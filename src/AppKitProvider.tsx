@@ -1,7 +1,6 @@
 import { WagmiProvider } from 'wagmi'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { wagmiAdapter, queryClient } from './appkit-config'
-import './appkit-config'
 
 export function AppKitProvider({ children }: { children: React.ReactNode }) {
   return (

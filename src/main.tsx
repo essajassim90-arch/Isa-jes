@@ -9,7 +9,7 @@ import { AppKitProvider } from './AppKitProvider.tsx'
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <AppKitProvider>
-    <VeChainKitProvider
+      <VeChainKitProvider
       network={{
         type: 'test',
       }}
@@ -34,7 +34,7 @@ createRoot(document.getElementById('root')!).render(
       theme={{ accent: '#3b82f6' }}
     >
       <App />
-    </VeChainKitProvider>
+      </VeChainKitProvider>
     </AppKitProvider>
   </StrictMode>,
 )
