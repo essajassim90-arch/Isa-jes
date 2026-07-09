@@ -4,9 +4,11 @@ import { VeChainKitProvider } from '@vechain/vechain-kit'
 import '@vechain/vechain-kit/assets'
 import './index.css'
 import App from './App.tsx'
+import { AppKitProvider } from './AppKitProvider.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
+    <AppKitProvider>
     <VeChainKitProvider
       network={{
         type: 'test',
@@ -33,5 +35,6 @@ createRoot(document.getElementById('root')!).render(
     >
       <App />
     </VeChainKitProvider>
+    </AppKitProvider>
   </StrictMode>,
 )

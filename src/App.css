@@ -259,6 +259,73 @@ a:hover { text-decoration: underline; }
   flex-wrap: wrap;
 }
 
+/* ─── EVM Section (Reown AppKit) ───────────────────────────────── */
+.evm-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.evm-section h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.evm-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.evm-connect {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.evm-desc {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.evm-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.evm-btn {
+  padding: 10px 22px;
+  background: var(--accent);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.evm-btn:hover { background: var(--accent-hover); }
+
+.evm-btn-outline {
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+}
+
+.evm-btn-outline:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
 /* ─── Responsive ───────────────────────────────────────────────── */
 @media (max-width: 600px) {
   .header { padding: 14px 16px; }
