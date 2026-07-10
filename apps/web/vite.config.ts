@@ -14,6 +14,40 @@ export default defineConfig(({ command }) => {
   return {
     plugins: [react()],
     base: '/Isa-jes/',
+    build: {
+      rollupOptions: {
+        onwarn(warning, warn) {
+          if (
+            warning.code === 'INVALID_ANNOTATION' &&
+            warning.id?.includes('@privy-io/react-auth/dist/esm/index.mjs')
+          ) {
+            return
+          }
+          warn(warning)
+        },
+        output: {
+          manualChunks(id) {
+            if (!id.includes('node_modules')) return
+
+            if (id.includes('react') || id.includes('scheduler')) return 'vendor-react'
+            if (id.includes('@vechain')) return 'vendor-vechain'
+            if (
+              id.includes('@reown') ||
+              id.includes('@walletconnect') ||
+              id.includes('@web3modal') ||
+              id.includes('@privy-io')
+            ) {
+              return 'vendor-wallet'
+            }
+            if (id.includes('wagmi') || id.includes('viem') || id.includes('ethers')) {
+              return 'vendor-web3-core'
+            }
+
+            return 'vendor-misc'
+          },
+        },
+      },
+    },
     define: {
       global: 'globalThis',
     },
