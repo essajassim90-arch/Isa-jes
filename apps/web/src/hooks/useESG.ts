@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import type { ESGReport } from '@nama/shared'
-import { apiUrl } from '../lib/api.ts'
+import { apiUrl, isDemoMode } from '../lib/api.ts'
+import { demoESGReport, DEMO_BATCH_ID } from '../lib/demoData.ts'
 
 export function useESG(orgId: string | null) {
   const [report, setReport] = useState<ESGReport | null>(null)
@@ -9,6 +10,17 @@ export function useESG(orgId: string | null) {
 
   useEffect(() => {
     if (!orgId) return
+
+    // In GitHub Pages demo mode return seeded data immediately
+    if (isDemoMode) {
+      if (orgId === DEMO_BATCH_ID) {
+        setReport(demoESGReport)
+      } else {
+        setError(`Demo mode: only "${DEMO_BATCH_ID}" is available offline.`)
+      }
+      return
+    }
+
     setLoading(true)
     setError(null)
     setReport(null)

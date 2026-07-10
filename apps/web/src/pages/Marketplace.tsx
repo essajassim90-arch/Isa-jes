@@ -63,7 +63,7 @@ export function Marketplace() {
       <div style={{ marginBottom: '32px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
           <h2 style={{ fontSize: '1.6rem', fontWeight: 700 }}>🛒 Smart Procurement Marketplace</h2>
-          <span className="badge-roadmap">Phase 1D</span>
+          <span className="badge-roadmap">Phase 1 MVP Demo</span>
         </div>
         <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
           Browse B2B procurement listings from verified producers. IoT-condition-verified

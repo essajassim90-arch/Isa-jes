@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)](https://www.typescriptlang.org)
 [![React](https://img.shields.io/badge/React-18-61DAFB)](https://react.dev)
-[![Status: Demo](https://img.shields.io/badge/Status-VeChain%20Ecosystem%20Demo-orange)](#)
+[![Status: Phase 1 MVP Demo](https://img.shields.io/badge/Status-Phase%201%20MVP%20Demo-orange)](#)
 
 NAMA is an open-source, blockchain-powered ecosystem that transforms global food supply chains through transparency, sustainability, and automation. Built on the **VeChainThor blockchain**, NAMA integrates Artificial Intelligence (AI), Internet of Things (IoT), and Digital Product Passports (DPP) to create a verifiable, traceable, and circular food economy.
 
@@ -68,17 +68,18 @@ Real-time carbon footprint tracking, predictive risk analytics, and audit-ready 
 ## Repository Structure
 
 ```
-nama/
-├── smart-contracts/          ← VeChainThor Solidity contracts (Hardhat)
-├── api/                      ← Node.js + TypeScript REST API gateway
-├── dashboard/                ← React + Vite main enterprise dashboard
-├── marketplace/              ← B2B procurement frontend
-├── iot-simulation/           ← Sensor data simulator (Node.js)
-├── ai-esg-dashboard/         ← AI-assisted ESG analytics (React + Vite)
-├── product-passport/         ← DPP viewer and minting UI
-├── circular-economy/         ← Waste-to-wealth management UI
+Isa-jes/
+├── apps/
+│   ├── web/                  ← React + Vite frontend (main demo dashboard)
+│   └── api/                  ← Node.js + TypeScript REST API gateway
+├── packages/
+│   ├── contracts/            ← VeChainThor Solidity contracts (Hardhat)
+│   ├── iot-simulation/       ← Sensor data simulator (Node.js + TypeScript)
+│   └── shared/               ← Shared TypeScript types
 ├── docs/                     ← Architecture diagrams, guides, API specs
-└── .github/workflows/        ← CI/CD pipelines
+├── .github/workflows/        ← CI/CD pipelines (deploy to GitHub Pages)
+├── .env.example              ← Environment variable template
+└── README.md                 ← This file
 ```
 
 ---
@@ -87,16 +88,14 @@ nama/
 
 | Layer | Technology |
 |-------|-----------|
-| Blockchain | VeChainThor (Testnet → Mainnet) |
+| Blockchain | VeChainThor (Testnet — Phase 1) |
 | Smart Contracts | Solidity + Hardhat + VeChain SDK |
-| Frontend | React 18 + TypeScript + Vite |
+| Frontend | React 18 + TypeScript + Vite 7 |
 | Wallet Integration | VeChain Kit + Reown AppKit |
 | Backend API | Node.js + TypeScript + Express |
-| IoT Simulation | Node.js + MQTT |
-| AI / Analytics | TypeScript ML utilities + Chart.js |
-| State Management | Zustand + TanStack Query |
+| IoT Simulation | Node.js + TypeScript |
 | Linting | oxlint |
-| Testing | Vitest + React Testing Library |
+| Testing | Hardhat (contracts) |
 
 ---
 
@@ -112,38 +111,84 @@ nama/
 
 ```bash
 # Clone the repository
-git clone https://github.com/<your-org>/nama-protocol.git
-cd nama-protocol
+git clone https://github.com/essajassim90-arch/Isa-jes.git
+cd Isa-jes
 
-# Install workspace dependencies
-npm install --legacy-peer-deps
+# Install all workspace dependencies
+npm ci
 
-# Start the main dashboard (development)
-cd dashboard
-npm install --legacy-peer-deps
+# Start the frontend in development mode
 npm run dev
+
+# (Optional) Start the API in a separate terminal
+cd apps/api
+node --import tsx/esm src/index.ts
 ```
 
-### Environment Variables
+### Running validation
 
-Copy `.env.example` to `.env.local` and fill in required values:
+```bash
+npm run lint                                     # Lint frontend
+npm run type-check                               # Type-check frontend
+VITE_WC_PROJECT_ID=dummy npm run build           # Production build
+npm run compile --workspace=@nama/contracts      # Compile Solidity contracts
+npm run test --workspace=@nama/contracts         # Run contract tests
+npm run build --workspace=@nama/iot-simulation   # Build IoT simulator
+```
+
+---
+
+## Demo Mode (GitHub Pages)
+
+The live GitHub Pages demo at `https://essajassim90-arch.github.io/Isa-jes/` runs entirely in the browser with **no backend**. When no `VITE_API_URL` environment variable is set in a production build, the app automatically enters **demo mode**:
+
+- All API hooks return local seeded data for batch `demo-batch-001`.
+- No network requests are made to any backend.
+- All IoT readings, DPP data, marketplace listings, and ESG metrics are pre-loaded from `apps/web/src/lib/demoData.ts`.
+
+To run against the live API locally, start the API server and set `VITE_API_URL` in your `.env.local`:
+
+```bash
+VITE_API_URL=http://localhost:3001
+```
+
+---
+
+## Environment Variables
+
+Copy `.env.example` to `.env.local` and fill in the required values:
 
 ```bash
 cp .env.example .env.local
 ```
 
-See [`.env.example`](../.env.example) for all required variables.
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `VITE_WC_PROJECT_ID` | **Required for build** | WalletConnect Project ID. Get one at [cloud.walletconnect.com](https://cloud.walletconnect.com). |
+| `VITE_API_URL` | Optional | Base URL of the NAMA API (e.g. `http://localhost:3001`). If omitted in a production build, the app enters demo mode with local seeded data. |
+| `JWT_SECRET` | Required for API | Secret key for JWT authentication in `apps/api`. Must be set via environment in non-development environments. |
+
+---
+
+## Privacy & Data Handling
+
+- **No personal data is required** to run or view this demo.
+- IoT readings are **fully simulated** — no real sensor hardware is involved.
+- Coordinates shown are **mock shipment waypoints**, not real device or user locations.
+- **No phone data, photos, audio, email, private keys, or seed phrases** are collected, processed, or stored.
+- The demo does not require wallet connection to browse DPP, marketplace, or ESG data.
+- Wallet connection (optional, via VeChain Kit) is used solely to display your on-chain testnet balances.
 
 ---
 
 ## Roadmap Summary
 
-| Phase | Timeline | Primary Objective |
-|-------|----------|-------------------|
-| Phase 1 | Months 1–3 | Proof of Concept — DPP contracts, IoT simulation, UI prototype |
-| Phase 2 | Months 4–6 | MVP & Closed Pilot — live B2B transactions, waste tracking |
-| Phase 3 | Months 7–9 | AI Analytics & Ecosystem Expansion — ESG intelligence, ERP APIs |
-| Phase 4 | Months 10–12+ | Mainnet & Global Scaling — cross-border trade interoperability |
+| Phase | Primary Objective |
+|-------|-------------------|
+| **Phase 1 (current)** | MVP Demo — DPP contracts, IoT simulation, UI demo on VeChainThor Testnet |
+| Phase 2 | MVP & Closed Pilot — live B2B transactions, waste tracking |
+| Phase 3 | AI Analytics & Ecosystem Expansion — ESG intelligence, ERP APIs |
+| Phase 4 | Mainnet & Global Scaling — cross-border trade interoperability |
 
 Full roadmap: [ROADMAP.md](ROADMAP.md)
 
@@ -236,3 +281,6 @@ Description:  NAMA is a global trust infrastructure for sustainable food systems
 GitHub:       https://github.com/essajassim90-arch
 VeWorld:      [TO BE PROVIDED LATER]
 ```
+
+
+

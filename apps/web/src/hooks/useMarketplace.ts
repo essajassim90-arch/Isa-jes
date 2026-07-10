@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import type { MarketplaceListing } from '@nama/shared'
-import { apiUrl } from '../lib/api.ts'
+import { apiUrl, isDemoMode } from '../lib/api.ts'
+import { demoMarketplaceListings } from '../lib/demoData.ts'
 
 interface ListingsResponse {
   listings: MarketplaceListing[]
@@ -13,6 +14,12 @@ export function useMarketplace() {
   const [error, setError] = useState<string | null>(null)
 
   const fetchListings = () => {
+    // In GitHub Pages demo mode return seeded data immediately
+    if (isDemoMode) {
+      setListings(demoMarketplaceListings)
+      return
+    }
+
     setLoading(true)
     setError(null)
 

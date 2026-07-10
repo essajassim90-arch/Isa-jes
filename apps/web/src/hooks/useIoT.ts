@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import type { IoTReading, IoTSensorType } from '@nama/shared'
-import { apiUrl } from '../lib/api.ts'
+import { apiUrl, isDemoMode } from '../lib/api.ts'
+import { demoIoTReadings, DEMO_BATCH_ID } from '../lib/demoData.ts'
 
 export type IoTState = 'optimal' | 'warning' | 'critical'
 
@@ -37,6 +38,19 @@ export function useIoT(batchId: string | null) {
 
   useEffect(() => {
     if (!batchId) return
+
+    // In GitHub Pages demo mode return seeded data immediately
+    if (isDemoMode) {
+      if (batchId === DEMO_BATCH_ID) {
+        setReadings(
+          demoIoTReadings.map((r) => ({ reading: r, state: classifyIoTState(r.type, r.value) })),
+        )
+      } else {
+        setReadings([])
+      }
+      return
+    }
+
     setLoading(true)
     setError(null)
     setReadings([])

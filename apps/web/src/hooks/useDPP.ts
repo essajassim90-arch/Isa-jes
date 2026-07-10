@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import type { DPP } from '@nama/shared'
-import { apiUrl } from '../lib/api.ts'
+import { apiUrl, isDemoMode } from '../lib/api.ts'
+import { demoDPP, DEMO_BATCH_ID } from '../lib/demoData.ts'
 
 export function useDPP(batchId: string | null) {
   const [dpp, setDpp] = useState<DPP | null>(null)
@@ -9,6 +10,17 @@ export function useDPP(batchId: string | null) {
 
   useEffect(() => {
     if (!batchId) return
+
+    // In GitHub Pages demo mode return seeded data immediately
+    if (isDemoMode) {
+      if (batchId === DEMO_BATCH_ID) {
+        setDpp(demoDPP)
+      } else {
+        setError(`Demo mode: only "${DEMO_BATCH_ID}" is available offline.`)
+      }
+      return
+    }
+
     setLoading(true)
     setError(null)
     setDpp(null)

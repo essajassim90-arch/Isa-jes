@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import {
   WalletButton,
   useWallet,
@@ -8,26 +7,21 @@ import {
 } from '@vechain/vechain-kit'
 import { useAppKit, useAppKitAccount, useAppKitNetwork } from '@reown/appkit/react'
 
-const MAINNET_SMART_ACCOUNT = '0x1604a6EF0B1Cc40bFcC5d2205DEDb264bf8862FE'
+// Phase 1 MVP Demo: Testnet only.
+// Mainnet address retained here for future phases but is NOT shown in the demo UI.
+// const MAINNET_SMART_ACCOUNT = '0x1604a6EF0B1Cc40bFcC5d2205DEDb264bf8862FE'
 const TESTNET_SMART_ACCOUNT = '0xf51085090F8294b6158082dbDBB42A4484a55ba6'
 
-function SmartAccountCard({
-  network,
-  address,
-}: {
-  network: 'Mainnet' | 'Testnet'
-  address: string
-}) {
+function SmartAccountCard({ address }: { address: string }) {
   const { data: isDeployed, isLoading } = useIsSmartAccountDeployed(address)
-  const isTestnet = network === 'Testnet'
 
   return (
     <div className="sa-card">
-      <div className="sa-network">{network}</div>
+      <div className="sa-network">Testnet</div>
       <div className="sa-label">Smart Account Address</div>
       <a
         className="sa-address"
-        href={`https://${isTestnet ? 'explore-testnet' : 'explore'}.vechain.org/accounts/${address}`}
+        href={`https://explore-testnet.vechain.org/accounts/${address}`}
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -44,9 +38,7 @@ function ConnectedDashboard() {
   const { account, connection, smartAccount } = useWallet()
   const accountAddress = account?.address ?? ''
   const { data: balance } = useAccountBalance(accountAddress)
-  const [network, setNetwork] = useState<'Testnet' | 'Mainnet'>('Testnet')
-  const activeAddress = network === 'Mainnet' ? MAINNET_SMART_ACCOUNT : TESTNET_SMART_ACCOUNT
-  const { data: isDeployed } = useIsSmartAccountDeployed(activeAddress)
+  const { data: isDeployed } = useIsSmartAccountDeployed(TESTNET_SMART_ACCOUNT)
 
   const { sendTransaction: deploySA, isTransactionPending: isUpgrading } = useUpgradeSmartAccount({
     smartAccountAddress: smartAccount?.address ?? accountAddress,
@@ -100,22 +92,8 @@ function ConnectedDashboard() {
       </div>
 
       <div className="sa-section">
-        <h2>Smart Account Deployment</h2>
-        <div className="network-tabs">
-          <button
-            className={`tab ${network === 'Testnet' ? 'active' : ''}`}
-            onClick={() => setNetwork('Testnet')}
-          >
-            Testnet
-          </button>
-          <button
-            className={`tab ${network === 'Mainnet' ? 'active' : ''}`}
-            onClick={() => setNetwork('Mainnet')}
-          >
-            Mainnet
-          </button>
-        </div>
-        <SmartAccountCard network={network} address={activeAddress} />
+        <h2>Smart Account (Testnet)</h2>
+        <SmartAccountCard address={TESTNET_SMART_ACCOUNT} />
         {!isDeployed && smartAccount?.address && (
           <button
             className="deploy-btn"
@@ -126,7 +104,7 @@ function ConnectedDashboard() {
           </button>
         )}
         {isDeployed && (
-          <p className="deploy-success">✅ Smart account is live on {network}!</p>
+          <p className="deploy-success">✅ Smart account is live on Testnet!</p>
         )}
       </div>
     </div>
@@ -188,8 +166,7 @@ export function Home() {
         powered by VeChainThor blockchain, IoT simulation, and Digital Product Passports.
       </p>
       <div className="hero-cards">
-        <SmartAccountCard network="Mainnet" address={MAINNET_SMART_ACCOUNT} />
-        <SmartAccountCard network="Testnet" address={TESTNET_SMART_ACCOUNT} />
+        <SmartAccountCard address={TESTNET_SMART_ACCOUNT} />
       </div>
       <div className="connect-cta">
         <WalletButton />
