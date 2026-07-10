@@ -18,8 +18,9 @@ export default defineConfig(({ command }) => {
       rollupOptions: {
         onwarn(warning, warn) {
           if (
-            warning.code === 'INVALID_ANNOTATION' &&
-            warning.id?.includes('@privy-io/react-auth/dist/esm/index.mjs')
+            warning.message?.includes(
+              'contains an annotation that Rollup cannot interpret due to the position of the comment',
+            )
           ) {
             return
           }
@@ -29,21 +30,7 @@ export default defineConfig(({ command }) => {
           manualChunks(id) {
             if (!id.includes('node_modules')) return
 
-            if (id.includes('react') || id.includes('scheduler')) return 'vendor-react'
-            if (id.includes('@vechain')) return 'vendor-vechain'
-            if (
-              id.includes('@reown') ||
-              id.includes('@walletconnect') ||
-              id.includes('@web3modal') ||
-              id.includes('@privy-io')
-            ) {
-              return 'vendor-wallet'
-            }
-            if (id.includes('wagmi') || id.includes('viem') || id.includes('ethers')) {
-              return 'vendor-web3-core'
-            }
-
-            return 'vendor-misc'
+            if (id.includes('@vechain/vechain-kit')) return 'vendor-vechain-kit'
           },
         },
       },
