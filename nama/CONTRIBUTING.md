@@ -285,3 +285,18 @@ Thank you for helping build a more transparent and sustainable global food syste
 ---
 
 *NAMA Protocol — Contributing Guide v1.0*
+
+---
+
+## Attribution
+
+```
+Founder:      Isa Jassim Ali
+Role:         Founder & Lead Architect
+Project:      NAMA
+Description:  NAMA is a global trust infrastructure for sustainable food systems built
+              around digital product passports, food traceability, ESG intelligence,
+              circular economy tracking, and enterprise supply-chain transparency.
+GitHub:       https://github.com/essajassim90-arch
+VeWorld:      [TO BE PROVIDED LATER]
+```

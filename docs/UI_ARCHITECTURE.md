@@ -420,3 +420,18 @@ Section 4: Review & Mint
 
 *NAMA UI/UX Architecture v1.0*  
 *Enterprise SaaS | WCAG 2.2 AA | VeChainThor Ecosystem*
+
+---
+
+## Attribution
+
+```
+Founder:      Isa Jassim Ali
+Role:         Founder & Lead Architect
+Project:      NAMA
+Description:  NAMA is a global trust infrastructure for sustainable food systems built
+              around digital product passports, food traceability, ESG intelligence,
+              circular economy tracking, and enterprise supply-chain transparency.
+GitHub:       https://github.com/essajassim90-arch
+VeWorld:      [TO BE PROVIDED LATER]
+```

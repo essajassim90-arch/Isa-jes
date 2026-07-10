@@ -171,3 +171,18 @@ Achieve full decentralization, cross-border interoperability, and aggressive mar
 
 *NAMA Protocol — Open Source VeChain Ecosystem Demo*  
 *Roadmap v1.0 | Subject to revision based on community feedback*
+
+---
+
+## Attribution
+
+```
+Founder:      Isa Jassim Ali
+Role:         Founder & Lead Architect
+Project:      NAMA
+Description:  NAMA is a global trust infrastructure for sustainable food systems built
+              around digital product passports, food traceability, ESG intelligence,
+              circular economy tracking, and enterprise supply-chain transparency.
+GitHub:       https://github.com/essajassim90-arch
+VeWorld:      [TO BE PROVIDED LATER]
+```

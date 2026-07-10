@@ -238,3 +238,34 @@ NAMA transforms supply chains from linear cost centers into circular, value-gene
 
 *NAMA Protocol — Open Source VeChain Ecosystem Demo*  
 *Version 1.0 | MIT License*
+
+---
+
+## About the Founder
+
+NAMA was conceived and architected by **Isa Jassim Ali**, Founder & Lead Architect of the NAMA Protocol.
+
+Isa Jassim Ali is the creator of NAMA's vision for global trust infrastructure for sustainable food systems — bringing together digital product passports, IoT traceability, ESG intelligence, circular economy tracking, and enterprise supply-chain transparency on VeChainThor.
+
+| | |
+|---|---|
+| **Founder** | Isa Jassim Ali |
+| **Role** | Founder & Lead Architect |
+| **Project** | NAMA |
+| **GitHub** | [essajassim90-arch](https://github.com/essajassim90-arch) |
+| **VeWorld Wallet** | [TO BE PROVIDED LATER] |
+
+---
+
+## Attribution
+
+```
+Founder:      Isa Jassim Ali
+Role:         Founder & Lead Architect
+Project:      NAMA
+Description:  NAMA is a global trust infrastructure for sustainable food systems built
+              around digital product passports, food traceability, ESG intelligence,
+              circular economy tracking, and enterprise supply-chain transparency.
+GitHub:       https://github.com/essajassim90-arch
+VeWorld:      [TO BE PROVIDED LATER]
+```
