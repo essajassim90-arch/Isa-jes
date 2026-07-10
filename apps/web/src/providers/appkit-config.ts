@@ -6,7 +6,7 @@ import { QueryClient } from '@tanstack/react-query'
 
 export const queryClient = new QueryClient()
 
-const projectId = import.meta.env.VITE_WC_PROJECT_ID ?? 'a0b855ceaf109dbc8426479a52cdaed1'
+const projectId = import.meta.env.VITE_WC_PROJECT_ID
 
 const metadata = {
   name: 'Isa-Jes dApp',

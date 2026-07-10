@@ -1,13 +1,18 @@
 {
-  "name": "isa-jes",
+  "name": "nama-protocol",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "oxlint",
-    "preview": "vite preview"
+    "dev": "npm run dev --workspace=@nama/web",
+    "build": "npm run build --workspace=@nama/web",
+    "lint": "npm run lint --workspace=@nama/web",
+    "preview": "npm run preview --workspace=@nama/web",
+    "typecheck": "npm run build --workspace=@nama/web -- --noEmit 2>/dev/null || tsc -p apps/web/tsconfig.app.json --noEmit"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

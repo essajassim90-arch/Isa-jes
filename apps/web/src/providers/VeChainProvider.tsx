@@ -8,7 +8,7 @@ export function VeChainProvider({ children }: { children: React.ReactNode }) {
       dappKit={{
         allowedWallets: ['veworld', 'sync2', 'wallet-connect'],
         walletConnectOptions: {
-          projectId: import.meta.env.VITE_WC_PROJECT_ID ?? 'a0b855ceaf109dbc8426479a52cdaed1',
+          projectId: import.meta.env.VITE_WC_PROJECT_ID,
           metadata: {
             name: 'NAMA Protocol',
             description: 'Decentralized ecosystem for global food security & sustainable supply chains',
