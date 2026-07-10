@@ -1,25 +1,36 @@
+export type DPPStatus = 'active' | 'delivered' | 'recalled' | 'expired'
+
+export type DPPEventType =
+  | 'created'
+  | 'transit'
+  | 'storage'
+  | 'quality_check'
+  | 'delivered'
+
 export interface DPPEvent {
-  eventType: 'created' | 'transit' | 'storage' | 'delivered' | 'quality_check'
+  eventType: DPPEventType
   timestamp: string
-  location?: string
-  actor?: string
+  actorOrgId?: string
+  locationCode?: string
   txHash?: string
   metadata?: Record<string, unknown>
 }
 
 export interface DPPCertification {
+  certificationId: string
   name: string
-  issuer: string
+  issuerOrgId: string
   issuedAt: string
   expiresAt?: string
   onChainHash?: string
 }
 
 export interface DPP {
+  dppId: string
   batchId: string
-  product: string
-  origin: string
-  status: 'active' | 'delivered' | 'recalled' | 'expired'
+  productName: string
+  originCountry: string
+  status: DPPStatus
   certifications: DPPCertification[]
   events: DPPEvent[]
   createdAt: string
