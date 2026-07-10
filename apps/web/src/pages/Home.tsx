@@ -5,7 +5,6 @@ import {
   useUpgradeSmartAccount,
   useAccountBalance,
 } from '@vechain/vechain-kit'
-import { useAppKit, useAppKitAccount, useAppKitNetwork } from '@reown/appkit/react'
 
 // Phase 1 MVP Demo: Testnet only.
 // Mainnet address retained here for future phases but is NOT shown in the demo UI.
@@ -111,52 +110,12 @@ function ConnectedDashboard() {
   )
 }
 
-function EvmSection() {
-  const { open } = useAppKit()
-  const { address: evmAddress, isConnected } = useAppKitAccount()
-  const { caipNetwork } = useAppKitNetwork()
-
-  return (
-    <div className="evm-section">
-      <h2>EVM Wallet (Reown AppKit)</h2>
-      <div className="evm-card">
-        {isConnected ? (
-          <>
-            <div className="wallet-row">
-              <span className="wallet-label">EVM Address</span>
-              <span className="wallet-address">
-                {evmAddress ? `${evmAddress.slice(0, 8)}…${evmAddress.slice(-6)}` : '—'}
-              </span>
-            </div>
-            <div className="wallet-row">
-              <span className="wallet-label">Network</span>
-              <span className="wallet-source">{caipNetwork?.name ?? '—'}</span>
-            </div>
-            <div className="evm-actions">
-              <button className="evm-btn" onClick={() => open()}>Manage EVM Wallet</button>
-              <button className="evm-btn evm-btn-outline" onClick={() => open({ view: 'Networks' })}>
-                Switch Network
-              </button>
-            </div>
-          </>
-        ) : (
-          <div className="evm-connect">
-            <p className="evm-desc">Connect an EVM wallet to interact with Ethereum, Arbitrum, and Polygon.</p>
-            <button className="evm-btn" onClick={() => open()}>Connect EVM Wallet</button>
-          </div>
-        )}
-      </div>
-    </div>
-  )
-}
-
 export function Home() {
   const { account } = useWallet()
 
   return account ? (
     <>
       <ConnectedDashboard />
-      <EvmSection />
     </>
   ) : (
     <div className="hero">
@@ -171,7 +130,6 @@ export function Home() {
       <div className="connect-cta">
         <WalletButton />
       </div>
-      <EvmSection />
     </div>
   )
 }

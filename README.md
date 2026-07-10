@@ -138,13 +138,15 @@ npm run build --workspace=@nama/iot-simulation   # Build IoT simulator
 
 ---
 
-## Demo Mode (GitHub Pages)
+## Staging Demo (GitHub Pages)
 
 The live GitHub Pages demo at `https://essajassim90-arch.github.io/Isa-jes/` runs entirely in the browser with **no backend**. When no `VITE_API_URL` environment variable is set in a production build, the app automatically enters **demo mode**:
 
 - All API hooks return local seeded data for batch `demo-batch-001`.
 - No network requests are made to any backend.
 - All IoT readings, DPP data, marketplace listings, and ESG metrics are pre-loaded from `apps/web/src/lib/demoData.ts`.
+
+This staging demo is for **Phase 1 MVP presentation only**. Backend/API deployment and live Testnet-integrated end-to-end flows are part of **Phase 2**.
 
 To run against the live API locally, start the API server and set `VITE_API_URL` in your `.env.local`:
 
@@ -281,6 +283,5 @@ Description:  NAMA is a global trust infrastructure for sustainable food systems
 GitHub:       https://github.com/essajassim90-arch
 VeWorld:      [TO BE PROVIDED LATER]
 ```
-
 
 
