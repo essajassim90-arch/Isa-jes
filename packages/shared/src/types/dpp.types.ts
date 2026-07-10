@@ -11,25 +11,30 @@ export interface DPPEvent {
   eventType: DPPEventType
   timestamp: string
   actorOrgId?: string
+  actor?: string
   locationCode?: string
+  location?: string
   txHash?: string
   metadata?: Record<string, unknown>
 }
 
 export interface DPPCertification {
-  certificationId: string
+  certificationId?: string
   name: string
-  issuerOrgId: string
+  issuerOrgId?: string
+  issuer: string
   issuedAt: string
   expiresAt?: string
   onChainHash?: string
 }
 
 export interface DPP {
-  dppId: string
+  dppId?: string
   batchId: string
-  productName: string
-  originCountry: string
+  product: string
+  productName?: string
+  origin: string
+  originCountry?: string
   status: DPPStatus
   certifications: DPPCertification[]
   events: DPPEvent[]

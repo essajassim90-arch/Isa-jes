@@ -9,15 +9,15 @@ export interface ESGMetricSnapshot {
 }
 
 export interface ESGReport {
-  reportId: string
+  reportId?: string
   orgId: string
-  periodStart: string
-  periodEnd: string
+  periodStart?: string
+  periodEnd?: string
   complianceScore: number
   carbonFootprintKg: number
   circularRoutes: number
   generatedAt: string
-  metrics: ESGMetricSnapshot[]
+  metrics?: ESGMetricSnapshot[]
   blockRange?: { from: number; to: number }
 }
 
