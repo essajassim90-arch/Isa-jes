@@ -6,11 +6,12 @@ import { QueryClient } from '@tanstack/react-query'
 
 export const queryClient = new QueryClient()
 
-const projectId = import.meta.env.VITE_WC_PROJECT_ID ?? 'a0b855ceaf109dbc8426479a52cdaed1'
+const projectId = import.meta.env.VITE_WC_PROJECT_ID
 
 const metadata = {
-  name: 'Isa-Jes dApp',
-  description: 'VeChain + EVM multichain dApp',
+  name: 'NAMA Protocol',
+  description:
+    'NAMA is a VeChainThor-powered trust infrastructure for sustainable food systems, Digital Product Passports, ESG intelligence, IoT traceability, and circular economy tracking.',
   url: typeof window !== 'undefined' ? window.location.origin : 'https://essajassim90-arch.github.io',
   icons: ['https://avatars.githubusercontent.com/u/148128029'],
 }

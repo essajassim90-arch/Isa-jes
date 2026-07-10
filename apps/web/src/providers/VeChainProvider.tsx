@@ -11,7 +11,8 @@ export function VeChainProvider({ children }: { children: React.ReactNode }) {
           projectId: import.meta.env.VITE_WC_PROJECT_ID,
           metadata: {
             name: 'NAMA Protocol',
-            description: 'Decentralized ecosystem for global food security & sustainable supply chains',
+            description:
+              'NAMA is a VeChainThor-powered trust infrastructure for sustainable food systems, Digital Product Passports, ESG intelligence, IoT traceability, and circular economy tracking.',
             url: typeof window !== 'undefined' ? window.location.origin : '',
             icons: ['https://avatars.githubusercontent.com/u/148128029'],
           },

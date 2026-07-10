@@ -180,8 +180,8 @@ function App() {
     <div className="app">
       <header className="header">
         <div className="header-left">
-          <span className="logo">⚡ Isa-Jes</span>
-          <span className="tagline">VeChain dApp</span>
+          <span className="logo">⚡ NAMA Protocol</span>
+          <span className="tagline">VeChain ecosystem archive</span>
         </div>
         <WalletButton />
       </header>
