@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import type { ESGReport } from '@nama/shared'
+import { apiUrl } from '../lib/api.ts'
 
-// TODO (Phase 1): Replace mock with real API call to GET /esg/report/:orgId.
 export function useESG(orgId: string | null) {
   const [report, setReport] = useState<ESGReport | null>(null)
   const [loading, setLoading] = useState(false)
@@ -11,18 +11,26 @@ export function useESG(orgId: string | null) {
     if (!orgId) return
     setLoading(true)
     setError(null)
+    setReport(null)
 
-    // Mock — swap for: fetch(`/api/esg/report/${orgId}`)
-    setTimeout(() => {
-      setReport({
-        orgId,
-        carbonFootprintKg: 1240.5,
-        circularRoutes: 7,
-        complianceScore: 82,
-        generatedAt: new Date().toISOString(),
+    fetch(apiUrl(`/esg/report/${encodeURIComponent(orgId)}`))
+      .then((res) => {
+        if (!res.ok) {
+          return res.json().then((body: { error?: string }) => {
+            throw new Error(body.error ?? `HTTP ${res.status}`)
+          })
+        }
+        return res.json() as Promise<ESGReport>
       })
-      setLoading(false)
-    }, 500)
+      .then((data) => {
+        setReport(data)
+      })
+      .catch((err: unknown) => {
+        setError(err instanceof Error ? err.message : 'Failed to load ESG report')
+      })
+      .finally(() => {
+        setLoading(false)
+      })
   }, [orgId])
 
   return { report, loading, error }

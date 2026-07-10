@@ -14,6 +14,15 @@ export default defineConfig(({ command }) => {
   return {
     plugins: [react()],
     base: '/Isa-jes/',
+    server: {
+      proxy: {
+        '/api': {
+          target: 'http://localhost:3001',
+          changeOrigin: true,
+          rewrite: (path: string) => path.replace(/^\/api/, ''),
+        },
+      },
+    },
     build: {
       rollupOptions: {
         onwarn(warning, warn) {

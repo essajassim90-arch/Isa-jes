@@ -46,6 +46,57 @@ function isEventPayload(value: unknown): value is EventPayload {
   return isValidEventType(p['eventType'])
 }
 
+// Seed demo-batch-001 on startup for the NAMA demo flow
+store.set('demo-batch-001', {
+  dppId: 'demo-dpp-001',
+  batchId: 'demo-batch-001',
+  product: 'org.coffee.arabica',
+  productName: 'Single-Origin Arabica Coffee Beans',
+  origin: 'FARM-KE-001',
+  originCountry: 'Kenya',
+  status: 'active',
+  certifications: [
+    {
+      name: 'Organic',
+      issuer: 'Kenya Organic Farmers Association',
+      issuedAt: '2025-01-15T00:00:00.000Z',
+    },
+    {
+      name: 'Fair Trade',
+      issuer: 'FLO-CERT GmbH',
+      issuedAt: '2025-02-01T00:00:00.000Z',
+      expiresAt: '2027-02-01T00:00:00.000Z',
+    },
+  ],
+  events: [
+    {
+      eventType: 'created',
+      timestamp: '2025-03-01T06:00:00.000Z',
+      actor: 'FARM-KE-001',
+      location: 'Nyeri County, Kenya',
+    },
+    {
+      eventType: 'transit',
+      timestamp: '2025-03-05T10:30:00.000Z',
+      actor: 'LOGISTICS-001',
+      location: 'Mombasa Port, Kenya',
+    },
+    {
+      eventType: 'storage',
+      timestamp: '2025-03-12T14:00:00.000Z',
+      actor: 'WAREHOUSE-AE-001',
+      location: 'Dubai, UAE',
+    },
+    {
+      eventType: 'quality_check',
+      timestamp: '2025-03-20T09:00:00.000Z',
+      actor: 'QA-TEAM-001',
+      location: 'Dubai, UAE',
+    },
+  ],
+  createdAt: '2025-03-01T06:00:00.000Z',
+})
+
 class DPPService {
   getByBatchId(batchId: string): DPP | undefined {
     return store.get(batchId)

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import type { DPP } from '@nama/shared'
+import { apiUrl } from '../lib/api.ts'
 
-// TODO (Phase 1): Replace mock with real API call to GET /dpp/:batchId.
 export function useDPP(batchId: string | null) {
   const [dpp, setDpp] = useState<DPP | null>(null)
   const [loading, setLoading] = useState(false)
@@ -11,20 +11,26 @@ export function useDPP(batchId: string | null) {
     if (!batchId) return
     setLoading(true)
     setError(null)
+    setDpp(null)
 
-    // Mock — swap for: fetch(`/api/dpp/${batchId}`)
-    setTimeout(() => {
-      setDpp({
-        batchId,
-        origin: 'Mock Farm, Kenya',
-        product: 'Organic Coffee Beans',
-        status: 'active',
-        certifications: [],
-        events: [],
-        createdAt: new Date().toISOString(),
+    fetch(apiUrl(`/dpp/${encodeURIComponent(batchId)}`))
+      .then((res) => {
+        if (!res.ok) {
+          return res.json().then((body: { error?: string }) => {
+            throw new Error(body.error ?? `HTTP ${res.status}`)
+          })
+        }
+        return res.json() as Promise<DPP>
       })
-      setLoading(false)
-    }, 500)
+      .then((data) => {
+        setDpp(data)
+      })
+      .catch((err: unknown) => {
+        setError(err instanceof Error ? err.message : 'Failed to load DPP')
+      })
+      .finally(() => {
+        setLoading(false)
+      })
   }, [batchId])
 
   return { dpp, loading, error }

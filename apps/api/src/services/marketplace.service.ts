@@ -5,6 +5,18 @@ import type { MarketplaceListing, MarketplaceOffer } from '@nama/shared'
 const listings = new Map<string, MarketplaceListing>()
 const offers = new Map<string, MarketplaceOffer>()
 
+// Seed demo listing for demo-batch-001 on startup
+listings.set('demo-listing-001', {
+  listingId: 'demo-listing-001',
+  dppId: 'demo-dpp-001',
+  sellerOrgId: 'FARM-KE-001',
+  quantity: 500,
+  unitPriceVET: '10',
+  currency: 'VET',
+  status: 'open',
+  createdAt: '2025-03-20T09:00:00.000Z',
+})
+
 interface CreateListingPayload {
   dppId: string
   sellerOrgId: string

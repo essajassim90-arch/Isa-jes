@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { WalletButton, useWallet } from '@vechain/vechain-kit'
+import { WalletButton } from '@vechain/vechain-kit'
 import './App.css'
 import { Home } from './pages/Home.tsx'
 import { Passport } from './pages/Passport.tsx'
@@ -18,7 +18,6 @@ const NAV_ITEMS: { id: Page; label: string }[] = [
 ]
 
 function App() {
-  const { account } = useWallet()
   const [page, setPage] = useState<Page>('home')
 
   const renderPage = () => {
@@ -39,16 +38,15 @@ function App() {
           <span className="tagline">VeChain Ecosystem MVP</span>
         </div>
         <nav className="header-nav">
-          {account &&
-            NAV_ITEMS.filter((n) => n.id !== 'home').map((n) => (
-              <button
-                key={n.id}
-                className={`nav-btn ${page === n.id ? 'active' : ''}`}
-                onClick={() => setPage(n.id)}
-              >
-                {n.label}
-              </button>
-            ))}
+          {NAV_ITEMS.filter((n) => n.id !== 'home').map((n) => (
+            <button
+              key={n.id}
+              className={`nav-btn ${page === n.id ? 'active' : ''}`}
+              onClick={() => setPage(n.id)}
+            >
+              {n.label}
+            </button>
+          ))}
         </nav>
         <WalletButton />
       </header>

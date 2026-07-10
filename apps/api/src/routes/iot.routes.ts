@@ -7,5 +7,5 @@ export const iotRouter = Router()
 /** POST /iot/reading — ingest an IoT sensor reading (requires auth) */
 iotRouter.post('/reading', authenticate, ingestReading)
 
-/** GET /iot/readings/:batchId — get latest readings for a batch (requires auth) */
-iotRouter.get('/readings/:batchId', authenticate, getLatestReadings)
+/** GET /iot/readings/:batchId — get latest readings for a batch (public for demo reads) */
+iotRouter.get('/readings/:batchId', getLatestReadings)
