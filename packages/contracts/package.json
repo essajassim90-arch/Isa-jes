@@ -4,7 +4,10 @@
   "private": true,
   "scripts": {
     "clean": "hardhat clean",
+    "seed-compiler": "node scripts/seed-compiler.cjs",
+    "precompile": "node scripts/seed-compiler.cjs",
     "compile": "hardhat compile",
+    "pretest": "node scripts/seed-compiler.cjs",
     "test": "hardhat test"
   },
   "devDependencies": {
