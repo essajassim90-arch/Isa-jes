@@ -6,6 +6,30 @@ export async function getListings(_req: Request, res: Response): Promise<void> {
   res.json({ listings, total: listings.length })
 }
 
+export async function getListingState(req: Request, res: Response): Promise<void> {
+  const listingId = req.params['listingId'] as string
+  const listing = marketplaceService.getListingState(listingId)
+
+  if (!listing) {
+    res.status(404).json({ error: 'Listing not found' })
+    return
+  }
+
+  res.json(listing)
+}
+
+export async function getOfferState(req: Request, res: Response): Promise<void> {
+  const offerId = req.params['offerId'] as string
+  const offer = marketplaceService.getOfferState(offerId)
+
+  if (!offer) {
+    res.status(404).json({ error: 'Offer not found' })
+    return
+  }
+
+  res.json(offer)
+}
+
 export async function createListing(req: Request, res: Response): Promise<void> {
   try {
     const listing = marketplaceService.createListing(req.body)

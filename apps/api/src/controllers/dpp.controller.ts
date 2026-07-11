@@ -11,6 +11,18 @@ export async function getDPP(req: Request, res: Response): Promise<void> {
   res.json(dpp)
 }
 
+export async function getDPPTimeline(req: Request, res: Response): Promise<void> {
+  const batchId = req.params['batchId'] as string
+  const timeline = dppService.getTimelineByBatchId(batchId)
+
+  if (!timeline) {
+    res.status(404).json({ error: 'DPP not found' })
+    return
+  }
+
+  res.json({ batchId, events: timeline, total: timeline.length })
+}
+
 export async function mintDPP(req: Request, res: Response): Promise<void> {
   // TODO (Phase 2): call DPP.sol mintDPP via vechain.service once contract is deployed
   try {

@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto'
 import type { DPP, DPPEvent, DPPEventType, DPPStatus } from '@nama/shared'
+import { projectionQueryService } from './projection-query.service.ts'
 
 // In-memory store — replaced with on-chain + DB persistence in later phases
 const store = new Map<string, DPP>()
@@ -13,6 +14,32 @@ function isValidEventType(value: unknown): value is DPPEventType {
 
 function isValidStatus(value: unknown): value is DPPStatus {
   return VALID_STATUSES.includes(value as DPPStatus)
+}
+
+function toDppStatusFromActive(active: number | null): DPPStatus {
+  return active === 1 ? 'active' : 'recalled'
+}
+
+function toDppEventType(value: string): DPPEventType {
+  const normalized = value.toLowerCase()
+
+  if (normalized.includes('quality')) {
+    return 'quality_check'
+  }
+
+  if (normalized.includes('transit')) {
+    return 'transit'
+  }
+
+  if (normalized.includes('storage')) {
+    return 'storage'
+  }
+
+  if (normalized.includes('deliver')) {
+    return 'delivered'
+  }
+
+  return 'created'
 }
 
 interface MintPayload {
@@ -99,7 +126,54 @@ store.set('demo-batch-001', {
 
 class DPPService {
   getByBatchId(batchId: string): DPP | undefined {
+    if (projectionQueryService.hasPassportProjectionData()) {
+      const passport = projectionQueryService.getPassportStateByBatchId(batchId)
+      if (!passport) {
+        return undefined
+      }
+
+      const timeline = projectionQueryService.getPassportTimeline(passport.passportId)
+      const events: DPPEvent[] = timeline.map((event) => ({
+        eventType: toDppEventType(event.eventType),
+        timestamp: event.eventTimestamp ?? event.occurredAt,
+        actor: event.actor ?? undefined,
+        locationCode: event.locationCode ?? undefined,
+        location: event.locationCode ?? undefined
+      }))
+
+      return {
+        dppId: passport.passportId,
+        batchId: passport.batchId ?? batchId,
+        product: passport.product ?? 'unknown',
+        origin: passport.origin ?? 'unknown',
+        status: toDppStatusFromActive(passport.active),
+        certifications: [],
+        events,
+        createdAt: passport.createdAt ?? passport.updatedAt ?? new Date().toISOString(),
+        updatedAt: passport.updatedAt ?? undefined
+      }
+    }
+
     return store.get(batchId)
+  }
+
+  getTimelineByBatchId(batchId: string): DPPEvent[] | undefined {
+    if (projectionQueryService.hasPassportProjectionData()) {
+      const passport = projectionQueryService.getPassportStateByBatchId(batchId)
+      if (!passport) {
+        return undefined
+      }
+
+      return projectionQueryService.getPassportTimeline(passport.passportId).map((event) => ({
+        eventType: toDppEventType(event.eventType),
+        timestamp: event.eventTimestamp ?? event.occurredAt,
+        actor: event.actor ?? undefined,
+        locationCode: event.locationCode ?? undefined,
+        location: event.locationCode ?? undefined
+      }))
+    }
+
+    return store.get(batchId)?.events
   }
 
   mint(payload: unknown): DPP {
