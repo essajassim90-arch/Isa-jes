@@ -9,6 +9,7 @@ import type {
   Result,
   Interface,
   EventFragment,
+  AddressLike,
   ContractRunner,
   ContractMethod,
   Listener,
@@ -27,6 +28,8 @@ export declare namespace DPP {
     batchId: string;
     product: string;
     origin: string;
+    metadataHash: string;
+    owner: AddressLike;
     active: boolean;
     createdAt: BigNumberish;
   };
@@ -35,12 +38,16 @@ export declare namespace DPP {
     batchId: string,
     product: string,
     origin: string,
+    metadataHash: string,
+    owner: string,
     active: boolean,
     createdAt: bigint
   ] & {
     batchId: string;
     product: string;
     origin: string;
+    metadataHash: string;
+    owner: string;
     active: boolean;
     createdAt: bigint;
   };
@@ -48,28 +55,71 @@ export declare namespace DPP {
 
 export interface DPPInterface extends Interface {
   getFunction(
-    nameOrSignature: "createPassport" | "getPassport" | "setPassportStatus"
+    nameOrSignature:
+      | "attachPassportCertification"
+      | "createPassport"
+      | "deactivatePassport"
+      | "getPassport"
+      | "recordPassportEvent"
+      | "setPassportStatus"
+      | "transferPassportOwnership"
+      | "updatePassportMetadata"
   ): FunctionFragment;
 
   getEvent(
-    nameOrSignatureOrTopic: "PassportCreated" | "PassportStatusUpdated"
+    nameOrSignatureOrTopic:
+      | "PassportCertificationAttached"
+      | "PassportCreated"
+      | "PassportDeactivated"
+      | "PassportEventRecorded"
+      | "PassportMetadataUpdated"
+      | "PassportOwnershipTransferred"
+      | "PassportStatusUpdated"
   ): EventFragment;
 
   encodeFunctionData(
+    functionFragment: "attachPassportCertification",
+    values: [BytesLike, BytesLike, string, BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "createPassport",
     values: [BytesLike, string, string, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "deactivatePassport",
+    values: [BytesLike, BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "getPassport",
     values: [BytesLike]
   ): string;
   encodeFunctionData(
+    functionFragment: "recordPassportEvent",
+    values: [BytesLike, BytesLike, AddressLike, string, BigNumberish, string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "setPassportStatus",
     values: [BytesLike, boolean]
   ): string;
+  encodeFunctionData(
+    functionFragment: "transferPassportOwnership",
+    values: [BytesLike, AddressLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "updatePassportMetadata",
+    values: [BytesLike, BytesLike, string]
+  ): string;
 
   decodeFunctionResult(
+    functionFragment: "attachPassportCertification",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "createPassport",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "deactivatePassport",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -77,29 +127,187 @@ export interface DPPInterface extends Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "recordPassportEvent",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "setPassportStatus",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferPassportOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "updatePassportMetadata",
+    data: BytesLike
+  ): Result;
+}
+
+export namespace PassportCertificationAttachedEvent {
+  export type InputTuple = [
+    passportId: BytesLike,
+    certType: BytesLike,
+    issuer: AddressLike,
+    certificationHash: string,
+    issuedAt: BigNumberish,
+    expiresAt: BigNumberish
+  ];
+  export type OutputTuple = [
+    passportId: string,
+    certType: string,
+    issuer: string,
+    certificationHash: string,
+    issuedAt: bigint,
+    expiresAt: bigint
+  ];
+  export interface OutputObject {
+    passportId: string;
+    certType: string;
+    issuer: string;
+    certificationHash: string;
+    issuedAt: bigint;
+    expiresAt: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
 }
 
 export namespace PassportCreatedEvent {
   export type InputTuple = [
     passportId: BytesLike,
     batchId: string,
+    owner: AddressLike,
     product: string,
-    origin: string
+    origin: string,
+    createdAt: BigNumberish
   ];
   export type OutputTuple = [
     passportId: string,
     batchId: string,
+    owner: string,
     product: string,
-    origin: string
+    origin: string,
+    createdAt: bigint
   ];
   export interface OutputObject {
     passportId: string;
     batchId: string;
+    owner: string;
     product: string;
     origin: string;
+    createdAt: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace PassportDeactivatedEvent {
+  export type InputTuple = [
+    passportId: BytesLike,
+    reasonCode: BytesLike,
+    deactivatedBy: AddressLike,
+    deactivatedAt: BigNumberish
+  ];
+  export type OutputTuple = [
+    passportId: string,
+    reasonCode: string,
+    deactivatedBy: string,
+    deactivatedAt: bigint
+  ];
+  export interface OutputObject {
+    passportId: string;
+    reasonCode: string;
+    deactivatedBy: string;
+    deactivatedAt: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace PassportEventRecordedEvent {
+  export type InputTuple = [
+    passportId: BytesLike,
+    eventType: BytesLike,
+    actor: AddressLike,
+    locationCode: string,
+    eventTimestamp: BigNumberish,
+    payloadHash: string
+  ];
+  export type OutputTuple = [
+    passportId: string,
+    eventType: string,
+    actor: string,
+    locationCode: string,
+    eventTimestamp: bigint,
+    payloadHash: string
+  ];
+  export interface OutputObject {
+    passportId: string;
+    eventType: string;
+    actor: string;
+    locationCode: string;
+    eventTimestamp: bigint;
+    payloadHash: string;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace PassportMetadataUpdatedEvent {
+  export type InputTuple = [
+    passportId: BytesLike,
+    fieldMask: BytesLike,
+    updatedBy: AddressLike,
+    metadataHash: string,
+    updatedAt: BigNumberish
+  ];
+  export type OutputTuple = [
+    passportId: string,
+    fieldMask: string,
+    updatedBy: string,
+    metadataHash: string,
+    updatedAt: bigint
+  ];
+  export interface OutputObject {
+    passportId: string;
+    fieldMask: string;
+    updatedBy: string;
+    metadataHash: string;
+    updatedAt: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace PassportOwnershipTransferredEvent {
+  export type InputTuple = [
+    passportId: BytesLike,
+    previousOwner: AddressLike,
+    newOwner: AddressLike,
+    transferredAt: BigNumberish
+  ];
+  export type OutputTuple = [
+    passportId: string,
+    previousOwner: string,
+    newOwner: string,
+    transferredAt: bigint
+  ];
+  export interface OutputObject {
+    passportId: string;
+    previousOwner: string;
+    newOwner: string;
+    transferredAt: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -108,11 +316,26 @@ export namespace PassportCreatedEvent {
 }
 
 export namespace PassportStatusUpdatedEvent {
-  export type InputTuple = [passportId: BytesLike, active: boolean];
-  export type OutputTuple = [passportId: string, active: boolean];
+  export type InputTuple = [
+    passportId: BytesLike,
+    updatedBy: AddressLike,
+    previousActive: boolean,
+    active: boolean,
+    updatedAt: BigNumberish
+  ];
+  export type OutputTuple = [
+    passportId: string,
+    updatedBy: string,
+    previousActive: boolean,
+    active: boolean,
+    updatedAt: bigint
+  ];
   export interface OutputObject {
     passportId: string;
+    updatedBy: string;
+    previousActive: boolean;
     active: boolean;
+    updatedAt: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -163,8 +386,26 @@ export interface DPP extends BaseContract {
     event?: TCEvent
   ): Promise<this>;
 
+  attachPassportCertification: TypedContractMethod<
+    [
+      passportId: BytesLike,
+      certType: BytesLike,
+      certificationHash: string,
+      issuedAt: BigNumberish,
+      expiresAt: BigNumberish
+    ],
+    [void],
+    "nonpayable"
+  >;
+
   createPassport: TypedContractMethod<
     [passportId: BytesLike, batchId: string, product: string, origin: string],
+    [void],
+    "nonpayable"
+  >;
+
+  deactivatePassport: TypedContractMethod<
+    [passportId: BytesLike, reasonCode: BytesLike],
     [void],
     "nonpayable"
   >;
@@ -175,8 +416,33 @@ export interface DPP extends BaseContract {
     "view"
   >;
 
+  recordPassportEvent: TypedContractMethod<
+    [
+      passportId: BytesLike,
+      eventType: BytesLike,
+      actor: AddressLike,
+      locationCode: string,
+      eventTimestamp: BigNumberish,
+      payloadHash: string
+    ],
+    [void],
+    "nonpayable"
+  >;
+
   setPassportStatus: TypedContractMethod<
     [passportId: BytesLike, active: boolean],
+    [void],
+    "nonpayable"
+  >;
+
+  transferPassportOwnership: TypedContractMethod<
+    [passportId: BytesLike, newOwner: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+
+  updatePassportMetadata: TypedContractMethod<
+    [passportId: BytesLike, fieldMask: BytesLike, metadataHash: string],
     [void],
     "nonpayable"
   >;
@@ -186,9 +452,29 @@ export interface DPP extends BaseContract {
   ): T;
 
   getFunction(
+    nameOrSignature: "attachPassportCertification"
+  ): TypedContractMethod<
+    [
+      passportId: BytesLike,
+      certType: BytesLike,
+      certificationHash: string,
+      issuedAt: BigNumberish,
+      expiresAt: BigNumberish
+    ],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
     nameOrSignature: "createPassport"
   ): TypedContractMethod<
     [passportId: BytesLike, batchId: string, product: string, origin: string],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "deactivatePassport"
+  ): TypedContractMethod<
+    [passportId: BytesLike, reasonCode: BytesLike],
     [void],
     "nonpayable"
   >;
@@ -200,19 +486,82 @@ export interface DPP extends BaseContract {
     "view"
   >;
   getFunction(
+    nameOrSignature: "recordPassportEvent"
+  ): TypedContractMethod<
+    [
+      passportId: BytesLike,
+      eventType: BytesLike,
+      actor: AddressLike,
+      locationCode: string,
+      eventTimestamp: BigNumberish,
+      payloadHash: string
+    ],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
     nameOrSignature: "setPassportStatus"
   ): TypedContractMethod<
     [passportId: BytesLike, active: boolean],
     [void],
     "nonpayable"
   >;
+  getFunction(
+    nameOrSignature: "transferPassportOwnership"
+  ): TypedContractMethod<
+    [passportId: BytesLike, newOwner: AddressLike],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "updatePassportMetadata"
+  ): TypedContractMethod<
+    [passportId: BytesLike, fieldMask: BytesLike, metadataHash: string],
+    [void],
+    "nonpayable"
+  >;
 
+  getEvent(
+    key: "PassportCertificationAttached"
+  ): TypedContractEvent<
+    PassportCertificationAttachedEvent.InputTuple,
+    PassportCertificationAttachedEvent.OutputTuple,
+    PassportCertificationAttachedEvent.OutputObject
+  >;
   getEvent(
     key: "PassportCreated"
   ): TypedContractEvent<
     PassportCreatedEvent.InputTuple,
     PassportCreatedEvent.OutputTuple,
     PassportCreatedEvent.OutputObject
+  >;
+  getEvent(
+    key: "PassportDeactivated"
+  ): TypedContractEvent<
+    PassportDeactivatedEvent.InputTuple,
+    PassportDeactivatedEvent.OutputTuple,
+    PassportDeactivatedEvent.OutputObject
+  >;
+  getEvent(
+    key: "PassportEventRecorded"
+  ): TypedContractEvent<
+    PassportEventRecordedEvent.InputTuple,
+    PassportEventRecordedEvent.OutputTuple,
+    PassportEventRecordedEvent.OutputObject
+  >;
+  getEvent(
+    key: "PassportMetadataUpdated"
+  ): TypedContractEvent<
+    PassportMetadataUpdatedEvent.InputTuple,
+    PassportMetadataUpdatedEvent.OutputTuple,
+    PassportMetadataUpdatedEvent.OutputObject
+  >;
+  getEvent(
+    key: "PassportOwnershipTransferred"
+  ): TypedContractEvent<
+    PassportOwnershipTransferredEvent.InputTuple,
+    PassportOwnershipTransferredEvent.OutputTuple,
+    PassportOwnershipTransferredEvent.OutputObject
   >;
   getEvent(
     key: "PassportStatusUpdated"
@@ -223,7 +572,18 @@ export interface DPP extends BaseContract {
   >;
 
   filters: {
-    "PassportCreated(bytes32,string,string,string)": TypedContractEvent<
+    "PassportCertificationAttached(bytes32,bytes32,address,string,uint256,uint256)": TypedContractEvent<
+      PassportCertificationAttachedEvent.InputTuple,
+      PassportCertificationAttachedEvent.OutputTuple,
+      PassportCertificationAttachedEvent.OutputObject
+    >;
+    PassportCertificationAttached: TypedContractEvent<
+      PassportCertificationAttachedEvent.InputTuple,
+      PassportCertificationAttachedEvent.OutputTuple,
+      PassportCertificationAttachedEvent.OutputObject
+    >;
+
+    "PassportCreated(bytes32,string,address,string,string,uint256)": TypedContractEvent<
       PassportCreatedEvent.InputTuple,
       PassportCreatedEvent.OutputTuple,
       PassportCreatedEvent.OutputObject
@@ -234,7 +594,51 @@ export interface DPP extends BaseContract {
       PassportCreatedEvent.OutputObject
     >;
 
-    "PassportStatusUpdated(bytes32,bool)": TypedContractEvent<
+    "PassportDeactivated(bytes32,bytes32,address,uint256)": TypedContractEvent<
+      PassportDeactivatedEvent.InputTuple,
+      PassportDeactivatedEvent.OutputTuple,
+      PassportDeactivatedEvent.OutputObject
+    >;
+    PassportDeactivated: TypedContractEvent<
+      PassportDeactivatedEvent.InputTuple,
+      PassportDeactivatedEvent.OutputTuple,
+      PassportDeactivatedEvent.OutputObject
+    >;
+
+    "PassportEventRecorded(bytes32,bytes32,address,string,uint256,string)": TypedContractEvent<
+      PassportEventRecordedEvent.InputTuple,
+      PassportEventRecordedEvent.OutputTuple,
+      PassportEventRecordedEvent.OutputObject
+    >;
+    PassportEventRecorded: TypedContractEvent<
+      PassportEventRecordedEvent.InputTuple,
+      PassportEventRecordedEvent.OutputTuple,
+      PassportEventRecordedEvent.OutputObject
+    >;
+
+    "PassportMetadataUpdated(bytes32,bytes32,address,string,uint256)": TypedContractEvent<
+      PassportMetadataUpdatedEvent.InputTuple,
+      PassportMetadataUpdatedEvent.OutputTuple,
+      PassportMetadataUpdatedEvent.OutputObject
+    >;
+    PassportMetadataUpdated: TypedContractEvent<
+      PassportMetadataUpdatedEvent.InputTuple,
+      PassportMetadataUpdatedEvent.OutputTuple,
+      PassportMetadataUpdatedEvent.OutputObject
+    >;
+
+    "PassportOwnershipTransferred(bytes32,address,address,uint256)": TypedContractEvent<
+      PassportOwnershipTransferredEvent.InputTuple,
+      PassportOwnershipTransferredEvent.OutputTuple,
+      PassportOwnershipTransferredEvent.OutputObject
+    >;
+    PassportOwnershipTransferred: TypedContractEvent<
+      PassportOwnershipTransferredEvent.InputTuple,
+      PassportOwnershipTransferredEvent.OutputTuple,
+      PassportOwnershipTransferredEvent.OutputObject
+    >;
+
+    "PassportStatusUpdated(bytes32,address,bool,bool,uint256)": TypedContractEvent<
       PassportStatusUpdatedEvent.InputTuple,
       PassportStatusUpdatedEvent.OutputTuple,
       PassportStatusUpdatedEvent.OutputObject

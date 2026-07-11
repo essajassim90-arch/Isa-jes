@@ -27,24 +27,41 @@ export interface MarketplaceInterface extends Interface {
   getFunction(
     nameOrSignature:
       | "acceptOffer"
+      | "adjustListingQuantity"
       | "cancelListing"
       | "createListing"
+      | "expireOffer"
       | "listings"
       | "offers"
       | "placeOffer"
+      | "rejectOffer"
+      | "setListingStatus"
+      | "updateListing"
+      | "updateOffer"
   ): FunctionFragment;
 
   getEvent(
     nameOrSignatureOrTopic:
       | "ListingCancelled"
       | "ListingCreated"
+      | "ListingQuantityAdjusted"
+      | "ListingStatusChanged"
+      | "ListingUpdated"
       | "OfferAccepted"
+      | "OfferExpired"
       | "OfferPlaced"
+      | "OfferRefunded"
+      | "OfferRejected"
+      | "OfferUpdated"
   ): EventFragment;
 
   encodeFunctionData(
     functionFragment: "acceptOffer",
     values: [BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "adjustListingQuantity",
+    values: [BytesLike, BigNumberish, BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "cancelListing",
@@ -54,15 +71,39 @@ export interface MarketplaceInterface extends Interface {
     functionFragment: "createListing",
     values: [BytesLike, BytesLike, BigNumberish, BigNumberish]
   ): string;
+  encodeFunctionData(
+    functionFragment: "expireOffer",
+    values: [BytesLike]
+  ): string;
   encodeFunctionData(functionFragment: "listings", values: [BytesLike]): string;
   encodeFunctionData(functionFragment: "offers", values: [BytesLike]): string;
   encodeFunctionData(
     functionFragment: "placeOffer",
     values: [BytesLike, BytesLike, BigNumberish]
   ): string;
+  encodeFunctionData(
+    functionFragment: "rejectOffer",
+    values: [BytesLike, BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setListingStatus",
+    values: [BytesLike, BigNumberish, BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "updateListing",
+    values: [BytesLike, BigNumberish, BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "updateOffer",
+    values: [BytesLike, BigNumberish, BytesLike]
+  ): string;
 
   decodeFunctionResult(
     functionFragment: "acceptOffer",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "adjustListingQuantity",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -73,16 +114,49 @@ export interface MarketplaceInterface extends Interface {
     functionFragment: "createListing",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "expireOffer",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "listings", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "offers", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "placeOffer", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "rejectOffer",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setListingStatus",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "updateListing",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "updateOffer",
+    data: BytesLike
+  ): Result;
 }
 
 export namespace ListingCancelledEvent {
-  export type InputTuple = [listingId: BytesLike];
-  export type OutputTuple = [listingId: string];
+  export type InputTuple = [
+    listingId: BytesLike,
+    seller: AddressLike,
+    reasonCode: BytesLike,
+    cancelledAt: BigNumberish
+  ];
+  export type OutputTuple = [
+    listingId: string,
+    seller: string,
+    reasonCode: string,
+    cancelledAt: bigint
+  ];
   export interface OutputObject {
     listingId: string;
+    seller: string;
+    reasonCode: string;
+    cancelledAt: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -96,14 +170,16 @@ export namespace ListingCreatedEvent {
     seller: AddressLike,
     passportId: BytesLike,
     unitPrice: BigNumberish,
-    quantity: BigNumberish
+    quantity: BigNumberish,
+    createdAt: BigNumberish
   ];
   export type OutputTuple = [
     listingId: string,
     seller: string,
     passportId: string,
     unitPrice: bigint,
-    quantity: bigint
+    quantity: bigint,
+    createdAt: bigint
   ];
   export interface OutputObject {
     listingId: string;
@@ -111,6 +187,100 @@ export namespace ListingCreatedEvent {
     passportId: string;
     unitPrice: bigint;
     quantity: bigint;
+    createdAt: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace ListingQuantityAdjustedEvent {
+  export type InputTuple = [
+    listingId: BytesLike,
+    previousQuantity: BigNumberish,
+    newQuantity: BigNumberish,
+    reasonCode: BytesLike,
+    updatedBy: AddressLike,
+    updatedAt: BigNumberish
+  ];
+  export type OutputTuple = [
+    listingId: string,
+    previousQuantity: bigint,
+    newQuantity: bigint,
+    reasonCode: string,
+    updatedBy: string,
+    updatedAt: bigint
+  ];
+  export interface OutputObject {
+    listingId: string;
+    previousQuantity: bigint;
+    newQuantity: bigint;
+    reasonCode: string;
+    updatedBy: string;
+    updatedAt: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace ListingStatusChangedEvent {
+  export type InputTuple = [
+    listingId: BytesLike,
+    previousStatus: BigNumberish,
+    newStatus: BigNumberish,
+    changedBy: AddressLike,
+    changedAt: BigNumberish
+  ];
+  export type OutputTuple = [
+    listingId: string,
+    previousStatus: bigint,
+    newStatus: bigint,
+    changedBy: string,
+    changedAt: bigint
+  ];
+  export interface OutputObject {
+    listingId: string;
+    previousStatus: bigint;
+    newStatus: bigint;
+    changedBy: string;
+    changedAt: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace ListingUpdatedEvent {
+  export type InputTuple = [
+    listingId: BytesLike,
+    seller: AddressLike,
+    fieldMask: BytesLike,
+    unitPrice: BigNumberish,
+    totalQuantity: BigNumberish,
+    availableQuantity: BigNumberish,
+    updatedAt: BigNumberish
+  ];
+  export type OutputTuple = [
+    listingId: string,
+    seller: string,
+    fieldMask: string,
+    unitPrice: bigint,
+    totalQuantity: bigint,
+    availableQuantity: bigint,
+    updatedAt: bigint
+  ];
+  export interface OutputObject {
+    listingId: string;
+    seller: string;
+    fieldMask: string;
+    unitPrice: bigint;
+    totalQuantity: bigint;
+    availableQuantity: bigint;
+    updatedAt: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -124,14 +294,16 @@ export namespace OfferAcceptedEvent {
     listingId: BytesLike,
     seller: AddressLike,
     buyer: AddressLike,
-    totalPrice: BigNumberish
+    totalPrice: BigNumberish,
+    acceptedAt: BigNumberish
   ];
   export type OutputTuple = [
     offerId: string,
     listingId: string,
     seller: string,
     buyer: string,
-    totalPrice: bigint
+    totalPrice: bigint,
+    acceptedAt: bigint
   ];
   export interface OutputObject {
     offerId: string;
@@ -139,6 +311,32 @@ export namespace OfferAcceptedEvent {
     seller: string;
     buyer: string;
     totalPrice: bigint;
+    acceptedAt: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace OfferExpiredEvent {
+  export type InputTuple = [
+    offerId: BytesLike,
+    listingId: BytesLike,
+    expiredBy: AddressLike,
+    expiredAt: BigNumberish
+  ];
+  export type OutputTuple = [
+    offerId: string,
+    listingId: string,
+    expiredBy: string,
+    expiredAt: bigint
+  ];
+  export interface OutputObject {
+    offerId: string;
+    listingId: string;
+    expiredBy: string;
+    expiredAt: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -152,14 +350,16 @@ export namespace OfferPlacedEvent {
     listingId: BytesLike,
     buyer: AddressLike,
     quantity: BigNumberish,
-    totalPrice: BigNumberish
+    totalPrice: BigNumberish,
+    placedAt: BigNumberish
   ];
   export type OutputTuple = [
     offerId: string,
     listingId: string,
     buyer: string,
     quantity: bigint,
-    totalPrice: bigint
+    totalPrice: bigint,
+    placedAt: bigint
   ];
   export interface OutputObject {
     offerId: string;
@@ -167,6 +367,97 @@ export namespace OfferPlacedEvent {
     buyer: string;
     quantity: bigint;
     totalPrice: bigint;
+    placedAt: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace OfferRefundedEvent {
+  export type InputTuple = [
+    offerId: BytesLike,
+    listingId: BytesLike,
+    buyer: AddressLike,
+    amount: BigNumberish,
+    refundedAt: BigNumberish
+  ];
+  export type OutputTuple = [
+    offerId: string,
+    listingId: string,
+    buyer: string,
+    amount: bigint,
+    refundedAt: bigint
+  ];
+  export interface OutputObject {
+    offerId: string;
+    listingId: string;
+    buyer: string;
+    amount: bigint;
+    refundedAt: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace OfferRejectedEvent {
+  export type InputTuple = [
+    offerId: BytesLike,
+    listingId: BytesLike,
+    seller: AddressLike,
+    reasonCode: BytesLike,
+    rejectedAt: BigNumberish
+  ];
+  export type OutputTuple = [
+    offerId: string,
+    listingId: string,
+    seller: string,
+    reasonCode: string,
+    rejectedAt: bigint
+  ];
+  export interface OutputObject {
+    offerId: string;
+    listingId: string;
+    seller: string;
+    reasonCode: string;
+    rejectedAt: bigint;
+  }
+  export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
+  export type Filter = TypedDeferredTopicFilter<Event>;
+  export type Log = TypedEventLog<Event>;
+  export type LogDescription = TypedLogDescription<Event>;
+}
+
+export namespace OfferUpdatedEvent {
+  export type InputTuple = [
+    offerId: BytesLike,
+    listingId: BytesLike,
+    buyer: AddressLike,
+    fieldMask: BytesLike,
+    quantity: BigNumberish,
+    totalPrice: BigNumberish,
+    updatedAt: BigNumberish
+  ];
+  export type OutputTuple = [
+    offerId: string,
+    listingId: string,
+    buyer: string,
+    fieldMask: string,
+    quantity: bigint,
+    totalPrice: bigint,
+    updatedAt: bigint
+  ];
+  export interface OutputObject {
+    offerId: string;
+    listingId: string;
+    buyer: string;
+    fieldMask: string;
+    quantity: bigint;
+    totalPrice: bigint;
+    updatedAt: bigint;
   }
   export type Event = TypedContractEvent<InputTuple, OutputTuple, OutputObject>;
   export type Filter = TypedDeferredTopicFilter<Event>;
@@ -219,6 +510,16 @@ export interface Marketplace extends BaseContract {
 
   acceptOffer: TypedContractMethod<[offerId: BytesLike], [void], "nonpayable">;
 
+  adjustListingQuantity: TypedContractMethod<
+    [
+      listingId: BytesLike,
+      newTotalQuantity: BigNumberish,
+      reasonCode: BytesLike
+    ],
+    [void],
+    "nonpayable"
+  >;
+
   cancelListing: TypedContractMethod<
     [listingId: BytesLike],
     [void],
@@ -235,6 +536,8 @@ export interface Marketplace extends BaseContract {
     [void],
     "nonpayable"
   >;
+
+  expireOffer: TypedContractMethod<[offerId: BytesLike], [void], "nonpayable">;
 
   listings: TypedContractMethod<
     [arg0: BytesLike],
@@ -271,6 +574,30 @@ export interface Marketplace extends BaseContract {
     "payable"
   >;
 
+  rejectOffer: TypedContractMethod<
+    [offerId: BytesLike, reasonCode: BytesLike],
+    [void],
+    "nonpayable"
+  >;
+
+  setListingStatus: TypedContractMethod<
+    [listingId: BytesLike, newStatus: BigNumberish, reasonCode: BytesLike],
+    [void],
+    "nonpayable"
+  >;
+
+  updateListing: TypedContractMethod<
+    [listingId: BytesLike, unitPrice: BigNumberish, fieldMask: BytesLike],
+    [void],
+    "nonpayable"
+  >;
+
+  updateOffer: TypedContractMethod<
+    [offerId: BytesLike, newQuantity: BigNumberish, fieldMask: BytesLike],
+    [void],
+    "payable"
+  >;
+
   getFunction<T extends ContractMethod = ContractMethod>(
     key: string | FunctionFragment
   ): T;
@@ -278,6 +605,17 @@ export interface Marketplace extends BaseContract {
   getFunction(
     nameOrSignature: "acceptOffer"
   ): TypedContractMethod<[offerId: BytesLike], [void], "nonpayable">;
+  getFunction(
+    nameOrSignature: "adjustListingQuantity"
+  ): TypedContractMethod<
+    [
+      listingId: BytesLike,
+      newTotalQuantity: BigNumberish,
+      reasonCode: BytesLike
+    ],
+    [void],
+    "nonpayable"
+  >;
   getFunction(
     nameOrSignature: "cancelListing"
   ): TypedContractMethod<[listingId: BytesLike], [void], "nonpayable">;
@@ -293,6 +631,9 @@ export interface Marketplace extends BaseContract {
     [void],
     "nonpayable"
   >;
+  getFunction(
+    nameOrSignature: "expireOffer"
+  ): TypedContractMethod<[offerId: BytesLike], [void], "nonpayable">;
   getFunction(
     nameOrSignature: "listings"
   ): TypedContractMethod<
@@ -331,6 +672,34 @@ export interface Marketplace extends BaseContract {
     [void],
     "payable"
   >;
+  getFunction(
+    nameOrSignature: "rejectOffer"
+  ): TypedContractMethod<
+    [offerId: BytesLike, reasonCode: BytesLike],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "setListingStatus"
+  ): TypedContractMethod<
+    [listingId: BytesLike, newStatus: BigNumberish, reasonCode: BytesLike],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "updateListing"
+  ): TypedContractMethod<
+    [listingId: BytesLike, unitPrice: BigNumberish, fieldMask: BytesLike],
+    [void],
+    "nonpayable"
+  >;
+  getFunction(
+    nameOrSignature: "updateOffer"
+  ): TypedContractMethod<
+    [offerId: BytesLike, newQuantity: BigNumberish, fieldMask: BytesLike],
+    [void],
+    "payable"
+  >;
 
   getEvent(
     key: "ListingCancelled"
@@ -347,11 +716,39 @@ export interface Marketplace extends BaseContract {
     ListingCreatedEvent.OutputObject
   >;
   getEvent(
+    key: "ListingQuantityAdjusted"
+  ): TypedContractEvent<
+    ListingQuantityAdjustedEvent.InputTuple,
+    ListingQuantityAdjustedEvent.OutputTuple,
+    ListingQuantityAdjustedEvent.OutputObject
+  >;
+  getEvent(
+    key: "ListingStatusChanged"
+  ): TypedContractEvent<
+    ListingStatusChangedEvent.InputTuple,
+    ListingStatusChangedEvent.OutputTuple,
+    ListingStatusChangedEvent.OutputObject
+  >;
+  getEvent(
+    key: "ListingUpdated"
+  ): TypedContractEvent<
+    ListingUpdatedEvent.InputTuple,
+    ListingUpdatedEvent.OutputTuple,
+    ListingUpdatedEvent.OutputObject
+  >;
+  getEvent(
     key: "OfferAccepted"
   ): TypedContractEvent<
     OfferAcceptedEvent.InputTuple,
     OfferAcceptedEvent.OutputTuple,
     OfferAcceptedEvent.OutputObject
+  >;
+  getEvent(
+    key: "OfferExpired"
+  ): TypedContractEvent<
+    OfferExpiredEvent.InputTuple,
+    OfferExpiredEvent.OutputTuple,
+    OfferExpiredEvent.OutputObject
   >;
   getEvent(
     key: "OfferPlaced"
@@ -360,9 +757,30 @@ export interface Marketplace extends BaseContract {
     OfferPlacedEvent.OutputTuple,
     OfferPlacedEvent.OutputObject
   >;
+  getEvent(
+    key: "OfferRefunded"
+  ): TypedContractEvent<
+    OfferRefundedEvent.InputTuple,
+    OfferRefundedEvent.OutputTuple,
+    OfferRefundedEvent.OutputObject
+  >;
+  getEvent(
+    key: "OfferRejected"
+  ): TypedContractEvent<
+    OfferRejectedEvent.InputTuple,
+    OfferRejectedEvent.OutputTuple,
+    OfferRejectedEvent.OutputObject
+  >;
+  getEvent(
+    key: "OfferUpdated"
+  ): TypedContractEvent<
+    OfferUpdatedEvent.InputTuple,
+    OfferUpdatedEvent.OutputTuple,
+    OfferUpdatedEvent.OutputObject
+  >;
 
   filters: {
-    "ListingCancelled(bytes32)": TypedContractEvent<
+    "ListingCancelled(bytes32,address,bytes32,uint256)": TypedContractEvent<
       ListingCancelledEvent.InputTuple,
       ListingCancelledEvent.OutputTuple,
       ListingCancelledEvent.OutputObject
@@ -373,7 +791,7 @@ export interface Marketplace extends BaseContract {
       ListingCancelledEvent.OutputObject
     >;
 
-    "ListingCreated(bytes32,address,bytes32,uint256,uint256)": TypedContractEvent<
+    "ListingCreated(bytes32,address,bytes32,uint256,uint256,uint256)": TypedContractEvent<
       ListingCreatedEvent.InputTuple,
       ListingCreatedEvent.OutputTuple,
       ListingCreatedEvent.OutputObject
@@ -384,7 +802,40 @@ export interface Marketplace extends BaseContract {
       ListingCreatedEvent.OutputObject
     >;
 
-    "OfferAccepted(bytes32,bytes32,address,address,uint256)": TypedContractEvent<
+    "ListingQuantityAdjusted(bytes32,uint256,uint256,bytes32,address,uint256)": TypedContractEvent<
+      ListingQuantityAdjustedEvent.InputTuple,
+      ListingQuantityAdjustedEvent.OutputTuple,
+      ListingQuantityAdjustedEvent.OutputObject
+    >;
+    ListingQuantityAdjusted: TypedContractEvent<
+      ListingQuantityAdjustedEvent.InputTuple,
+      ListingQuantityAdjustedEvent.OutputTuple,
+      ListingQuantityAdjustedEvent.OutputObject
+    >;
+
+    "ListingStatusChanged(bytes32,uint8,uint8,address,uint256)": TypedContractEvent<
+      ListingStatusChangedEvent.InputTuple,
+      ListingStatusChangedEvent.OutputTuple,
+      ListingStatusChangedEvent.OutputObject
+    >;
+    ListingStatusChanged: TypedContractEvent<
+      ListingStatusChangedEvent.InputTuple,
+      ListingStatusChangedEvent.OutputTuple,
+      ListingStatusChangedEvent.OutputObject
+    >;
+
+    "ListingUpdated(bytes32,address,bytes32,uint256,uint256,uint256,uint256)": TypedContractEvent<
+      ListingUpdatedEvent.InputTuple,
+      ListingUpdatedEvent.OutputTuple,
+      ListingUpdatedEvent.OutputObject
+    >;
+    ListingUpdated: TypedContractEvent<
+      ListingUpdatedEvent.InputTuple,
+      ListingUpdatedEvent.OutputTuple,
+      ListingUpdatedEvent.OutputObject
+    >;
+
+    "OfferAccepted(bytes32,bytes32,address,address,uint256,uint256)": TypedContractEvent<
       OfferAcceptedEvent.InputTuple,
       OfferAcceptedEvent.OutputTuple,
       OfferAcceptedEvent.OutputObject
@@ -395,7 +846,18 @@ export interface Marketplace extends BaseContract {
       OfferAcceptedEvent.OutputObject
     >;
 
-    "OfferPlaced(bytes32,bytes32,address,uint256,uint256)": TypedContractEvent<
+    "OfferExpired(bytes32,bytes32,address,uint256)": TypedContractEvent<
+      OfferExpiredEvent.InputTuple,
+      OfferExpiredEvent.OutputTuple,
+      OfferExpiredEvent.OutputObject
+    >;
+    OfferExpired: TypedContractEvent<
+      OfferExpiredEvent.InputTuple,
+      OfferExpiredEvent.OutputTuple,
+      OfferExpiredEvent.OutputObject
+    >;
+
+    "OfferPlaced(bytes32,bytes32,address,uint256,uint256,uint256)": TypedContractEvent<
       OfferPlacedEvent.InputTuple,
       OfferPlacedEvent.OutputTuple,
       OfferPlacedEvent.OutputObject
@@ -404,6 +866,39 @@ export interface Marketplace extends BaseContract {
       OfferPlacedEvent.InputTuple,
       OfferPlacedEvent.OutputTuple,
       OfferPlacedEvent.OutputObject
+    >;
+
+    "OfferRefunded(bytes32,bytes32,address,uint256,uint256)": TypedContractEvent<
+      OfferRefundedEvent.InputTuple,
+      OfferRefundedEvent.OutputTuple,
+      OfferRefundedEvent.OutputObject
+    >;
+    OfferRefunded: TypedContractEvent<
+      OfferRefundedEvent.InputTuple,
+      OfferRefundedEvent.OutputTuple,
+      OfferRefundedEvent.OutputObject
+    >;
+
+    "OfferRejected(bytes32,bytes32,address,bytes32,uint256)": TypedContractEvent<
+      OfferRejectedEvent.InputTuple,
+      OfferRejectedEvent.OutputTuple,
+      OfferRejectedEvent.OutputObject
+    >;
+    OfferRejected: TypedContractEvent<
+      OfferRejectedEvent.InputTuple,
+      OfferRejectedEvent.OutputTuple,
+      OfferRejectedEvent.OutputObject
+    >;
+
+    "OfferUpdated(bytes32,bytes32,address,bytes32,uint256,uint256,uint256)": TypedContractEvent<
+      OfferUpdatedEvent.InputTuple,
+      OfferUpdatedEvent.OutputTuple,
+      OfferUpdatedEvent.OutputObject
+    >;
+    OfferUpdated: TypedContractEvent<
+      OfferUpdatedEvent.InputTuple,
+      OfferUpdatedEvent.OutputTuple,
+      OfferUpdatedEvent.OutputObject
     >;
   };
 }
