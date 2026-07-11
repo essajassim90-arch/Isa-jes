@@ -71,13 +71,14 @@ Real-time carbon footprint tracking, predictive risk analytics, and audit-ready 
 Isa-jes/
 ├── apps/
 │   ├── web/                  ← React + Vite frontend (main demo dashboard)
-│   └── api/                  ← Node.js + TypeScript REST API gateway
+│   ├── api/                  ← Node.js + TypeScript REST API gateway
+│   └── indexer/              ← VeChainThor event indexer + SQLite projections
 ├── packages/
 │   ├── contracts/            ← VeChainThor Solidity contracts (Hardhat)
 │   ├── iot-simulation/       ← Sensor data simulator (Node.js + TypeScript)
 │   └── shared/               ← Shared TypeScript types
 ├── docs/                     ← Architecture diagrams, guides, API specs
-├── .github/workflows/        ← CI/CD pipelines (deploy to GitHub Pages)
+├── .github/workflows/        ← CI/CD pipelines
 ├── .env.example              ← Environment variable template
 └── README.md                 ← This file
 ```
@@ -133,6 +134,11 @@ npm run type-check                               # Type-check frontend
 VITE_WC_PROJECT_ID=dummy npm run build           # Production build
 npm run compile --workspace=@nama/contracts      # Compile Solidity contracts
 npm run test --workspace=@nama/contracts         # Run contract tests
+npm run lint --workspace=@nama/api               # Lint API
+npx tsc --project apps/api/tsconfig.json         # Type-check API
+npm run lint --workspace=@nama/indexer           # Lint indexer
+npm run type-check --workspace=@nama/indexer     # Type-check indexer
+npm run build --workspace=@nama/indexer          # Build indexer
 npm run build --workspace=@nama/iot-simulation   # Build IoT simulator
 ```
 
@@ -169,6 +175,15 @@ cp .env.example .env.local
 | `VITE_WC_PROJECT_ID` | **Required for build** | WalletConnect Project ID. Get one at [cloud.walletconnect.com](https://cloud.walletconnect.com). |
 | `VITE_API_URL` | Optional | Base URL of the NAMA API (e.g. `http://localhost:3001`). If omitted in a production build, the app enters demo mode with local seeded data. |
 | `JWT_SECRET` | Required for API | Secret key for JWT authentication in `apps/api`. Must be set via environment in non-development environments. |
+| `DEPLOYER_PRIVATE_KEY` | Required for contract deployment | Private key used only for VeChainThor Testnet deployment from `packages/contracts`. |
+| `DPP_CONTRACT_ADDRESS` / `MARKETPLACE_CONTRACT_ADDRESS` | Required for indexer runtime | Deployed contract addresses consumed by `apps/indexer` without rebuilding. |
+| `PROJECTION_DB_PATH` | Required for projection-backed API deployment | Shared SQLite path read by `apps/api` and written by `apps/indexer`. |
+
+---
+
+## Testnet deployment runbook
+
+For the deployment architecture, co-location strategy, hosting recommendations, secret handling, and contract address propagation flow, see [`docs/TESTNET_DEPLOYMENT_RUNBOOK.md`](docs/TESTNET_DEPLOYMENT_RUNBOOK.md).
 
 ---
 
@@ -283,5 +298,4 @@ Description:  NAMA is a global trust infrastructure for sustainable food systems
 GitHub:       https://github.com/essajassim90-arch
 VeWorld:      [TO BE PROVIDED LATER]
 ```
-
 
