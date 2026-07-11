@@ -27,8 +27,29 @@ function serialize(value: unknown): unknown {
   return value;
 }
 
+function readOccurredAtFromPayload(payload: Record<string, unknown>): string | null {
+  const timestampFields = ['createdAt', 'updatedAt', 'eventTimestamp', 'placedAt', 'acceptedAt'];
+
+  for (const field of timestampFields) {
+    const value = payload[field];
+    if (typeof value !== 'string') {
+      continue;
+    }
+
+    const timestamp = Number(value);
+    if (!Number.isFinite(timestamp)) {
+      continue;
+    }
+
+    return new Date(timestamp * 1000).toISOString();
+  }
+
+  return null;
+}
+
 export function toNormalizedEnvelope(log: RawEventLog, decoded: DecodedEvent): NormalizedEventEnvelope {
-  const occurredAt = new Date().toISOString();
+  const payload = serialize(buildPayload(decoded)) as Record<string, unknown>;
+  const occurredAt = readOccurredAtFromPayload(payload) ?? new Date().toISOString();
   const indexedAt = occurredAt;
 
   return {
@@ -47,7 +68,7 @@ export function toNormalizedEnvelope(log: RawEventLog, decoded: DecodedEvent): N
       logIndex: log.logIndex
     },
     occurredAt,
-    payload: serialize(buildPayload(decoded)) as Record<string, unknown>,
+    payload,
     metadata: {
       indexedAt
     }
