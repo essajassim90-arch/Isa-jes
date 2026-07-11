@@ -12,7 +12,7 @@
 
 The global food supply chain is plagued by critical inefficiencies: data fragmentation, opaque logistics, disproportionate power dynamics, and staggering food waste. NAMA is a next-generation, blockchain-enabled ecosystem designed to fundamentally restructure global food systems.
 
-Built on the highly scalable and enterprise-grade **VeChainThor** blockchain, NAMA synergizes Artificial Intelligence (AI), Internet of Things (IoT), and Digital Product Passports (DPP) to create an immutable, transparent, and circular food economy. NAMA empowers stakeholders across the entire value chain — from smallholder farmers to multinational enterprises — by ensuring verifiable food traceability, democratizing B2B procurement, and monetizing sustainable practices.
+Built on the highly scalable and enterprise-grade **VeChainThor** blockchain, NAMA synergizes Artificial Intelligence (AI), Internet of Things (IoT), and Digital Product Passports (DPP) to create an immutable, transparent, and circular food economy. NAMA empowers stakeholders across the entire value chain — from smallholder farmers to multinational enterprises — by ensuring verifiable food traceability, democratizing B2B procurement, and monetizing sustainable practices. The long-term vision extends this trust infrastructure to cross-border trade, aspiring to enable blockchain-verified customs readiness, decentralized freight markets, and sustainability-linked international trade validation.
 
 ---
 
@@ -228,11 +228,68 @@ We invite the global developer community, sustainability researchers, food indus
 
 ---
 
-## 8. Conclusion
+## 8. Future Vision: Global Trade & Customs Interoperability
+
+> ⚠️ **This section describes a future strategic direction for the NAMA Protocol. The capabilities outlined below are not currently implemented and do not exist in the present codebase or deployment. This is an aspirational roadmap vision aligned with NAMA's long-term mission.**
+
+As the NAMA Protocol matures beyond domestic B2B procurement, a critical next frontier emerges: extending the trust infrastructure to support **cross-border food trade** at scale. Global food supply chains remain burdened by opaque logistics intermediaries, fragmented customs documentation, and the absence of any credible mechanism linking sustainability performance to trade terms.
+
+NAMA's long-term vision addresses this directly through four future strategic pillars.
+
+### 8.1 FTZ Green Lane — Blockchain-Verified Customs Readiness
+
+Free Trade Zone (FTZ) corridors represent high-velocity entry points for international food trade, yet customs verification remains largely manual, paper-based, and prone to delay. NAMA envisions a future state in which a verified DPP — anchored on VeChainThor and enriched with IoT cold-chain telemetry — acts as a cryptographic proof of shipment compliance, enabling expedited processing through an FTZ Green Lane pathway.
+
+In this future model:
+- A NAMA-certified shipment would carry an immutable, verifiable provenance record from origin to border crossing.
+- IoT-validated transit conditions (temperature, humidity, route integrity) would substantiate compliance with phytosanitary and food safety requirements.
+- Customs authorities would be able to query the DPP record directly, reducing the need for physical document verification.
+- Digital trade documentation would replace paper-based certificates of origin and health certification where regulatory frameworks permit.
+
+### 8.2 Decentralized Freight Marketplace
+
+A structural weakness in current global food logistics is the concentration of freight capacity among a small number of dominant operators. Independent logistics providers — particularly those serving last-mile and regional routes in emerging markets — are excluded from competitive procurement processes due to lack of verifiable track records.
+
+NAMA's future Decentralized Freight Marketplace would:
+- Enable open, competitive freight bidding directly linked to verified shipment qualification records.
+- Allow independent carriers to build on-chain logistics reputations based on historical delivery performance, IoT compliance, and DPP event histories.
+- Give producers and buyers transparent access to a broad carrier network rather than relying on incumbent intermediaries.
+- Democratize logistics participation, particularly for smallholder and SME supply chains in sub-Saharan Africa, South Asia, and Southeast Asia.
+
+This aligns directly with UN SDG 9 (Industry, Innovation and Infrastructure) and SDG 17 (Partnerships for the Goals).
+
+### 8.3 Cross-Border Trade Layer
+
+For NAMA's DPP standard to operate across jurisdictions, it must interoperate with the data requirements of multiple regulatory regimes. The future Cross-Border Trade Layer envisions:
+
+- **Customs Interoperability** — Standardised DPP data schemas aligned with World Customs Organization (WCO) frameworks and ISO trade documentation standards.
+- **Shipment Provenance Verification** — On-chain records serving as internationally recognised proof of origin and chain of custody.
+- **Sustainability-Linked Trade Validation** — Verified ESG telemetry and circular economy diversion records forming the evidential basis for preferential trade treatment under sustainability-linked trade agreements.
+- **Multi-Jurisdiction Compliance** — A modular compliance layer allowing NAMA DPPs to be extended with jurisdiction-specific certification fields without modifying the core contract architecture.
+
+### 8.4 Strategic Vision
+
+The combined effect of these future capabilities would represent a shift in the architecture of international food trade:
+
+| Today's Reality | NAMA Future Vision |
+|---|---|
+| Paper-based customs documentation | Cryptographically verified DPP customs records |
+| Opaque logistics intermediary networks | Transparent, competitive decentralized freight marketplace |
+| Disconnected sustainability claims | On-chain ESG proof directly linked to trade terms |
+| Centralised customs processing | Distributed, DPP-driven customs pre-clearance signals |
+| Fragmented cross-border data | Interoperable DPP standard across trade jurisdictions |
+
+This vision aligns with **UN SDG 9** (resilient infrastructure and inclusive industrialization), **UN SDG 12** (responsible consumption and production), and **UN SDG 17** (partnerships for sustainable development goals) — positioning NAMA as infrastructure-layer technology for the next generation of international food trade.
+
+---
+
+## 9. Conclusion
 
 The transition to a transparent, sustainable, and secure global food system is no longer optional — it is an economic and ecological imperative. By converging the immutability of VeChainThor with advanced AI and IoT, NAMA provides the definitive open-source infrastructure for the future of food.
 
 NAMA transforms supply chains from linear cost centers into circular, value-generating ecosystems — ensuring that the world's most vital resource is protected, optimized, and fairly traded.
+
+Looking further ahead, the aspirational vision described in Section 8 positions NAMA as foundational infrastructure for international food trade — reducing dependence on centralized intermediaries, extending verifiable provenance to cross-border transactions, and aligning global trade incentives with sustainable food systems.
 
 ---
 

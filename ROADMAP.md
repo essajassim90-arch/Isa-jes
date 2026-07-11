@@ -12,6 +12,7 @@ This roadmap outlines the phased rollout of the NAMA ecosystem, progressing from
 | **Phase 2** | Months 4–6 | MVP & Closed Pilot | Live B2B Transactions & Circular Waste Tracking |
 | **Phase 3** | Months 7–9 | AI Analytics & Expansion | ESG Dashboard & Legacy ERP Integration |
 | **Phase 4** | Months 10–12+ | Global Scaling | Mainnet Launch & Cross-Border Interoperability |
+| **Phase 5** | Future Vision | Global Trade & Customs Interoperability | FTZ Green Lane, Decentralized Freight Marketplace & Cross-Border Trade Layer |
 
 ---
 
@@ -145,15 +146,54 @@ Achieve full decentralization, cross-border interoperability, and aggressive mar
 
 ---
 
+---
+
+## Phase 5 — Global Trade & Customs Interoperability *(Future Vision)*
+**Timeline: Beyond Month 12 — Aspirational Strategic Phase**
+
+> ⚠️ **This phase represents a future strategic vision. None of the capabilities described below are currently implemented. No new smart contracts, deployments, or integrations are included in the current codebase. All items below are roadmap-oriented and subject to revision.**
+
+### Focus
+Extend the NAMA trust infrastructure beyond domestic procurement to support cross-border food trade — reducing dependence on opaque logistics intermediaries, enabling blockchain-verified customs readiness, and supporting international sustainability-linked trade validation.
+
+### Objectives
+
+- **FTZ Green Lane** — Develop a blockchain-verified customs readiness pathway enabling NAMA-certified shipments to qualify for expedited processing in Free Trade Zone corridors. DPP provenance data and verified IoT telemetry would serve as the basis for automated customs pre-clearance signals.
+- **Decentralized Freight Marketplace** — Design an open freight bidding layer that broadens participation beyond dominant logistics operators, enabling independent carriers to compete transparently for shipments on the basis of verified qualification records rather than incumbent relationships.
+- **Cross-Border Trade Layer** — Build interoperability standards enabling NAMA DPPs to satisfy cross-jurisdictional compliance requirements, allowing shipment provenance records and sustainability certifications to be recognised across multiple trade regions.
+- **Sustainability-Linked Trade Validation** — Establish a mechanism by which verified ESG telemetry and circular economy records materially influence trade terms — connecting on-chain sustainability performance to preferential trade treatment.
+
+### Aspirational Deliverables
+
+- [ ] FTZ Green Lane protocol specification (research & standards paper)
+- [ ] Decentralized freight bidding architecture design
+- [ ] Cross-border DPP data format standardisation (aligned with WCO and ISO standards)
+- [ ] Customs API integration research with national trade data systems
+- [ ] Sustainability-linked trade validation framework
+- [ ] Pilot partnership engagement with logistics operators and customs authorities
+- [ ] UN SDG 9, 12 and 17 alignment documentation
+
+### Strategic Alignment
+
+| Concept | SDG Alignment | Problem Addressed |
+|---------|---------------|-------------------|
+| FTZ Green Lane | SDG 9 (Industry & Innovation) | Opaque and slow customs processes for food shipments |
+| Decentralized Freight Marketplace | SDG 9, SDG 17 | Concentration of logistics power among incumbent operators |
+| Cross-Border Trade Layer | SDG 17 (Partnerships for Goals) | Fragmented customs data and non-interoperable trade documentation |
+| Sustainability-Linked Trade Validation | SDG 12 (Responsible Consumption) | Lack of credible on-chain proof for preferential sustainability trade treatment |
+
+---
+
 ## Future Development (Beyond Month 12)
 
 - **Predictive Food Security Analytics** — Global early-warning system for crop failures and supply disruptions
 - **Cross-Chain Interoperability** — Bridges to other enterprise blockchain networks
-- **Customs API Integration** — Direct integration with national customs data systems
+- **Customs API Integration** — Direct integration with national customs data systems *(see Phase 5 — Global Trade & Customs Interoperability)*
 - **DAO-Based Governance** — Full community control over protocol parameters and upgrades
 - **Global Sustainability Certification Network** — Decentralized certification body for food sustainability standards
 - **Consumer DPP Mobile App** — Direct-to-consumer product passport scanning and verification
 - **AI-Powered Demand Forecasting** — Dynamic demand signals for producers to optimize harvest planning
+- **FTZ Green Lane & Decentralized Freight Marketplace** — Cross-border trade and logistics democratization *(see Phase 5 — Global Trade & Customs Interoperability)*
 
 ---
 

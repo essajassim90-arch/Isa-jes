@@ -320,6 +320,66 @@ GitHub Actions CI/CD
 
 ---
 
+## Future Architecture Vision — Global Trade & Customs Interoperability *(Phase 5 / Aspirational)*
+
+> ⚠️ **This section describes a future architectural direction only. None of the components below exist in the current codebase. No new smart contracts, deployments, or integrations are present. This is a strategic roadmap vision.**
+
+### Overview
+
+The long-term architectural ambition for NAMA extends the current DPP + Marketplace + IoT + ESG stack outward to encompass **cross-border trade infrastructure**. The existing contracts (`DPP.sol`, `Marketplace.sol`) and indexer pipeline provide a natural foundation — the future layer adds interoperability, customs signalling, and freight market abstractions on top of them.
+
+### Future Component Map
+
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│                   NAMA — FUTURE TRADE LAYER (ASPIRATIONAL)                │
+│                                                                            │
+│  Existing Foundation                 Future Extension                     │
+│  ────────────────                    ──────────────────                   │
+│                                                                            │
+│  DPP.sol ──────────────────────────▶ Cross-Border DPP Adapter            │
+│  (provenance + certifications)        (jurisdiction-specific fields)      │
+│                                                                            │
+│  Marketplace.sol ──────────────────▶ Decentralized Freight Marketplace   │
+│  (offer / accept / settle)            (open carrier bidding layer)        │
+│                                                                            │
+│  IoT Telemetry + SDG Events ───────▶ FTZ Green Lane Signal               │
+│  (temperature, humidity, GPS)         (customs pre-clearance evidence)    │
+│                                                                            │
+│  ESG Intelligence Dashboard ───────▶ Sustainability-Linked Trade         │
+│  (AII, SDG telemetry, audit)          Validation (trade term alignment)  │
+│                                                                            │
+│  Indexer (ThorEventConnector) ─────▶ Customs Interoperability Layer      │
+│  (projection store, SQLite)           (WCO-aligned data export)          │
+│                                                                            │
+└──────────────────────────────────────────────────────────────────────────┘
+```
+
+### Future Sub-Components
+
+#### FTZ Green Lane
+Customs authorities would consume a NAMA-issued DPP verification signal — derived from existing `DPP.sol` passport data and IoT telemetry events — as the basis for expedited shipment processing. The signal generation layer would be an off-chain API service reading from the existing indexer projection store. No new on-chain contract is required for the prototype signal; the evidentiary data already exists in `PassportCertificationAttached` and `PassportEventRecorded` events.
+
+#### Decentralized Freight Marketplace
+Architecturally modelled on the existing `Marketplace.sol` bid/offer pattern, a future freight contract would extend the listing/offer flow to cover shipment tenders rather than product listings. Carrier qualification would be anchored to on-chain logistics event histories, reusing the `DPP.recordPassportEvent` mechanism for delivery confirmations.
+
+#### Cross-Border Trade Layer
+A future standards-alignment module would wrap the existing DPP data schema in a translation layer conforming to WCO data model fields and ISO 28005 (electronic port clearance) structures. This would be implemented as an API transformation service above the existing `GET /dpp/:batchId` route — no contract changes required.
+
+#### Sustainability-Linked Trade Validation
+ESG telemetry data (already present in `TelemetryEvent` projections) and circular economy diversion records (`PassportCertificationAttached` with `certType = "esg_circular"`) would feed into a trade terms eligibility engine, producing a verifiable sustainability trade score. This extends the existing AII architecture with a cross-border weighting pillar.
+
+### SDG Alignment
+
+| Future Component | SDG 9 | SDG 12 | SDG 17 |
+|---|:---:|:---:|:---:|
+| FTZ Green Lane | ✓ | | |
+| Decentralized Freight Marketplace | ✓ | | ✓ |
+| Cross-Border Trade Layer | | | ✓ |
+| Sustainability-Linked Trade Validation | | ✓ | ✓ |
+
+---
+
 *NAMA Protocol — Architecture v1.0*
 
 ---
