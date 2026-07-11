@@ -1,4 +1,6 @@
 export { InMemoryEventConnector } from './connectors/in-memory-connector.js';
+export { ThorEventConnector } from './connectors/thor-event-connector.js';
+export type { ThorEventConnectorOptions } from './connectors/thor-event-connector.js';
 export type { EventConnector, RawEventLog } from './connectors/types.js';
 export { CheckpointStore } from './checkpoints/checkpoint-store.js';
 export { SqliteProjectionStore } from './database/sqlite-projection-store.js';
