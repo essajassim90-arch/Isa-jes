@@ -16,7 +16,23 @@ listings.set('demo-listing-001', {
   unitPriceVET: '10',
   currency: 'VET',
   status: 'open',
+  listingType: 'commercial',
   createdAt: '2025-03-20T09:00:00.000Z',
+})
+
+// Seed circular diversion listing for demo-batch-001
+listings.set('demo-listing-circ-001', {
+  listingId: 'demo-listing-circ-001',
+  dppId: 'demo-dpp-001',
+  sellerOrgId: 'FARM-KE-001',
+  quantity: 60,
+  unitPriceVET: '2',
+  currency: 'VET',
+  status: 'open',
+  listingType: 'circular',
+  kgAvailable: 60.5,
+  circularSdgGoals: [2, 12],
+  createdAt: '2025-03-18T07:00:00.000Z',
 })
 
 interface CreateListingPayload {
@@ -118,9 +134,11 @@ function attachAiiSignals(listing: MarketplaceListing): MarketplaceListing {
 }
 
 class MarketplaceService {
-  getListings(): MarketplaceListing[] {
+  getListings(listingType?: string): MarketplaceListing[] {
+    let items: MarketplaceListing[]
+
     if (projectionQueryService.hasMarketplaceListingProjectionData()) {
-      return projectionQueryService.getOpenListings().map((listing) =>
+      items = projectionQueryService.getOpenListings().map((listing) =>
         attachAiiSignals({
           listingId: listing.listingId,
           dppId: listing.passportId ?? 'unknown',
@@ -129,13 +147,20 @@ class MarketplaceService {
           unitPriceVET: listing.unitPrice ?? '0',
           currency: 'VET',
           status: toListingStatus(listing.status),
+          listingType: 'commercial',
           createdAt: listing.createdAt ?? listing.updatedAt ?? new Date().toISOString(),
           updatedAt: listing.updatedAt ?? undefined
         })
       )
+    } else {
+      items = [...listings.values()].filter((l) => l.status === 'open').map(attachAiiSignals)
     }
 
-    return [...listings.values()].filter((l) => l.status === 'open').map(attachAiiSignals)
+    if (listingType === 'commercial' || listingType === 'circular') {
+      items = items.filter((l) => (l.listingType ?? 'commercial') === listingType)
+    }
+
+    return items
   }
 
   getListingState(listingId: string): MarketplaceListing | undefined {

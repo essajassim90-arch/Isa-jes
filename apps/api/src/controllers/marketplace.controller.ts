@@ -1,8 +1,9 @@
 import type { Request, Response } from 'express'
 import { marketplaceService } from '../services/marketplace.service.ts'
 
-export async function getListings(_req: Request, res: Response): Promise<void> {
-  const listings = marketplaceService.getListings()
+export async function getListings(req: Request, res: Response): Promise<void> {
+  const listingType = typeof req.query['type'] === 'string' ? req.query['type'] : undefined
+  const listings = marketplaceService.getListings(listingType)
   res.json({ listings, total: listings.length })
 }
 

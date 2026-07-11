@@ -1,4 +1,5 @@
 import type { ESGReport } from './esg.types.ts'
+import type { CircularPanel } from './circular.types.ts'
 
 export type InterfaceMode = 'enterprise' | 'producer'
 export type DPPProfile = 'standard' | 'aqua'
@@ -151,6 +152,7 @@ export interface EnterpriseDashboard {
   esg: ESGReport
   telemetry: TelemetrySummary
   aii: AIISnapshot
+  circularPanel?: CircularPanel
   procurementInsights: Array<{
     listingId: string
     batchId: string

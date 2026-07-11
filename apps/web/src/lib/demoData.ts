@@ -15,6 +15,10 @@ import type {
   ESGReport,
   IoTReading,
   TelemetrySummary,
+  CircularPanel,
+  CircularDiversionRoute,
+  ESGCircularBadge,
+  HeritageVaultEntry,
 } from '@nama/shared'
 
 export const DEMO_BATCH_ID = 'demo-batch-001'
@@ -360,7 +364,21 @@ export const demoMarketplaceListings: MarketplaceListing[] = [
     unitPriceVET: '10',
     currency: 'VET',
     status: 'open',
+    listingType: 'commercial',
     createdAt: '2025-03-20T09:00:00.000Z',
+  },
+  {
+    listingId: 'demo-listing-circ-001',
+    dppId: 'demo-dpp-001',
+    sellerOrgId: 'FARM-KE-001',
+    quantity: 60,
+    unitPriceVET: '2',
+    currency: 'VET',
+    status: 'open',
+    listingType: 'circular',
+    kgAvailable: 60.5,
+    circularSdgGoals: [2, 12],
+    createdAt: '2025-03-18T07:00:00.000Z',
   },
 ]
 
@@ -543,4 +561,116 @@ export const demoProducerWorkspace = {
   presets: interfacePresets,
   workflows: producerWorkflows,
   passports: [demoDPP, demoAquaDPP],
+}
+
+// ---------------------------------------------------------------------------
+// Phase 2M — Circular Procurement Demo Data
+// ---------------------------------------------------------------------------
+
+export const demoCircularRoutes: CircularDiversionRoute[] = [
+  {
+    routeId: 'circ-route-001',
+    dppId: 'demo-dpp-001',
+    batchId: DEMO_BATCH_ID,
+    diversionType: 'compost',
+    kgDiverted: 42.0,
+    status: 'completed',
+    certificationName: 'Organic',
+    startedAt: '2025-03-18T07:00:00.000Z',
+    completedAt: '2025-03-20T09:00:00.000Z',
+    sdg2Impact: true,
+    sdg12Impact: true,
+    actorOrgId: 'FARM-KE-001',
+  },
+  {
+    routeId: 'circ-route-002',
+    dppId: 'demo-dpp-001',
+    batchId: DEMO_BATCH_ID,
+    diversionType: 'animal-feed',
+    kgDiverted: 18.5,
+    status: 'completed',
+    certificationName: 'Fair Trade',
+    startedAt: '2025-03-15T06:30:00.000Z',
+    completedAt: '2025-03-17T08:00:00.000Z',
+    sdg2Impact: true,
+    sdg12Impact: false,
+    actorOrgId: 'FARM-KE-001',
+  },
+  {
+    routeId: 'circ-route-003',
+    dppId: 'demo-dpp-aqua-001',
+    batchId: AQUA_BATCH_ID,
+    diversionType: 'bioenergy',
+    kgDiverted: 11.2,
+    status: 'active',
+    certificationName: 'ASC Ready',
+    startedAt: '2025-03-27T05:00:00.000Z',
+    sdg2Impact: false,
+    sdg12Impact: true,
+    actorOrgId: 'AQUA-PRODUCER-009',
+  },
+]
+
+export const demoCircularBadges: ESGCircularBadge[] = [
+  {
+    badgeId: 'badge-001',
+    dppId: 'demo-dpp-001',
+    batchId: DEMO_BATCH_ID,
+    certificationBasis: ['Organic', 'Fair Trade'],
+    score: 90,
+    tier: 'gold',
+    issuedAt: '2025-03-20T09:00:00.000Z',
+    validUntil: '2027-02-01T00:00:00.000Z',
+    sdgAlignment: [2, 12],
+  },
+  {
+    badgeId: 'badge-002',
+    dppId: 'demo-dpp-aqua-001',
+    batchId: AQUA_BATCH_ID,
+    certificationBasis: ['ASC Ready'],
+    score: 55,
+    tier: 'silver',
+    issuedAt: '2025-03-28T06:45:00.000Z',
+    sdgAlignment: [12],
+  },
+]
+
+export const demoHeritageVault: HeritageVaultEntry[] = [
+  {
+    vaultId: `heritage-${DEMO_BATCH_ID}`,
+    dppId: 'demo-dpp-001',
+    batchId: DEMO_BATCH_ID,
+    productName: 'Single-Origin Arabica Coffee Beans',
+    origin: 'Kenya',
+    certificationSnapshot: ['Organic', 'Fair Trade'],
+    heritageScore: 100,
+    category: 'heritage-variety',
+    registeredAt: '2025-03-01T06:00:00.000Z',
+    status: 'simulated',
+  },
+  {
+    vaultId: `heritage-${AQUA_BATCH_ID}`,
+    dppId: 'demo-dpp-aqua-001',
+    batchId: AQUA_BATCH_ID,
+    productName: 'Vannamei Shrimp Harvest Lot',
+    origin: 'Indonesia',
+    certificationSnapshot: ['ASC Ready'],
+    heritageScore: 60,
+    category: 'traditional-method',
+    registeredAt: '2025-03-24T05:30:00.000Z',
+    status: 'simulated',
+  },
+]
+
+export const demoCircularPanel: CircularPanel = {
+  metrics: {
+    routesCompleted: 2,
+    kgDiverted: 71.7,
+    sdg2ImpactEvents: 2,
+    sdg12ImpactEvents: 3,
+    generatedAt: '2025-03-28T06:45:00.000Z',
+  },
+  recentRoutes: demoCircularRoutes,
+  badges: demoCircularBadges,
+  heritageVault: demoHeritageVault,
 }

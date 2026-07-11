@@ -5,9 +5,10 @@ import { Marketplace } from './Marketplace.tsx'
 import { ESG } from './ESG.tsx'
 import { EnterpriseDashboard } from './EnterpriseDashboard.tsx'
 import { ProducerMobileUI } from './ProducerMobileUI.tsx'
+import { Circular } from './Circular.tsx'
 
 type InterfaceMode = 'enterprise' | 'producer'
-type EnterprisePage = 'dashboard' | 'passport' | 'marketplace' | 'esg'
+type EnterprisePage = 'dashboard' | 'passport' | 'marketplace' | 'esg' | 'circular'
 type ProducerPage = 'workspace' | 'passport'
 type Page = EnterprisePage | ProducerPage
 
@@ -16,6 +17,7 @@ const ENTERPRISE_NAV_ITEMS: { id: EnterprisePage; label: string }[] = [
   { id: 'passport', label: '📦 Passport' },
   { id: 'marketplace', label: '🛒 Marketplace' },
   { id: 'esg', label: '🌱 ESG' },
+  { id: 'circular', label: '♻️ Circular' },
 ]
 
 const PRODUCER_NAV_ITEMS: { id: ProducerPage; label: string }[] = [
@@ -46,6 +48,8 @@ export function RoleBasedDashboard() {
         return <Marketplace />
       case 'esg':
         return <ESG />
+      case 'circular':
+        return <Circular />
       default:
         return <EnterpriseDashboard />
     }

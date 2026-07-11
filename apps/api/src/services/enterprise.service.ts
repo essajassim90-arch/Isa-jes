@@ -12,6 +12,7 @@ import { dppService } from './dpp.service.ts'
 import { esgService } from './esg.service.ts'
 import { marketplaceService } from './marketplace.service.ts'
 import { projectionQueryService } from './projection-query.service.ts'
+import { circularService } from './circular.service.ts'
 
 interface ExportPayload {
   mimeType: string
@@ -327,6 +328,7 @@ class EnterpriseService {
       esg: esgService.getReport(featuredBatchId),
       telemetry,
       aii: this.getAIISnapshot(featuredBatchId),
+      circularPanel: circularService.getCircularPanel(),
       procurementInsights: this.getProcurementInsights(),
       auditSnapshots: this.getAuditSnapshots(),
       exportJobs

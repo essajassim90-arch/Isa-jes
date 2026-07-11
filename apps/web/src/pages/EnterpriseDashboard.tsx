@@ -1,4 +1,5 @@
 import { useEnterpriseDashboard } from '../hooks/useEnterpriseDashboard.ts'
+import { useCircular } from '../hooks/useCircular.ts'
 import { apiUrl, isDemoMode } from '../lib/api.ts'
 
 function StatCard({ label, value, tone = 'default' }: { label: string; value: string | number; tone?: 'default' | 'accent' }) {
@@ -12,6 +13,7 @@ function StatCard({ label, value, tone = 'default' }: { label: string; value: st
 
 export function EnterpriseDashboard() {
   const { dashboard, loading, error } = useEnterpriseDashboard()
+  const { panel: circularPanel } = useCircular()
 
   if (loading) {
     return <div className="page-empty">Loading enterprise dashboard…</div>
@@ -161,6 +163,51 @@ export function EnterpriseDashboard() {
           ))}
         </div>
       </section>
+
+      {circularPanel && (
+        <section className="panel">
+          <div className="section-title-row">
+            <h2>♻️ Circular Procurement</h2>
+            <span className="badge-roadmap">Phase 2M · certification-based</span>
+          </div>
+          <div className="metric-grid" style={{ marginBottom: '16px' }}>
+            <div className="metric-card">
+              <div className="metric-label">Routes completed</div>
+              <div className="metric-value accent">{circularPanel.metrics.routesCompleted}</div>
+            </div>
+            <div className="metric-card">
+              <div className="metric-label">kg diverted</div>
+              <div className="metric-value accent">{circularPanel.metrics.kgDiverted} kg</div>
+            </div>
+            <div className="metric-card">
+              <div className="metric-label">SDG 2 impact events</div>
+              <div className="metric-value">{circularPanel.metrics.sdg2ImpactEvents}</div>
+            </div>
+            <div className="metric-card">
+              <div className="metric-label">SDG 12 impact events</div>
+              <div className="metric-value">{circularPanel.metrics.sdg12ImpactEvents}</div>
+            </div>
+          </div>
+          <div className="stack-sm">
+            {circularPanel.recentRoutes.slice(0, 3).map((route) => (
+              <div key={route.routeId} className="list-row">
+                <div>
+                  <strong style={{ textTransform: 'capitalize' }}>{route.diversionType.replace(/-/g, ' ')}</strong>
+                  <div className="muted-text">
+                    {route.batchId} · {route.certificationName ?? '—'}
+                  </div>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
+                  <span className={`sa-status ${route.status === 'completed' ? 'deployed' : 'pending'}`} style={{ textTransform: 'capitalize' }}>
+                    {route.status}
+                  </span>
+                  <span className="muted-text">{route.kgDiverted} kg</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="panel">
         <div className="section-title-row">
