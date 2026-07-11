@@ -69,6 +69,22 @@ function toGrade(score: number): AIISnapshot['grade'] {
 }
 
 class EnterpriseService {
+  getProcurementInsights() {
+    return marketplaceService.getListings().map((listing) => {
+      const passport = dppService.listAll().find((entry) => entry.dppId === listing.dppId || entry.batchId === listing.dppId)
+      const batchId = passport?.batchId ?? listing.dppId
+      const aiiScore = passport ? this.getAIISnapshot(batchId).score : 0
+
+      return {
+        listingId: listing.listingId,
+        batchId,
+        aiiScore,
+        qualityIndicator: listing.aiiQualityIndicator ?? 'watchlist',
+        procurementSignal: listing.procurementSignal ?? 'review'
+      }
+    })
+  }
+
   getTelemetrySummary(batchId?: string): TelemetrySummary {
     const telemetry = dppService
       .listAll()
@@ -311,6 +327,7 @@ class EnterpriseService {
       esg: esgService.getReport(featuredBatchId),
       telemetry,
       aii: this.getAIISnapshot(featuredBatchId),
+      procurementInsights: this.getProcurementInsights(),
       auditSnapshots: this.getAuditSnapshots(),
       exportJobs
     }

@@ -41,6 +41,9 @@ function EventRow({ event }: { event: DPPEvent }) {
 export function DPPCard({ dpp }: DPPCardProps) {
   const isVerified = Boolean(dpp.txHash)
   const metadataEntries = Object.entries(dpp.metadata ?? {}).slice(0, 4)
+  const certificationCount = dpp.certifications.length
+  const procurementSignal = certificationCount >= 2 ? 'strong' : certificationCount === 1 ? 'moderate' : 'review'
+  const qualityIndicator = certificationCount >= 2 ? 'premium' : certificationCount === 1 ? 'qualified' : 'watchlist'
 
   return (
     <div className="sa-card" style={{ maxWidth: '100%', width: '100%' }}>
@@ -84,6 +87,18 @@ export function DPPCard({ dpp }: DPPCardProps) {
             </span>
           </div>
         )}
+        <div className="wallet-row">
+          <span className="wallet-label">AII badge</span>
+          <span className="badge-roadmap">{certificationCount > 0 ? `${certificationCount} verified` : 'Pending'}</span>
+        </div>
+        <div className="wallet-row">
+          <span className="wallet-label">Procurement signal</span>
+          <span className="badge-roadmap">{procurementSignal}</span>
+        </div>
+        <div className="wallet-row">
+          <span className="wallet-label">Marketplace quality</span>
+          <span className="badge-roadmap">{qualityIndicator}</span>
+        </div>
         <div className="wallet-row">
           <span className="wallet-label">On-Chain</span>
           <span className={`sa-status ${isVerified ? 'deployed' : 'pending'}`} style={{ fontSize: '0.8rem' }}>

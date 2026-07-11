@@ -151,6 +151,13 @@ export interface EnterpriseDashboard {
   esg: ESGReport
   telemetry: TelemetrySummary
   aii: AIISnapshot
+  procurementInsights: Array<{
+    listingId: string
+    batchId: string
+    aiiScore: number
+    qualityIndicator: 'premium' | 'qualified' | 'watchlist'
+    procurementSignal: 'strong' | 'moderate' | 'review'
+  }>
   auditSnapshots: AuditSnapshot[]
   exportJobs: ExportJob[]
 }

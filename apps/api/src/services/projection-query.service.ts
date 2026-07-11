@@ -31,6 +31,16 @@ interface PassportTimelineRow {
   occurredAt: string
 }
 
+interface PassportCertificationRow {
+  passportId: string
+  certType: string | null
+  issuer: string | null
+  certificationHash: string | null
+  issuedAt: string | null
+  expiresAt: string | null
+  occurredAt: string
+}
+
 interface ListingStateRow {
   listingId: string
   seller: string | null
@@ -185,6 +195,33 @@ class ProjectionQueryService {
     const db = this.#getDb()
     if (!db) {
       return []
+    }
+
+    getPassportCertifications(passportId: string): PassportCertificationRow[] {
+      const db = this.#getDb()
+      if (!db) {
+        return []
+      }
+
+      try {
+        return db
+          .prepare(
+            `SELECT
+              passport_id AS passportId,
+              cert_type AS certType,
+              issuer,
+              certification_hash AS certificationHash,
+              issued_at AS issuedAt,
+              expires_at AS expiresAt,
+              occurred_at AS occurredAt
+            FROM dpp_certifications
+            WHERE passport_id = ?
+            ORDER BY datetime(COALESCE(issued_at, occurred_at)) DESC, event_id DESC`
+          )
+          .all(passportId) as PassportCertificationRow[]
+      } catch {
+        return []
+      }
     }
 
     try {

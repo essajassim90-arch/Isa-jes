@@ -72,7 +72,7 @@ export function EnterpriseDashboard() {
 
         <div className="panel">
           <div className="section-title-row">
-            <h2>AII v1</h2>
+            <h2>AII indicators</h2>
             <span className="badge-roadmap">Off-chain derived</span>
           </div>
           <div className="stack-sm">
@@ -97,7 +97,7 @@ export function EnterpriseDashboard() {
       <section className="two-column-grid">
         <div className="panel">
           <div className="section-title-row">
-            <h2>Verified SDG telemetry</h2>
+            <h2>Verified SDG area</h2>
             <span className="badge-roadmap">Event-based extension</span>
           </div>
           <div className="stack-sm">
@@ -137,6 +137,28 @@ export function EnterpriseDashboard() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="panel">
+        <div className="section-title-row">
+          <h2>Procurement insights</h2>
+          <span className="badge-roadmap">AII quality signals</span>
+        </div>
+        <div className="stack-sm">
+          {dashboard.procurementInsights.map((insight) => (
+            <div key={insight.listingId} className="list-row">
+              <div>
+                <strong>{insight.batchId}</strong>
+                <div className="muted-text">
+                  Listing {insight.listingId} · AII {insight.aiiScore}
+                </div>
+              </div>
+              <span className="badge-roadmap">
+                {insight.qualityIndicator} · {insight.procurementSignal}
+              </span>
+            </div>
+          ))}
         </div>
       </section>
 

@@ -13,6 +13,7 @@ interface DecodedEventBase {
 const DPP_EVENT_NAMES = new Set<SupportedEventName>([
   'PassportCreated',
   'PassportStatusUpdated',
+  'PassportCertificationAttached',
   'PassportEventRecorded'
 ]);
 

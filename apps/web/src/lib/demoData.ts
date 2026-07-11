@@ -497,6 +497,15 @@ export const demoEnterpriseDashboard: EnterpriseDashboard = {
       'Listing demo-listing-001 open at 10 VET',
     ],
   },
+  procurementInsights: [
+    {
+      listingId: 'demo-listing-001',
+      batchId: DEMO_BATCH_ID,
+      aiiScore: 77,
+      qualityIndicator: 'qualified',
+      procurementSignal: 'moderate',
+    },
+  ],
   auditSnapshots: [
     {
       snapshotId: 'audit-1',

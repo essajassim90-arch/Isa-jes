@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto'
 import type { MarketplaceListing, MarketplaceOffer } from '@nama/shared'
+import { dppService } from './dpp.service.ts'
 import { projectionQueryService } from './projection-query.service.ts'
 
 // In-memory stores — replaced with on-chain + DB persistence in later phases
@@ -93,23 +94,48 @@ function toOfferStatus(value: string | null): MarketplaceOffer['status'] {
   return 'pending'
 }
 
+function deriveAiiSignals(certificationCount: number, quantity: number): Pick<MarketplaceListing, 'aiiQualityIndicator' | 'procurementSignal'> {
+  const weighted = certificationCount * 30 + Math.min(40, Math.floor(quantity / 10))
+
+  if (weighted >= 90) {
+    return { aiiQualityIndicator: 'premium', procurementSignal: 'strong' }
+  }
+  if (weighted >= 55) {
+    return { aiiQualityIndicator: 'qualified', procurementSignal: 'moderate' }
+  }
+  return { aiiQualityIndicator: 'watchlist', procurementSignal: 'review' }
+}
+
+function attachAiiSignals(listing: MarketplaceListing): MarketplaceListing {
+  const matchingDpp = dppService.listAll().find(
+    (dpp) => dpp.dppId === listing.dppId || dpp.batchId === listing.dppId
+  )
+  const certificationCount = matchingDpp?.certifications.length ?? 0
+  return {
+    ...listing,
+    ...deriveAiiSignals(certificationCount, listing.quantity)
+  }
+}
+
 class MarketplaceService {
   getListings(): MarketplaceListing[] {
     if (projectionQueryService.hasMarketplaceListingProjectionData()) {
-      return projectionQueryService.getOpenListings().map((listing) => ({
-        listingId: listing.listingId,
-        dppId: listing.passportId ?? 'unknown',
-        sellerOrgId: listing.seller ?? 'unknown',
-        quantity: parseInteger(listing.quantity),
-        unitPriceVET: listing.unitPrice ?? '0',
-        currency: 'VET',
-        status: toListingStatus(listing.status),
-        createdAt: listing.createdAt ?? listing.updatedAt ?? new Date().toISOString(),
-        updatedAt: listing.updatedAt ?? undefined
-      }))
+      return projectionQueryService.getOpenListings().map((listing) =>
+        attachAiiSignals({
+          listingId: listing.listingId,
+          dppId: listing.passportId ?? 'unknown',
+          sellerOrgId: listing.seller ?? 'unknown',
+          quantity: parseInteger(listing.quantity),
+          unitPriceVET: listing.unitPrice ?? '0',
+          currency: 'VET',
+          status: toListingStatus(listing.status),
+          createdAt: listing.createdAt ?? listing.updatedAt ?? new Date().toISOString(),
+          updatedAt: listing.updatedAt ?? undefined
+        })
+      )
     }
 
-    return [...listings.values()].filter((l) => l.status === 'open')
+    return [...listings.values()].filter((l) => l.status === 'open').map(attachAiiSignals)
   }
 
   getListingState(listingId: string): MarketplaceListing | undefined {
@@ -119,7 +145,7 @@ class MarketplaceService {
         return undefined
       }
 
-      return {
+      return attachAiiSignals({
         listingId: listing.listingId,
         dppId: listing.passportId ?? 'unknown',
         sellerOrgId: listing.seller ?? 'unknown',
@@ -129,10 +155,11 @@ class MarketplaceService {
         status: toListingStatus(listing.status),
         createdAt: listing.createdAt ?? listing.updatedAt ?? new Date().toISOString(),
         updatedAt: listing.updatedAt ?? undefined
-      }
+      })
     }
 
-    return listings.get(listingId)
+    const listing = listings.get(listingId)
+    return listing ? attachAiiSignals(listing) : undefined
   }
 
   getOfferState(offerId: string): MarketplaceOffer | undefined {

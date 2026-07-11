@@ -42,6 +42,18 @@ interface OfferRow {
   lastEventId: string;
 }
 
+interface CertificationRow {
+  eventId: string;
+  passportId: string;
+  certType?: string;
+  issuer?: string;
+  certificationHash?: string;
+  issuedAt?: string;
+  expiresAt?: string;
+  occurredAt: string;
+  indexedAt: string;
+}
+
 function getString(payload: Record<string, unknown>, key: string): string | undefined {
   const value = payload[key];
   return typeof value === 'string' ? value : undefined;
@@ -174,6 +186,30 @@ function buildOfferRow(envelope: NormalizedEventEnvelope): OfferRow | null {
     const offerId = getString(payload, 'offerId');
     if (!offerId) {
       return null;
+    }
+
+    function buildCertificationRow(envelope: NormalizedEventEnvelope): CertificationRow | null {
+      if (envelope.eventName !== 'PassportCertificationAttached') {
+        return null;
+      }
+
+      const payload = envelope.payload;
+      const passportId = getString(payload, 'passportId');
+      if (!passportId) {
+        return null;
+      }
+
+      return {
+        eventId: envelope.id,
+        passportId,
+        certType: getString(payload, 'certType'),
+        issuer: getString(payload, 'issuer'),
+        certificationHash: getString(payload, 'certificationHash'),
+        issuedAt: toIsoFromUnixSeconds(getString(payload, 'issuedAt')),
+        expiresAt: toIsoFromUnixSeconds(getString(payload, 'expiresAt')),
+        occurredAt: envelope.occurredAt,
+        indexedAt: envelope.metadata.indexedAt
+      };
     }
 
     return {
@@ -327,6 +363,26 @@ export class SqliteProjectionStore implements ProjectionStore {
             timeline.payloadHash ?? null,
             timeline.occurredAt,
             timeline.indexedAt
+          );
+        }
+
+        const certification = buildCertificationRow(event);
+        if (certification) {
+          db.prepare(
+            `INSERT OR IGNORE INTO dpp_certifications (
+              event_id, passport_id, cert_type, issuer, certification_hash,
+              issued_at, expires_at, occurred_at, indexed_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
+          ).run(
+            certification.eventId,
+            certification.passportId,
+            certification.certType ?? null,
+            certification.issuer ?? null,
+            certification.certificationHash ?? null,
+            certification.issuedAt ?? null,
+            certification.expiresAt ?? null,
+            certification.occurredAt,
+            certification.indexedAt
           );
         }
       }

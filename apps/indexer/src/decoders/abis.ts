@@ -28,6 +28,19 @@ export const DPP_EVENTS_ABI = [
   },
   {
     type: 'event',
+    name: 'PassportCertificationAttached',
+    inputs: [
+      { name: 'passportId', type: 'bytes32', indexed: true },
+      { name: 'certType', type: 'bytes32', indexed: true },
+      { name: 'issuer', type: 'address', indexed: true },
+      { name: 'certificationHash', type: 'string', indexed: false },
+      { name: 'issuedAt', type: 'uint256', indexed: false },
+      { name: 'expiresAt', type: 'uint256', indexed: false }
+    ],
+    anonymous: false
+  },
+  {
+    type: 'event',
     name: 'PassportEventRecorded',
     inputs: [
       { name: 'passportId', type: 'bytes32', indexed: true },

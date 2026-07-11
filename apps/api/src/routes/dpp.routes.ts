@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { getDPP, getDPPTimeline, mintDPP, addDPPEvent } from '../controllers/dpp.controller.ts'
+import { getDPP, getDPPTimeline, getDPPCertifications, mintDPP, addDPPEvent } from '../controllers/dpp.controller.ts'
 import { authenticate } from '../middleware/auth.ts'
 
 export const dppRouter = Router()
@@ -9,6 +9,9 @@ dppRouter.get('/:batchId', getDPP)
 
 /** GET /dpp/:batchId/timeline — fetch timeline events for a DPP */
 dppRouter.get('/:batchId/timeline', getDPPTimeline)
+
+/** GET /dpp/:batchId/certifications — fetch certifications for a DPP */
+dppRouter.get('/:batchId/certifications', getDPPCertifications)
 
 /** POST /dpp/mint — mint a new DPP on-chain (requires auth) */
 dppRouter.post('/mint', authenticate, mintDPP)

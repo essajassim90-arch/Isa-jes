@@ -44,6 +44,14 @@ function ListingCard({ listing }: { listing: MarketplaceListing }) {
           </span>
         </div>
         <div className="wallet-row">
+          <span className="wallet-label">AII Quality Indicator</span>
+          <span className="badge-roadmap">{listing.aiiQualityIndicator ?? 'watchlist'}</span>
+        </div>
+        <div className="wallet-row">
+          <span className="wallet-label">Procurement Signal</span>
+          <span className="badge-roadmap">{listing.procurementSignal ?? 'review'}</span>
+        </div>
+        <div className="wallet-row">
           <span className="wallet-label">Created</span>
           <span style={{ color: 'var(--text-muted)', fontSize: '0.82rem' }}>{date}</span>
         </div>

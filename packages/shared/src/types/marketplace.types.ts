@@ -9,6 +9,8 @@ export interface MarketplaceListing {
   unitPriceVET: string
   currency: 'VET'
   status: ListingStatus
+  aiiQualityIndicator?: 'premium' | 'qualified' | 'watchlist'
+  procurementSignal?: 'strong' | 'moderate' | 'review'
   createdAt: string
   updatedAt?: string
 }

@@ -28,7 +28,7 @@ function serialize(value: unknown): unknown {
 }
 
 function readOccurredAtFromPayload(payload: Record<string, unknown>): string | null {
-  const timestampFields = ['createdAt', 'updatedAt', 'eventTimestamp', 'placedAt', 'acceptedAt'];
+  const timestampFields = ['createdAt', 'updatedAt', 'issuedAt', 'eventTimestamp', 'placedAt', 'acceptedAt'];
 
   for (const field of timestampFields) {
     const value = payload[field];

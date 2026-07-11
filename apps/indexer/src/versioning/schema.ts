@@ -5,6 +5,7 @@ export type SupportedContract = 'dpp' | 'marketplace';
 export type SupportedEventName =
   | 'PassportCreated'
   | 'PassportStatusUpdated'
+  | 'PassportCertificationAttached'
   | 'PassportEventRecorded'
   | 'ListingCreated'
   | 'OfferPlaced'

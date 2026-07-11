@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto'
-import type { DPP, DPPEvent, DPPEventType, DPPStatus, DPPProfile } from '@nama/shared'
+import type { DPP, DPPCertification, DPPEvent, DPPEventType, DPPStatus, DPPProfile } from '@nama/shared'
 import { projectionQueryService } from './projection-query.service.ts'
 import { getWorkflowDefinition } from './workflow-catalog.ts'
 
@@ -24,6 +24,10 @@ function toDppStatusFromActive(active: number | null): DPPStatus {
 function toDppEventType(value: string): DPPEventType {
   const normalized = value.toLowerCase()
 
+  if (normalized.includes('certification')) {
+    return 'quality_check'
+  }
+
   if (normalized.includes('quality')) {
     return 'quality_check'
   }
@@ -41,6 +45,37 @@ function toDppEventType(value: string): DPPEventType {
   }
 
   return 'created'
+}
+
+function decodeCertType(certType: string | null): string {
+  if (!certType) {
+    return 'Passport Certification'
+  }
+
+  const normalized = certType.toLowerCase()
+  if (normalized.includes('org')) return 'Organic'
+  if (normalized.includes('fair')) return 'Fair Trade'
+  if (normalized.includes('sdg')) return 'SDG Verified'
+  if (normalized.includes('aii')) return 'AII Evidence'
+  if (normalized.startsWith('0x')) return 'Passport Certification'
+  return certType
+}
+
+function mapProjectionCertification(certification: {
+  certType: string | null
+  issuer: string | null
+  certificationHash: string | null
+  issuedAt: string | null
+  expiresAt: string | null
+  occurredAt: string
+}): DPPCertification {
+  return {
+    name: decodeCertType(certification.certType),
+    issuer: certification.issuer ?? 'Verified Issuer',
+    issuedAt: certification.issuedAt ?? certification.occurredAt,
+    expiresAt: certification.expiresAt ?? undefined,
+    onChainHash: certification.certificationHash ?? undefined
+  }
 }
 
 interface MintPayload {
@@ -221,6 +256,20 @@ function attachWorkflow(dpp: DPP): DPP {
 }
 
 class DPPService {
+  getCertificationsByBatchId(batchId: string): DPPCertification[] | undefined {
+    if (projectionQueryService.hasPassportProjectionData()) {
+      const passport = projectionQueryService.getPassportStateByBatchId(batchId)
+      if (!passport) {
+        return undefined
+      }
+
+      return projectionQueryService.getPassportCertifications(passport.passportId).map(mapProjectionCertification)
+    }
+
+    const dpp = store.get(batchId)
+    return dpp?.certifications
+  }
+
   getByBatchId(batchId: string): DPP | undefined {
     if (projectionQueryService.hasPassportProjectionData()) {
       const passport = projectionQueryService.getPassportStateByBatchId(batchId)
@@ -229,6 +278,9 @@ class DPPService {
       }
 
       const timeline = projectionQueryService.getPassportTimeline(passport.passportId)
+      const certifications = projectionQueryService
+        .getPassportCertifications(passport.passportId)
+        .map(mapProjectionCertification)
       const events: DPPEvent[] = timeline.map((event) => ({
         eventType: toDppEventType(event.eventType),
         timestamp: event.eventTimestamp ?? event.occurredAt,
@@ -243,7 +295,7 @@ class DPPService {
         product: passport.product ?? 'unknown',
         origin: passport.origin ?? 'unknown',
         status: toDppStatusFromActive(passport.active),
-        certifications: [],
+        certifications,
         events,
         createdAt: passport.createdAt ?? passport.updatedAt ?? new Date().toISOString(),
         updatedAt: passport.updatedAt ?? undefined
@@ -275,19 +327,23 @@ class DPPService {
 
   listAll(): DPP[] {
     if (projectionQueryService.hasPassportProjectionData()) {
-      return projectionQueryService.getPassportStates().map((passport) =>
-        attachWorkflow({
+      return projectionQueryService.getPassportStates().map((passport) => {
+        const certifications = projectionQueryService
+          .getPassportCertifications(passport.passportId)
+          .map(mapProjectionCertification)
+
+        return attachWorkflow({
           dppId: passport.passportId,
           batchId: passport.batchId ?? passport.passportId,
           product: passport.product ?? 'unknown',
           origin: passport.origin ?? 'unknown',
           status: toDppStatusFromActive(passport.active),
-          certifications: [],
+          certifications,
           events: [],
           createdAt: passport.createdAt ?? passport.updatedAt ?? new Date().toISOString(),
           updatedAt: passport.updatedAt ?? undefined
         })
-      )
+      })
     }
 
     return [...store.values()].map((dpp) => attachWorkflow(dpp))
@@ -349,3 +405,6 @@ class DPPService {
 }
 
 export const dppService = new DPPService()
+  if (normalized.includes('certification')) {
+    return 'quality_check'
+  }

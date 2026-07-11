@@ -49,6 +49,18 @@ export const TABLE_DEFINITIONS = [
     indexed_at TEXT NOT NULL,
     FOREIGN KEY(event_id) REFERENCES raw_chain_events(event_id)
   );`,
+  `CREATE TABLE IF NOT EXISTS dpp_certifications (
+    event_id TEXT PRIMARY KEY,
+    passport_id TEXT NOT NULL,
+    cert_type TEXT,
+    issuer TEXT,
+    certification_hash TEXT,
+    issued_at TEXT,
+    expires_at TEXT,
+    occurred_at TEXT NOT NULL,
+    indexed_at TEXT NOT NULL,
+    FOREIGN KEY(event_id) REFERENCES raw_chain_events(event_id)
+  );`,
   `CREATE TABLE IF NOT EXISTS marketplace_listings (
     listing_id TEXT PRIMARY KEY,
     seller TEXT,
@@ -86,5 +98,6 @@ export const INDEX_DEFINITIONS = [
   `CREATE INDEX IF NOT EXISTS idx_raw_chain_events_cursor ON raw_chain_events (block_number, log_index);`,
   `CREATE INDEX IF NOT EXISTS idx_domain_events_aggregate ON domain_events (aggregate_type, aggregate_id);`,
   `CREATE INDEX IF NOT EXISTS idx_dpp_timeline_passport ON dpp_timeline_events (passport_id, event_timestamp);`,
+  `CREATE INDEX IF NOT EXISTS idx_dpp_certifications_passport ON dpp_certifications (passport_id, issued_at);`,
   `CREATE INDEX IF NOT EXISTS idx_marketplace_offers_listing ON marketplace_offers (listing_id);`
 ] as const;
