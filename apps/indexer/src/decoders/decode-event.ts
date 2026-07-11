@@ -1,4 +1,5 @@
 import { decodeEventLog } from 'viem';
+import type { Hex } from 'viem';
 import type { RawEventLog } from '../connectors/types.js';
 import type { SupportedContract, SupportedEventName } from '../versioning/schema.js';
 import { DPP_EVENTS_ABI, MARKETPLACE_EVENTS_ABI } from './abis.js';
@@ -25,6 +26,7 @@ export function decodeSupportedEvent(log: RawEventLog): DecodedEventBase | null 
   if (log.topics.length === 0) {
     return null;
   }
+  const topics = log.topics as [Hex, ...Hex[]];
 
   const abi = log.contract === 'dpp' ? DPP_EVENTS_ABI : MARKETPLACE_EVENTS_ABI;
 
@@ -32,7 +34,7 @@ export function decodeSupportedEvent(log: RawEventLog): DecodedEventBase | null 
     const decoded = decodeEventLog({
       abi,
       data: log.data,
-      topics: log.topics,
+      topics,
       strict: true
     });
 
