@@ -110,45 +110,6 @@ readingsByBatch.set('demo-batch-001', [
   },
 ])
 
-interface IngestPayload {
-  sensorId: string
-  batchId: string
-  type: IoTSensorType
-  value: number | string
-  unit: string
-  timestamp?: string
-  latitude?: number
-  longitude?: number
-}
-
-function isIngestPayload(value: unknown): value is IngestPayload {
-  if (typeof value !== 'object' || value === null) return false
-  const p = value as Record<string, unknown>
-  return (
-    typeof p['sensorId'] === 'string' &&
-    typeof p['batchId'] === 'string' &&
-    VALID_SENSOR_TYPES.includes(p['type'] as IoTSensorType) &&
-    (typeof p['value'] === 'number' || typeof p['value'] === 'string') &&
-    typeof p['unit'] === 'string'
-  )
-}
-
-function classifyState(type: IoTSensorType, value: number | string): IoTState {
-  if (typeof value !== 'number') return 'optimal'
-  switch (type) {
-    case 'temperature':
-      if (value > 35) return 'critical'
-      if (value > 25) return 'warning'
-      return 'optimal'
-    case 'humidity':
-      if (value > 80) return 'critical'
-      if (value > 60) return 'warning'
-      return 'optimal'
-    default:
-      return 'optimal'
-  }
-}
-
 class IoTService {
   ingest(payload: unknown): IoTReadingWithState {
     if (!isIngestPayload(payload)) {
