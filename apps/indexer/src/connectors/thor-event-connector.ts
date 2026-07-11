@@ -187,12 +187,50 @@ export class ThorEventConnector implements EventConnector {
   }
 
   /**
+   * Fetch all pages of raw event logs for a given range and criteria set.
+   *
+   * Paginates using `offset` until fewer than `pageLimit` results are returned,
+   * ensuring no logs are lost when event volume in a block range exceeds
+   * the per-page limit.
+   */
+  async #fetchAllPages(
+    range: { unit: 'block'; from: number; to: number },
+    criteria: EventCriteria[],
+  ): Promise<EventLogs[]> {
+    const all: EventLogs[] = [];
+    let offset = 0;
+
+    while (true) {
+      const page = await this.#thor.logs.filterRawEventLogs({
+        range,
+        criteriaSet: criteria,
+        options: { offset, limit: this.#pageLimit },
+        order: 'asc',
+      });
+
+      all.push(...page);
+
+      // Fewer results than the limit means we have fetched the final page.
+      if (page.length < this.#pageLimit) {
+        break;
+      }
+
+      offset += this.#pageLimit;
+    }
+
+    return all;
+  }
+
+  /**
    * Fetch raw event logs from VeChainThor for the next block range.
    *
    * Returns an empty array when:
    * - No contract addresses are configured (pre-deployment state).
    * - The connector is already up-to-date with the chain head.
    * - The Thor node returns no events for the queried range.
+   *
+   * Pagination: fetches all pages per contract so that no events are lost
+   * when event volume in a block range exceeds pageLimit.
    */
   async pull(): Promise<RawEventLog[]> {
     if (!this.#initialized) {
@@ -222,12 +260,7 @@ export class ThorEventConnector implements EventConnector {
 
     if (this.#dppAddress) {
       const criteria: EventCriteria[] = [{ address: this.#dppAddress }];
-      const logs = await this.#thor.logs.filterRawEventLogs({
-        range,
-        criteriaSet: criteria,
-        options: { offset: 0, limit: this.#pageLimit },
-        order: 'asc',
-      });
+      const logs = await this.#fetchAllPages(range, criteria);
       for (const log of logs) {
         tagged.push({ log, contract: 'dpp', address: this.#dppAddress });
       }
@@ -235,12 +268,7 @@ export class ThorEventConnector implements EventConnector {
 
     if (this.#marketplaceAddress) {
       const criteria: EventCriteria[] = [{ address: this.#marketplaceAddress }];
-      const logs = await this.#thor.logs.filterRawEventLogs({
-        range,
-        criteriaSet: criteria,
-        options: { offset: 0, limit: this.#pageLimit },
-        order: 'asc',
-      });
+      const logs = await this.#fetchAllPages(range, criteria);
       for (const log of logs) {
         tagged.push({ log, contract: 'marketplace', address: this.#marketplaceAddress });
       }
