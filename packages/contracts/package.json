@@ -8,7 +8,9 @@
     "precompile": "node scripts/seed-compiler.cjs",
     "compile": "hardhat compile",
     "pretest": "node scripts/seed-compiler.cjs",
-    "test": "hardhat test"
+    "test": "hardhat test",
+    "type-check": "tsc --noEmit",
+    "ignition:validate": "hardhat compile && tsc --project ignition/tsconfig.json --noEmit"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
@@ -25,6 +27,7 @@
     "@types/mocha": ">=9.1.0",
     "@types/node": "^20.0.0",
     "chai": "^4.2.0",
+    "dotenv": "^16.6.1",
     "hardhat": "^2.22.16",
     "hardhat-gas-reporter": "^1.0.8",
     "solidity-coverage": "^0.8.1",

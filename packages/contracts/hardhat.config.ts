@@ -5,7 +5,8 @@ import type { HardhatUserConfig } from 'hardhat/config'
 dotenvConfig()
 
 const vechainTestnetRpcUrl = process.env.VECHAIN_TESTNET_RPC_URL ?? 'https://testnet.vechain.org'
-const deployerPrivateKey = process.env.VECHAIN_TESTNET_PRIVATE_KEY
+const deployerPrivateKey =
+  process.env.DEPLOYER_PRIVATE_KEY ?? process.env.VECHAIN_TESTNET_PRIVATE_KEY
 
 const config: HardhatUserConfig = {
   solidity: {
