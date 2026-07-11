@@ -40,6 +40,7 @@ function EventRow({ event }: { event: DPPEvent }) {
 
 export function DPPCard({ dpp }: DPPCardProps) {
   const isVerified = Boolean(dpp.txHash)
+  const metadataEntries = Object.entries(dpp.metadata ?? {}).slice(0, 4)
 
   return (
     <div className="sa-card" style={{ maxWidth: '100%', width: '100%' }}>
@@ -64,6 +65,15 @@ export function DPPCard({ dpp }: DPPCardProps) {
           <span className="wallet-label">Origin</span>
           <span>{dpp.originCountry ? `${dpp.origin}, ${dpp.originCountry}` : dpp.origin}</span>
         </div>
+        {(dpp.profile || dpp.workflowId) && (
+          <div className="wallet-row">
+            <span className="wallet-label">Workflow</span>
+            <span style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+              {dpp.profile && <span className="badge-roadmap">{dpp.profile}</span>}
+              {dpp.workflowId && <span className="badge-roadmap">{dpp.workflowId}</span>}
+            </span>
+          </div>
+        )}
         {dpp.certifications.length > 0 && (
           <div className="wallet-row">
             <span className="wallet-label">Certifications</span>
@@ -81,6 +91,22 @@ export function DPPCard({ dpp }: DPPCardProps) {
           </span>
         </div>
       </div>
+
+      {metadataEntries.length > 0 && (
+        <div style={{ marginBottom: '16px' }}>
+          <div style={{ fontWeight: 600, fontSize: '0.9rem', marginBottom: '8px', color: 'var(--text-muted)' }}>
+            Metadata-driven capture
+          </div>
+          <div style={{ display: 'grid', gap: '8px' }}>
+            {metadataEntries.map(([key, value]) => (
+              <div key={key} className="data-chip">
+                <span className="data-chip-label">{key}</span>
+                <span className="data-chip-value">{String(value)}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {dpp.events.length > 0 && (
         <div>

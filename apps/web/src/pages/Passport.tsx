@@ -5,6 +5,7 @@ import { DPPCard } from '../components/DPPCard.tsx'
 import { IoTReadingBadge } from '../components/IoTReadingBadge.tsx'
 
 const DEMO_BATCH_ID = 'demo-batch-001'
+const AQUA_BATCH_ID = 'aqua-batch-001'
 
 export function Passport() {
   const [input, setInput] = useState(DEMO_BATCH_ID)
@@ -30,6 +31,10 @@ export function Passport() {
           Search and view the on-chain lifecycle of any product batch — from origin through IoT
           readings to final delivery.
         </p>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '12px' }}>
+          <span className="badge-roadmap">{DEMO_BATCH_ID}</span>
+          <span className="badge-roadmap">{AQUA_BATCH_ID}</span>
+        </div>
       </div>
 
       <form onSubmit={handleSearch} style={{ display: 'flex', gap: '10px', marginBottom: '28px' }}>
@@ -37,7 +42,7 @@ export function Passport() {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Enter batch ID (e.g. demo-batch-001)"
+          placeholder="Enter batch ID (e.g. demo-batch-001 or aqua-batch-001)"
           style={{
             flex: 1,
             padding: '10px 14px',

@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto'
-import type { DPP, DPPEvent, DPPEventType, DPPStatus } from '@nama/shared'
+import type { DPP, DPPEvent, DPPEventType, DPPStatus, DPPProfile } from '@nama/shared'
 import { projectionQueryService } from './projection-query.service.ts'
+import { getWorkflowDefinition } from './workflow-catalog.ts'
 
 // In-memory store — replaced with on-chain + DB persistence in later phases
 const store = new Map<string, DPP>()
@@ -48,6 +49,9 @@ interface MintPayload {
   origin: string
   productName?: string
   originCountry?: string
+  profile?: DPPProfile
+  workflowId?: string
+  metadata?: Record<string, unknown>
   status?: string
 }
 
@@ -82,6 +86,8 @@ store.set('demo-batch-001', {
   origin: 'FARM-KE-001',
   originCountry: 'Kenya',
   status: 'active',
+  profile: 'standard',
+  workflowId: 'producer-dpp-standard-v1',
   certifications: [
     {
       name: 'Organic',
@@ -101,28 +107,118 @@ store.set('demo-batch-001', {
       timestamp: '2025-03-01T06:00:00.000Z',
       actor: 'FARM-KE-001',
       location: 'Nyeri County, Kenya',
+      metadata: {
+        telemetry: [
+          { category: 'biodiversity', value: 1, unit: 'event', sdgGoals: [15], status: 'verified', tags: ['agroforestry'] }
+        ]
+      }
     },
     {
       eventType: 'transit',
       timestamp: '2025-03-05T10:30:00.000Z',
       actor: 'LOGISTICS-001',
       location: 'Mombasa Port, Kenya',
+      metadata: {
+        telemetry: [
+          { category: 'energy', value: 12.4, unit: 'kWh', sdgGoals: [7, 13], status: 'verified', tags: ['dispatch', 'cold-chain'] }
+        ]
+      }
     },
     {
       eventType: 'storage',
       timestamp: '2025-03-12T14:00:00.000Z',
       actor: 'WAREHOUSE-AE-001',
       location: 'Dubai, UAE',
+      metadata: {
+        telemetry: [
+          { category: 'waste', value: 2.1, unit: 'kg', sdgGoals: [12], status: 'captured', tags: ['storage-loss'] }
+        ]
+      }
     },
     {
       eventType: 'quality_check',
       timestamp: '2025-03-20T09:00:00.000Z',
       actor: 'QA-TEAM-001',
       location: 'Dubai, UAE',
+      metadata: {
+        telemetry: [
+          { category: 'compliance', value: 1, unit: 'event', sdgGoals: [12], status: 'verified', tags: ['qa', 'audit'] }
+        ]
+      }
     },
   ],
+  metadata: {
+    producerCooperative: 'Nyeri Highlands Cooperative',
+    lotSizeKg: 500,
+    harvestDate: '2025-02-24',
+    packagingType: 'jute',
+    certificationsVerified: true
+  },
   createdAt: '2025-03-01T06:00:00.000Z',
 })
+
+store.set('aqua-batch-001', {
+  dppId: 'demo-dpp-aqua-001',
+  batchId: 'aqua-batch-001',
+  product: 'org.shrimp.vannamei',
+  productName: 'Vannamei Shrimp Harvest Lot',
+  origin: 'POND-ID-009',
+  originCountry: 'Indonesia',
+  status: 'active',
+  profile: 'aqua',
+  workflowId: 'producer-aqua-dpp-v1',
+  certifications: [
+    {
+      name: 'ASC Ready',
+      issuer: 'Regional Aqua Assurance Board',
+      issuedAt: '2025-03-10T00:00:00.000Z'
+    }
+  ],
+  events: [
+    {
+      eventType: 'created',
+      timestamp: '2025-03-24T05:30:00.000Z',
+      actor: 'AQUA-PRODUCER-009',
+      location: 'Makassar, Indonesia',
+      metadata: {
+        telemetry: [
+          { category: 'water', value: 7.6, unit: 'pH', sdgGoals: [6, 14], status: 'verified', tags: ['pond-baseline'] }
+        ]
+      }
+    },
+    {
+      eventType: 'quality_check',
+      timestamp: '2025-03-28T06:45:00.000Z',
+      actor: 'BIOSECURITY-TEAM-03',
+      location: 'Makassar, Indonesia',
+      metadata: {
+        telemetry: [
+          { category: 'water', value: 6.8, unit: 'mg/L', sdgGoals: [6, 14], status: 'verified', tags: ['oxygen'] },
+          { category: 'biodiversity', value: 1, unit: 'event', sdgGoals: [14], status: 'captured', tags: ['feed-audit'] }
+        ]
+      }
+    }
+  ],
+  metadata: {
+    species: 'Litopenaeus vannamei',
+    pondId: 'POND-ID-009',
+    harvestWindow: '2025-04-02',
+    dissolvedOxygenMgL: 6.8,
+    salinityPpt: 14,
+    feedCertification: 'IFFO RS'
+  },
+  createdAt: '2025-03-24T05:30:00.000Z'
+})
+
+function attachWorkflow(dpp: DPP): DPP {
+  const profile = dpp.profile ?? 'standard'
+  return {
+    ...dpp,
+    profile,
+    workflowId: dpp.workflowId ?? getWorkflowDefinition(undefined, profile).workflowId,
+    workflow: getWorkflowDefinition(dpp.workflowId, profile)
+  }
+}
 
 class DPPService {
   getByBatchId(batchId: string): DPP | undefined {
@@ -141,7 +237,7 @@ class DPPService {
         location: event.locationCode ?? undefined
       }))
 
-      return {
+      return attachWorkflow({
         dppId: passport.passportId,
         batchId: passport.batchId ?? batchId,
         product: passport.product ?? 'unknown',
@@ -151,10 +247,11 @@ class DPPService {
         events,
         createdAt: passport.createdAt ?? passport.updatedAt ?? new Date().toISOString(),
         updatedAt: passport.updatedAt ?? undefined
-      }
+      })
     }
 
-    return store.get(batchId)
+    const dpp = store.get(batchId)
+    return dpp ? attachWorkflow(dpp) : undefined
   }
 
   getTimelineByBatchId(batchId: string): DPPEvent[] | undefined {
@@ -176,6 +273,26 @@ class DPPService {
     return store.get(batchId)?.events
   }
 
+  listAll(): DPP[] {
+    if (projectionQueryService.hasPassportProjectionData()) {
+      return projectionQueryService.getPassportStates().map((passport) =>
+        attachWorkflow({
+          dppId: passport.passportId,
+          batchId: passport.batchId ?? passport.passportId,
+          product: passport.product ?? 'unknown',
+          origin: passport.origin ?? 'unknown',
+          status: toDppStatusFromActive(passport.active),
+          certifications: [],
+          events: [],
+          createdAt: passport.createdAt ?? passport.updatedAt ?? new Date().toISOString(),
+          updatedAt: passport.updatedAt ?? undefined
+        })
+      )
+    }
+
+    return [...store.values()].map((dpp) => attachWorkflow(dpp))
+  }
+
   mint(payload: unknown): DPP {
     if (!isMintPayload(payload)) {
       throw new Error('Invalid DPP payload: batchId, product, and origin are required')
@@ -192,6 +309,8 @@ class DPPService {
       origin: payload.origin,
       originCountry: payload.originCountry,
       status,
+      profile: payload.profile ?? 'standard',
+      workflowId: payload.workflowId,
       certifications: [],
       events: [
         {
@@ -199,10 +318,11 @@ class DPPService {
           timestamp: new Date().toISOString(),
         },
       ],
+      metadata: payload.metadata,
       createdAt: new Date().toISOString(),
     }
     store.set(dpp.batchId, dpp)
-    return dpp
+    return attachWorkflow(dpp)
   }
 
   addEvent(batchId: string, payload: unknown): DPP {
@@ -224,7 +344,7 @@ class DPPService {
     }
     dpp.events.push(event)
     dpp.updatedAt = new Date().toISOString()
-    return dpp
+    return attachWorkflow(dpp)
   }
 }
 

@@ -4,6 +4,8 @@ import { dppRouter } from './routes/dpp.routes.ts'
 import { marketplaceRouter } from './routes/marketplace.routes.ts'
 import { esgRouter } from './routes/esg.routes.ts'
 import { iotRouter } from './routes/iot.routes.ts'
+import { enterpriseRouter } from './routes/enterprise.routes.ts'
+import { producerRouter } from './routes/producer.routes.ts'
 import { rateLimiter } from './middleware/rateLimit.ts'
 
 const app = express()
@@ -21,6 +23,8 @@ app.use('/dpp', dppRouter)
 app.use('/marketplace', marketplaceRouter)
 app.use('/esg', esgRouter)
 app.use('/iot', iotRouter)
+app.use('/enterprise', enterpriseRouter)
+app.use('/producer', producerRouter)
 
 app.listen(PORT, () => {
   console.log(`NAMA API running on http://localhost:${PORT}`)

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import type { DPP } from '@nama/shared'
 import { apiUrl, isDemoMode } from '../lib/api.ts'
-import { demoDPP, DEMO_BATCH_ID } from '../lib/demoData.ts'
+import { demoAquaDPP, demoDPP, DEMO_BATCH_ID, AQUA_BATCH_ID } from '../lib/demoData.ts'
 
 export function useDPP(batchId: string | null) {
   const [dpp, setDpp] = useState<DPP | null>(null)
@@ -15,8 +15,10 @@ export function useDPP(batchId: string | null) {
     if (isDemoMode) {
       if (batchId === DEMO_BATCH_ID) {
         setDpp(demoDPP)
+      } else if (batchId === AQUA_BATCH_ID) {
+        setDpp(demoAquaDPP)
       } else {
-        setError(`Demo mode: only "${DEMO_BATCH_ID}" is available offline.`)
+        setError(`Demo mode: only "${DEMO_BATCH_ID}" and "${AQUA_BATCH_ID}" are available offline.`)
       }
       return
     }

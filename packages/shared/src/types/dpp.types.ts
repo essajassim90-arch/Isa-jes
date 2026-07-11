@@ -1,3 +1,5 @@
+import type { DPPProfile, ProducerWorkflowDefinition } from './experience.types.ts'
+
 export type DPPStatus = 'active' | 'delivered' | 'recalled' | 'expired'
 
 export type DPPEventType =
@@ -38,6 +40,10 @@ export interface DPP {
   status: DPPStatus
   certifications: DPPCertification[]
   events: DPPEvent[]
+  profile?: DPPProfile
+  workflowId?: string
+  workflow?: ProducerWorkflowDefinition
+  metadata?: Record<string, unknown>
   createdAt: string
   updatedAt?: string
   txHash?: string

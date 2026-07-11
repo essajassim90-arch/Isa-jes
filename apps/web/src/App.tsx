@@ -1,33 +1,60 @@
 import { useState } from 'react'
 import { WalletButton } from '@vechain/vechain-kit'
 import './App.css'
-import { Home } from './pages/Home.tsx'
 import { Passport } from './pages/Passport.tsx'
 import { Marketplace } from './pages/Marketplace.tsx'
 import { ESG } from './pages/ESG.tsx'
-import { Circular } from './pages/Circular.tsx'
+import { EnterpriseDashboard } from './pages/EnterpriseDashboard.tsx'
+import { ProducerWorkspace } from './pages/ProducerWorkspace.tsx'
 
-type Page = 'home' | 'passport' | 'marketplace' | 'esg' | 'circular'
+type InterfaceMode = 'enterprise' | 'producer'
+type EnterprisePage = 'dashboard' | 'passport' | 'marketplace' | 'esg'
+type ProducerPage = 'workspace' | 'passport'
+type Page = EnterprisePage | ProducerPage
 
-const NAV_ITEMS: { id: Page; label: string }[] = [
-  { id: 'home', label: '🏠 Home' },
+const ENTERPRISE_NAV_ITEMS: { id: EnterprisePage; label: string }[] = [
+  { id: 'dashboard', label: '🏢 Dashboard' },
   { id: 'passport', label: '📦 Passport' },
   { id: 'marketplace', label: '🛒 Marketplace' },
   { id: 'esg', label: '🌱 ESG' },
-  { id: 'circular', label: '♻️ Circular' },
+]
+
+const PRODUCER_NAV_ITEMS: { id: ProducerPage; label: string }[] = [
+  { id: 'workspace', label: '📱 Workspace' },
+  { id: 'passport', label: '📦 Passport' },
 ]
 
 function App() {
-  const [page, setPage] = useState<Page>('home')
+  const [mode, setMode] = useState<InterfaceMode>('enterprise')
+  const [page, setPage] = useState<Page>('dashboard')
+
+  const navItems = mode === 'enterprise' ? ENTERPRISE_NAV_ITEMS : PRODUCER_NAV_ITEMS
 
   const renderPage = () => {
-    switch (page) {
-      case 'passport':    return <Passport />
-      case 'marketplace': return <Marketplace />
-      case 'esg':         return <ESG />
-      case 'circular':    return <Circular />
-      default:            return <Home />
+    if (mode === 'producer') {
+      switch (page) {
+        case 'passport':
+          return <Passport />
+        default:
+          return <ProducerWorkspace />
+      }
     }
+
+    switch (page as EnterprisePage) {
+      case 'passport':
+        return <Passport />
+      case 'marketplace':
+        return <Marketplace />
+      case 'esg':
+        return <ESG />
+      default:
+        return <EnterpriseDashboard />
+    }
+  }
+
+  const switchMode = (nextMode: InterfaceMode) => {
+    setMode(nextMode)
+    setPage(nextMode === 'enterprise' ? 'dashboard' : 'workspace')
   }
 
   return (
@@ -35,10 +62,25 @@ function App() {
       <header className="header">
         <div className="header-left">
           <span className="logo">⚡ NAMA Protocol</span>
-          <span className="tagline">VeChain Ecosystem MVP</span>
+          <span className="tagline">Unified enterprise + producer pre-Testnet shell</span>
         </div>
-        <nav className="header-nav">
-          {NAV_ITEMS.filter((n) => n.id !== 'home').map((n) => (
+        <div className="header-controls">
+          <div className="mode-switcher">
+            <button
+              className={`mode-toggle ${mode === 'enterprise' ? 'active' : ''}`}
+              onClick={() => switchMode('enterprise')}
+            >
+              Enterprise
+            </button>
+            <button
+              className={`mode-toggle ${mode === 'producer' ? 'active' : ''}`}
+              onClick={() => switchMode('producer')}
+            >
+              Producer
+            </button>
+          </div>
+          <nav className="header-nav">
+            {navItems.map((n) => (
             <button
               key={n.id}
               className={`nav-btn ${page === n.id ? 'active' : ''}`}
@@ -47,8 +89,9 @@ function App() {
               {n.label}
             </button>
           ))}
-        </nav>
-        <WalletButton />
+          </nav>
+          <WalletButton />
+        </div>
       </header>
 
       <main className="main">{renderPage()}</main>
