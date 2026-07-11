@@ -22,6 +22,12 @@ const config: HardhatUserConfig = {
     vechain_testnet: {
       url: vechainTestnetRpcUrl,
       accounts: deployerPrivateKey ? [deployerPrivateKey] : [],
+      // VeChainThor Testnet chain ID (0x27 = 39).
+      // Required so Hardhat does not auto-detect via eth_chainId on startup.
+      chainId: 39,
+      // VeChainThor does not support EIP-1559 (no eth_feeHistory / maxFeePerGas).
+      // Setting gasPrice forces Hardhat Ignition to send legacy (type-0) transactions.
+      gasPrice: 1_000_000_000,
     },
   },
 }

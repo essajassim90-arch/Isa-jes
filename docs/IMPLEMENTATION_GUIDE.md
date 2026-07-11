@@ -541,8 +541,8 @@ jobs:
 |----------|-------------|-------|
 | `VITE_WC_PROJECT_ID` | WalletConnect / Reown project ID | Frontend |
 | `VITE_VECHAIN_NETWORK` | `test` or `main` | Frontend |
-| `VITE_DPP_CONTRACT_ADDRESS` | Deployed DPP contract address | Frontend |
-| `VITE_MARKETPLACE_CONTRACT_ADDRESS` | Deployed Marketplace contract address | Frontend |
+| `VITE_CONTRACT_DPP` | Deployed DPP contract address | Frontend |
+| `VITE_CONTRACT_MARKETPLACE` | Deployed Marketplace contract address | Frontend |
 | `VITE_API_BASE_URL` | API gateway URL | Frontend |
 | `DATABASE_URL` | PostgreSQL connection string | API (secret) |
 | `REDIS_URL` | Redis connection string | API (secret) |

@@ -95,8 +95,8 @@ VITE_CONTRACT_MARKETPLACE=<deployed Marketplace address>
 The indexer (`apps/indexer`) also requires these addresses:
 
 ```
-THOR_DPP_ADDRESS=<deployed DPP address>
-THOR_MARKETPLACE_ADDRESS=<deployed Marketplace address>
+DPP_CONTRACT_ADDRESS=<deployed DPP address>
+MARKETPLACE_CONTRACT_ADDRESS=<deployed Marketplace address>
 ```
 
 ---

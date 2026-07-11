@@ -110,7 +110,7 @@ cp .env.example .env.local
 # Fill in required values:
 # VITE_WC_PROJECT_ID — from https://cloud.walletconnect.com
 # VITE_VECHAIN_NETWORK — 'test' or 'main'
-# VITE_DPP_CONTRACT_ADDRESS — deployed contract address on Testnet
+# VITE_CONTRACT_DPP — deployed contract address on Testnet
 ```
 
 ### Available Scripts
