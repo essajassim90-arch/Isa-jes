@@ -129,34 +129,6 @@ class ProjectionQueryService {
       return null
     }
 
-    getPassportStates(limit = 50): PassportStateRow[] {
-      const db = this.#getDb()
-      if (!db) {
-        return []
-      }
-
-      try {
-        return db
-          .prepare(
-            `SELECT
-              passport_id AS passportId,
-              batch_id AS batchId,
-              owner,
-              product,
-              origin,
-              active,
-              created_at AS createdAt,
-              updated_at AS updatedAt
-            FROM dpp_passports
-            ORDER BY datetime(COALESCE(updated_at, created_at)) DESC, passport_id DESC
-            LIMIT ?`
-          )
-          .all(limit) as PassportStateRow[]
-      } catch {
-        return []
-      }
-    }
-
     try {
       const row = db
         .prepare(
@@ -178,6 +150,34 @@ class ProjectionQueryService {
       return row ?? null
     } catch {
       return null
+    }
+  }
+
+  getPassportStates(limit = 50): PassportStateRow[] {
+    const db = this.#getDb()
+    if (!db) {
+      return []
+    }
+
+    try {
+      return db
+        .prepare(
+          `SELECT
+            passport_id AS passportId,
+            batch_id AS batchId,
+            owner,
+            product,
+            origin,
+            active,
+            created_at AS createdAt,
+            updated_at AS updatedAt
+          FROM dpp_passports
+          ORDER BY datetime(COALESCE(updated_at, created_at)) DESC, passport_id DESC
+          LIMIT ?`
+        )
+        .all(limit) as PassportStateRow[]
+    } catch {
+      return []
     }
   }
 
@@ -293,32 +293,32 @@ class ProjectionQueryService {
     } catch {
       return null
     }
+  }
 
-    getRecentDomainEvents(limit = 25): DomainEventRow[] {
-      const db = this.#getDb()
-      if (!db) {
-        return []
-      }
+  getRecentDomainEvents(limit = 25): DomainEventRow[] {
+    const db = this.#getDb()
+    if (!db) {
+      return []
+    }
 
-      try {
-        return db
-          .prepare(
-            `SELECT
-              event_id AS eventId,
-              aggregate_type AS aggregateType,
-              aggregate_id AS aggregateId,
-              event_name AS eventName,
-              payload_json AS payloadJson,
-              occurred_at AS occurredAt,
-              indexed_at AS indexedAt
-            FROM domain_events
-            ORDER BY datetime(occurred_at) DESC, event_id DESC
-            LIMIT ?`
-          )
-          .all(limit) as DomainEventRow[]
-      } catch {
-        return []
-      }
+    try {
+      return db
+        .prepare(
+          `SELECT
+            event_id AS eventId,
+            aggregate_type AS aggregateType,
+            aggregate_id AS aggregateId,
+            event_name AS eventName,
+            payload_json AS payloadJson,
+            occurred_at AS occurredAt,
+            indexed_at AS indexedAt
+          FROM domain_events
+          ORDER BY datetime(occurred_at) DESC, event_id DESC
+          LIMIT ?`
+        )
+        .all(limit) as DomainEventRow[]
+    } catch {
+      return []
     }
   }
 }

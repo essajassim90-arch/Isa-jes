@@ -89,7 +89,7 @@ class EnterpriseService {
               ...entry,
               passportId: dpp.dppId,
               capturedAt: event.timestamp,
-              source: getSource() === 'projection' ? 'projection' : 'manual'
+              source: (getSource() === 'projection' ? 'projection' : 'manual') as TelemetryEvent['source']
             }))
         })
       )
