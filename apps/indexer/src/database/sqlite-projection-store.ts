@@ -179,6 +179,30 @@ function buildListingRow(envelope: NormalizedEventEnvelope): ListingRow | null {
   };
 }
 
+function buildCertificationRow(envelope: NormalizedEventEnvelope): CertificationRow | null {
+  if (envelope.eventName !== 'PassportCertificationAttached') {
+    return null;
+  }
+
+  const payload = envelope.payload;
+  const passportId = getString(payload, 'passportId');
+  if (!passportId) {
+    return null;
+  }
+
+  return {
+    eventId: envelope.id,
+    passportId,
+    certType: getString(payload, 'certType'),
+    issuer: getString(payload, 'issuer'),
+    certificationHash: getString(payload, 'certificationHash'),
+    issuedAt: toIsoFromUnixSeconds(getString(payload, 'issuedAt')),
+    expiresAt: toIsoFromUnixSeconds(getString(payload, 'expiresAt')),
+    occurredAt: envelope.occurredAt,
+    indexedAt: envelope.metadata.indexedAt
+  };
+}
+
 function buildOfferRow(envelope: NormalizedEventEnvelope): OfferRow | null {
   const payload = envelope.payload;
 
@@ -186,30 +210,6 @@ function buildOfferRow(envelope: NormalizedEventEnvelope): OfferRow | null {
     const offerId = getString(payload, 'offerId');
     if (!offerId) {
       return null;
-    }
-
-    function buildCertificationRow(envelope: NormalizedEventEnvelope): CertificationRow | null {
-      if (envelope.eventName !== 'PassportCertificationAttached') {
-        return null;
-      }
-
-      const payload = envelope.payload;
-      const passportId = getString(payload, 'passportId');
-      if (!passportId) {
-        return null;
-      }
-
-      return {
-        eventId: envelope.id,
-        passportId,
-        certType: getString(payload, 'certType'),
-        issuer: getString(payload, 'issuer'),
-        certificationHash: getString(payload, 'certificationHash'),
-        issuedAt: toIsoFromUnixSeconds(getString(payload, 'issuedAt')),
-        expiresAt: toIsoFromUnixSeconds(getString(payload, 'expiresAt')),
-        occurredAt: envelope.occurredAt,
-        indexedAt: envelope.metadata.indexedAt
-      };
     }
 
     return {

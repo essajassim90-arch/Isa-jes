@@ -405,6 +405,3 @@ class DPPService {
 }
 
 export const dppService = new DPPService()
-  if (normalized.includes('certification')) {
-    return 'quality_check'
-  }
