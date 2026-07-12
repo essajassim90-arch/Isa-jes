@@ -1,0 +1,43 @@
+# Configuration for actions/labeler
+# Labels are applied based on paths modified in a pull request.
+
+web:
+  - changed-files:
+    - any-glob-to-any-file: 'apps/web/**'
+
+api:
+  - changed-files:
+    - any-glob-to-any-file: 'apps/api/**'
+
+indexer:
+  - changed-files:
+    - any-glob-to-any-file: 'apps/indexer/**'
+
+contracts:
+  - changed-files:
+    - any-glob-to-any-file: 'packages/contracts/**'
+
+iot-simulation:
+  - changed-files:
+    - any-glob-to-any-file: 'packages/iot-simulation/**'
+
+shared:
+  - changed-files:
+    - any-glob-to-any-file: 'packages/shared/**'
+
+ci:
+  - changed-files:
+    - any-glob-to-any-file: '.github/**'
+
+documentation:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**.md'
+      - 'docs/**'
+
+dependencies:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'package.json'
+      - 'package-lock.json'
+      - '**/package.json'
