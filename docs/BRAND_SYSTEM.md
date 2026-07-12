@@ -58,6 +58,57 @@ These three anchors define the NAMA brand at every touchpoint.
 
 ---
 
+## Bilingual Brand Usage
+
+NAMA operates across both Arabic-speaking regional markets and English-speaking international contexts. The brand system formally supports two positioning registers that must coexist without either displacing the other.
+
+### Official Taglines
+
+| Language | Tagline | Register |
+|----------|---------|----------|
+| Arabic | **ثقة غذائية مستدامة** | Regional / MENA-first |
+| English (short) | **Sustainable Food Trust** | International / global-first |
+| English (long-form) | **Trusted Infrastructure for Sustainable Food Systems** | Enterprise, grants, ecosystem partners |
+
+The short English tagline is the direct conceptual equivalent of the Arabic tagline and may be used interchangeably in bilingual contexts. The long-form English positioning is reserved for formal documentation, investor materials, grant applications, and ecosystem partnership communications.
+
+### Audience-Based Usage Rules
+
+| Audience | Language Priority | Notes |
+|----------|------------------|-------|
+| Local / regional consumers and producers (MENA) | Arabic-first | Use Arabic tagline on all printed and digital assets; English may appear as a secondary label if space permits |
+| International investors, VCs, ecosystem funds | English-first | Use long-form English positioning as the lead; Arabic tagline may appear as a secondary identity marker |
+| Hackathons and developer grants | English-first | Use short English tagline in submission materials; bilingual lockup encouraged in supporting slides |
+| Ecosystem and protocol partners | English-first | Use long-form English positioning; bilingual lockup where layout allows |
+| Regulatory and audit bodies (MENA) | Arabic-first | All compliance-facing materials must carry the Arabic tagline as the primary identifier |
+
+**Do not remove Arabic identity** from any asset that targets a regional audience, even when an English counterpart is added.  
+**Do not translate brand assets inconsistently** — the only approved English equivalent for ثقة غذائية مستدامة is "Sustainable Food Trust". Do not substitute alternative translations.
+
+### Recommended Logo Lockups
+
+The following lockup combinations are approved for use. All other combinations require brand review.
+
+| Lockup | Context |
+|--------|---------|
+| `NAMA + ثقة غذائية مستدامة` | Regional / MENA materials, Arabic-first assets |
+| `NAMA + Sustainable Food Trust` | International materials, English-first assets |
+| `NAMA — Sustainable Food Trust / نما — ثقة غذائية مستدامة` | Bilingual lockup for dual-audience materials, conference assets, and ecosystem documentation |
+
+When using the bilingual lockup, the English line and the Arabic line must be set at equal visual weight. Neither line should be reduced to a footnote size. A vertical stacking arrangement is preferred when horizontal space is constrained.
+
+### Arabic Visual References
+
+Current Arabic visual references (including hand-sketch concepts and early design iterations containing Arabic script) are **valid brand references** and reflect the authentic origin of the NAMA identity. They should not be discarded or treated as informal.
+
+Future production assets must include English counterparts alongside all Arabic-language brand expressions. Specifically:
+
+- Any new SVG lockup produced for the Arabic tagline must have a companion English-tagline SVG at the same specification.
+- Any marketing template produced in Arabic must have an equivalent English-language version approved before publication.
+- The bilingual lockup (`NAMA — Sustainable Food Trust / نما — ثقة غذائية مستدامة`) should be added to the asset conversion roadmap as a P1 deliverable.
+
+---
+
 ## Secondary Visual Systems
 
 ### Digital Product Passport (DPP) Card
@@ -200,6 +251,8 @@ The following assets are pending final production conversion from sketch / conce
 | Circular Economy badge | SVG inline component | P1 |
 | Food Security / Sovereignty badge | SVG inline component | P1 |
 | Arabic tagline lockup | SVG (text outlined) | P1 |
+| English tagline lockup (Sustainable Food Trust) | SVG (text outlined) | P1 |
+| Bilingual lockup (NAMA — Sustainable Food Trust / نما — ثقة غذائية مستدامة) | SVG (text outlined) | P1 |
 
 ---
 
