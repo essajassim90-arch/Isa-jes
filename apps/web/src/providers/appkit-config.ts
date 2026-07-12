@@ -6,7 +6,7 @@ import { QueryClient } from '@tanstack/react-query'
 
 export const queryClient = new QueryClient()
 
-const projectId = import.meta.env.VITE_WC_PROJECT_ID as string | undefined
+const projectId = import.meta.env.VITE_WC_PROJECT_ID?.trim() || undefined
 
 const metadata = {
   name: 'NAMA Protocol',

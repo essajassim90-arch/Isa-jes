@@ -1,7 +1,7 @@
 import { VeChainKitProvider } from '@vechain/vechain-kit'
 import '@vechain/vechain-kit/assets'
 
-const projectId = import.meta.env.VITE_WC_PROJECT_ID as string | undefined
+const projectId = import.meta.env.VITE_WC_PROJECT_ID?.trim() || undefined
 
 const walletConnectMetadata = {
   name: 'NAMA Protocol',
