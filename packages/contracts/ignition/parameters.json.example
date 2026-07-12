@@ -1,0 +1,5 @@
+{
+  "$schema": "https://hardhat.org/ignition/schema/parameters.json",
+  "DPP": {},
+  "Marketplace": {}
+}
