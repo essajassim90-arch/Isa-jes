@@ -254,6 +254,7 @@ For the full technical and commercial deep-dive, read the [NAMA Whitepaper](WHIT
 | [WHITEPAPER.md](WHITEPAPER.md) | Full technical and commercial deep-dive |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | System architecture and module breakdown |
 | [ROADMAP.md](ROADMAP.md) | Phased development roadmap |
+| [docs/BRAND_SYSTEM.md](docs/BRAND_SYSTEM.md) | Visual identity — Leaf-N mark, colour palette, Arabic tagline, badge system, usage rules |
 | [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) | Brand system, design tokens, CSS variables, component specs |
 | [docs/UI_ARCHITECTURE.md](docs/UI_ARCHITECTURE.md) | UI/UX architecture, page structure, user journeys |
 | [docs/COMPONENT_ARCHITECTURE.md](docs/COMPONENT_ARCHITECTURE.md) | React component hierarchy and TypeScript models |
