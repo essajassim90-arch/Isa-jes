@@ -1,0 +1,78 @@
+# NAMA Protocol — Docker Compose
+#
+# Runs the co-located indexer + API stack on a single host with a shared
+# SQLite projection database. Do NOT run more than one indexer replica —
+# SQLite does not support concurrent writers.
+#
+# Usage:
+#   cp .env.example .env          # fill in required values
+#   docker compose up -d
+#
+# Required .env values for this compose file:
+#   DPP_CONTRACT_ADDRESS          — deployed DPP contract address (0x...)
+#   MARKETPLACE_CONTRACT_ADDRESS  — deployed Marketplace contract address (0x...)
+#   JWT_SECRET                    — strong random secret for the API
+#
+# Optional .env values:
+#   THOR_URL                      — defaults to https://testnet.vechain.org
+#   CHAIN_ID                      — defaults to 39 (VeChainThor Testnet)
+#   API_PORT                      — host port to expose the API on (default: 3001)
+
+services:
+  indexer:
+    image: node:20-alpine
+    working_dir: /app
+    command: >
+      sh -c "npm ci --legacy-peer-deps --silent &&
+             npm run start --workspace=@nama/indexer"
+    volumes:
+      - .:/app:ro
+      - projections:/var/lib/nama/projections
+      - node_modules:/app/node_modules
+    environment:
+      DPP_CONTRACT_ADDRESS: ${DPP_CONTRACT_ADDRESS}
+      MARKETPLACE_CONTRACT_ADDRESS: ${MARKETPLACE_CONTRACT_ADDRESS}
+      THOR_URL: ${THOR_URL:-https://testnet.vechain.org}
+      CHAIN_ID: ${CHAIN_ID:-39}
+      DB_PATH: /var/lib/nama/projections/projections.db
+      CHECKPOINT_PATH: /var/lib/nama/projections/checkpoints.json
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "process.exit(0)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  api:
+    image: node:20-alpine
+    working_dir: /app
+    command: >
+      sh -c "npm ci --legacy-peer-deps --silent &&
+             npm run build --workspace=@nama/api &&
+             npm run start --workspace=@nama/api"
+    volumes:
+      - .:/app:ro
+      - projections:/var/lib/nama/projections:ro
+      - node_modules:/app/node_modules
+    environment:
+      PORT: 3001
+      JWT_SECRET: ${JWT_SECRET}
+      PROJECTION_DB_PATH: /var/lib/nama/projections/projections.db
+    ports:
+      - "${API_PORT:-3001}:3001"
+    depends_on:
+      indexer:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  projections:
+    driver: local
+  node_modules:
+    driver: local

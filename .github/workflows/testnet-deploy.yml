@@ -1,0 +1,83 @@
+name: Deploy Contracts to VeChainThor Testnet
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type "deploy" to confirm testnet deployment'
+        required: true
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-contracts:
+    name: Deploy DPP + Marketplace to VeChainThor Testnet
+    runs-on: ubuntu-latest
+    if: github.event.inputs.confirm == 'deploy'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Compile contracts
+        run: npm run compile --workspace=@nama/contracts
+
+      - name: Validate Ignition modules
+        run: npm run ignition:validate --workspace=@nama/contracts
+
+      - name: Deploy DPP contract
+        id: deploy-dpp
+        run: |
+          cd packages/contracts
+          OUTPUT=$(npx hardhat ignition deploy ignition/modules/DPP.ts --network vechain_testnet 2>&1)
+          echo "$OUTPUT"
+          DPP_ADDR=$(echo "$OUTPUT" | grep -oE '0x[0-9a-fA-F]{40}' | head -1)
+          echo "dpp_address=$DPP_ADDR" >> "$GITHUB_OUTPUT"
+          if [ -z "$DPP_ADDR" ]; then
+            echo "ERROR: could not parse deployed DPP address from output"
+            exit 1
+          fi
+        env:
+          DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+          VECHAIN_TESTNET_RPC_URL: ${{ vars.VECHAIN_TESTNET_RPC_URL || 'https://testnet.vechain.org' }}
+
+      - name: Deploy Marketplace contract
+        id: deploy-marketplace
+        run: |
+          cd packages/contracts
+          OUTPUT=$(npx hardhat ignition deploy ignition/modules/Marketplace.ts --network vechain_testnet 2>&1)
+          echo "$OUTPUT"
+          MARKETPLACE_ADDR=$(echo "$OUTPUT" | grep -oE '0x[0-9a-fA-F]{40}' | head -1)
+          echo "marketplace_address=$MARKETPLACE_ADDR" >> "$GITHUB_OUTPUT"
+          if [ -z "$MARKETPLACE_ADDR" ]; then
+            echo "ERROR: could not parse deployed Marketplace address from output"
+            exit 1
+          fi
+        env:
+          DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+          VECHAIN_TESTNET_RPC_URL: ${{ vars.VECHAIN_TESTNET_RPC_URL || 'https://testnet.vechain.org' }}
+
+      - name: Print deployed addresses
+        run: |
+          echo "════════════════════════════════════════════"
+          echo "NAMA contracts deployed to VeChainThor Testnet"
+          echo "════════════════════════════════════════════"
+          echo "DPP:         ${{ steps.deploy-dpp.outputs.dpp_address }}"
+          echo "Marketplace: ${{ steps.deploy-marketplace.outputs.marketplace_address }}"
+          echo ""
+          echo "Next steps:"
+          echo "  1. Update packages/shared/src/constants/vechain.ts with these addresses"
+          echo "  2. Set VITE_CONTRACT_DPP and VITE_CONTRACT_MARKETPLACE in GitHub Secrets"
+          echo "  3. Set DPP_CONTRACT_ADDRESS and MARKETPLACE_CONTRACT_ADDRESS on your indexer host"
+          echo "════════════════════════════════════════════"
