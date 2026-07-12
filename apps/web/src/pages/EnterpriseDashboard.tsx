@@ -1,6 +1,7 @@
 import { useEnterpriseDashboard } from '../hooks/useEnterpriseDashboard.ts'
 import { useCircular } from '../hooks/useCircular.ts'
 import { apiUrl, isDemoMode } from '../lib/api.ts'
+import { demoProcurementSavings, demoCircularRevenueShare } from '../lib/demoData.ts'
 
 function StatCard({ label, value, tone = 'default' }: { label: string; value: string | number; tone?: 'default' | 'accent' }) {
   return (
@@ -208,6 +209,81 @@ export function EnterpriseDashboard() {
           </div>
         </section>
       )}
+
+      <section className="panel">
+        <div className="section-title-row">
+          <h2>💰 Commercial Model</h2>
+          <span className="badge-roadmap">Demo · read-only · no payment logic</span>
+        </div>
+        <div className="panel-note" style={{ marginBottom: '16px' }}>
+          Illustrative commercial model — demo values only. No real revenue, no payment contracts,
+          no financial settlement. See{' '}
+          <a href="https://github.com/essajassim90-arch/Isa-jes/blob/main/docs/COMMERCIAL_MODEL.md" className="link-muted" target="_blank" rel="noopener noreferrer">
+            docs/COMMERCIAL_MODEL.md
+          </a>{' '}
+          for full context.
+        </div>
+
+        <div className="section-title-row" style={{ marginBottom: '8px' }}>
+          <h3 style={{ fontSize: '0.9rem', fontWeight: 600, margin: 0 }}>Shared Savings Procurement</h3>
+          <span className="badge-roadmap">{demoProcurementSavings.period}</span>
+        </div>
+        <div className="metric-grid" style={{ marginBottom: '16px' }}>
+          <div className="metric-card">
+            <div className="metric-label">Conventional cost</div>
+            <div className="metric-value">${demoProcurementSavings.conventionalCostUsd.toLocaleString()}</div>
+          </div>
+          <div className="metric-card">
+            <div className="metric-label">NAMA procurement cost</div>
+            <div className="metric-value accent">${demoProcurementSavings.namaCostUsd.toLocaleString()}</div>
+          </div>
+          <div className="metric-card">
+            <div className="metric-label">Verified savings</div>
+            <div className="metric-value accent">${demoProcurementSavings.verifiedSavingsUsd.toLocaleString()}</div>
+          </div>
+          <div className="metric-card">
+            <div className="metric-label">Buyer net saving</div>
+            <div className="metric-value">${demoProcurementSavings.buyerNetSavingUsd.toLocaleString()}</div>
+          </div>
+        </div>
+        <div className="stack-sm" style={{ marginBottom: '20px' }}>
+          <div className="key-value">
+            <span>NAMA savings-share rate (configurable)</span>
+            <strong>{(demoProcurementSavings.namaSavingsShareRate * 100).toFixed(0)}%</strong>
+          </div>
+          <div className="key-value">
+            <span>NAMA revenue from savings-share</span>
+            <strong>${demoProcurementSavings.namaRevenueUsd.toLocaleString()}</strong>
+          </div>
+        </div>
+
+        <div className="section-title-row" style={{ marginBottom: '8px' }}>
+          <h3 style={{ fontSize: '0.9rem', fontWeight: 600, margin: 0 }}>Circular Recovery Revenue Share</h3>
+          <span className="badge-roadmap">Configurable split · not a legal rule</span>
+        </div>
+        <div className="metric-grid" style={{ marginBottom: '12px' }}>
+          <div className="metric-card">
+            <div className="metric-label">Total circular recovery revenue</div>
+            <div className="metric-value">${demoCircularRevenueShare.totalCircularRevenueUsd.toLocaleString()}</div>
+          </div>
+          <div className="metric-card">
+            <div className="metric-label">Municipality / recovery partner (50%)</div>
+            <div className="metric-value">${demoCircularRevenueShare.municipalityRevenueUsd.toLocaleString()}</div>
+          </div>
+          <div className="metric-card">
+            <div className="metric-label">NAMA share (40%)</div>
+            <div className="metric-value accent">${demoCircularRevenueShare.namaRevenueUsd.toLocaleString()}</div>
+          </div>
+          <div className="metric-card">
+            <div className="metric-label">Contributing institution (10%)</div>
+            <div className="metric-value">${demoCircularRevenueShare.institutionRevenueUsd.toLocaleString()}</div>
+          </div>
+        </div>
+        <div className="panel-note">
+          Split is illustrative (40 / 50 / 10). Final percentages are negotiated per partnership.
+          No on-chain payment logic · Phase 2 planning only.
+        </div>
+      </section>
 
       <section className="panel">
         <div className="section-title-row">

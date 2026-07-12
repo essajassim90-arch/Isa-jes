@@ -19,6 +19,9 @@ import type {
   CircularDiversionRoute,
   ESGCircularBadge,
   HeritageVaultEntry,
+  ProcurementSavingsModel,
+  CircularRevenueShare,
+  SupplierParticipationModel,
 } from '@nama/shared'
 
 export const DEMO_BATCH_ID = 'demo-batch-001'
@@ -674,3 +677,46 @@ export const demoCircularPanel: CircularPanel = {
   badges: demoCircularBadges,
   heritageVault: demoHeritageVault,
 }
+
+// ---------------------------------------------------------------------------
+// Commercial Operating Model — Demo Layer Only
+// No payment contracts, no real revenue, no financial settlement logic.
+// All values are demo placeholders — see docs/COMMERCIAL_MODEL.md.
+// ---------------------------------------------------------------------------
+
+export const demoProcurementSavings: ProcurementSavingsModel = {
+  buyerOrgId: 'DEMO-BUYER-HOSPITAL-001',
+  period: 'Q1 2025',
+  conventionalCostUsd: 108_000,
+  namaCostUsd: 82_000,
+  verifiedSavingsUsd: 26_000,
+  namaSavingsShareRate: 0.15,
+  namaRevenueUsd: 3_900,
+  buyerNetSavingUsd: 22_100,
+}
+
+export const demoCircularRevenueShare: CircularRevenueShare = {
+  routeId: 'circ-route-001',
+  totalCircularRevenueUsd: 1_210,
+  municipalityShareRate: 0.5,
+  namaShareRate: 0.4,
+  institutionShareRate: 0.1,
+  municipalityRevenueUsd: 605,
+  namaRevenueUsd: 484,
+  institutionRevenueUsd: 121,
+}
+
+export const demoSupplierParticipation: SupplierParticipationModel[] = [
+  {
+    producerOrgId: 'FARM-KE-001',
+    tier: 'preferred',
+    criteriaSatisfied: ['AII grade B+', 'Organic & Fair Trade certifications', '4 verified telemetry events'],
+    futureBenefitDirection: 'Priority listing placement · fee reduction in Phase 3',
+  },
+  {
+    producerOrgId: 'AQUA-PRODUCER-009',
+    tier: 'standard',
+    criteriaSatisfied: ['Active DPP registered', 'ASC Ready certification'],
+    futureBenefitDirection: 'Eligible for Preferred tier with additional telemetry events',
+  },
+]
