@@ -3,14 +3,7 @@ import react from '@vitejs/plugin-react'
 import path from 'path'
 
 // https://vite.dev/config/
-export default defineConfig(({ command }) => {
-  if (command === 'build' && !process.env.VITE_WC_PROJECT_ID) {
-    throw new Error(
-      '\n\nMissing required environment variable: VITE_WC_PROJECT_ID\n' +
-      'Set this in .env.local for local builds or via CI secrets for production.\n',
-    )
-  }
-
+export default defineConfig(() => {
   return {
     plugins: [react()],
     base: '/Isa-jes/',
