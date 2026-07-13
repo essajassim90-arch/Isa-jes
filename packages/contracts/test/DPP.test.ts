@@ -21,16 +21,16 @@ describe('DPP', () => {
     expect(passport.active).to.equal(true)
   })
 
-  it('updates passport status', async () => {
-    const [owner, updater] = await ethers.getSigners()
+  it('allows passport owner to update passport status', async () => {
+    const [owner] = await ethers.getSigners()
     const factory = await ethers.getContractFactory('DPP')
     const contract = await factory.deploy()
 
     const passportId = ethers.id('dpp-2')
     await contract.createPassport(passportId, 'batch-002', 'Mangoes', 'KE')
-    await expect(contract.connect(updater).setPassportStatus(passportId, false))
+    await expect(contract.connect(owner).setPassportStatus(passportId, false))
       .to.emit(contract, 'PassportStatusUpdated')
-      .withArgs(passportId, updater.address, true, false, anyValue)
+      .withArgs(passportId, owner.address, true, false, anyValue)
 
     const passport = await contract.getPassport(passportId)
     expect(passport.active).to.equal(false)
@@ -112,7 +112,24 @@ describe('DPP', () => {
     await expect(
       contract.connect(attacker).recordPassportEvent(passportId, ethers.id('e'), owner.address, 'L', 1, 'hash'),
     ).to.be.revertedWithCustomError(contract, 'Unauthorized')
+    await expect(contract.connect(attacker).setPassportStatus(passportId, false)).to.be.revertedWithCustomError(
+      contract,
+      'Unauthorized',
+    )
     await expect(contract.connect(attacker).transferPassportOwnership(passportId, attacker.address)).to.be
       .revertedWithCustomError(contract, 'Unauthorized')
+    await expect(contract.connect(attacker).deactivatePassport(passportId, ethers.id('reason'))).to.be
+      .revertedWithCustomError(contract, 'Unauthorized')
+  })
+
+  it('reverts setPassportStatus for missing passport', async () => {
+    const factory = await ethers.getContractFactory('DPP')
+    const contract = await factory.deploy()
+
+    const missingPassportId = ethers.id('dpp-missing')
+    await expect(contract.setPassportStatus(missingPassportId, false)).to.be.revertedWithCustomError(
+      contract,
+      'PassportNotFound',
+    )
   })
 })

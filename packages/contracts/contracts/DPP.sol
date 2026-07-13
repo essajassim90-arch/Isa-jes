@@ -100,6 +100,9 @@ contract DPP {
         if (passport.createdAt == 0) {
             revert PassportNotFound(passportId);
         }
+        if (passport.owner != msg.sender) {
+            revert Unauthorized();
+        }
 
         bool previousActive = passport.active;
         passport.active = active;

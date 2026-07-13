@@ -17,6 +17,7 @@ API_URL="${API_URL:-http://localhost:3001}"
 THOR_URL="${THOR_URL:-https://testnet.vechain.org}"
 DPP_CONTRACT_ADDRESS="${DPP_CONTRACT_ADDRESS:-}"
 MARKETPLACE_CONTRACT_ADDRESS="${MARKETPLACE_CONTRACT_ADDRESS:-}"
+DPP_BATCH_ID="${DPP_BATCH_ID:-}"
 
 PASS=0
 FAIL=0
@@ -45,21 +46,25 @@ HEALTH_RESP=$(curl -sf --max-time 10 "$API_URL/health" 2>&1) && \
   ok "GET /health → $HEALTH_RESP" || \
   fail "GET /health failed (is the API running at $API_URL?)"
 
-# ── 2. DPP API endpoint ────────────────────────────────────────────────────────
+# ── 2. DPP API endpoint (optional detail lookup) ───────────────────────────────
 
 echo ""
 echo "── 2. DPP endpoint"
-DPP_RESP=$(curl -sf --max-time 10 "$API_URL/dpp" 2>&1) && \
-  ok "GET /dpp returned data" || \
-  fail "GET /dpp failed"
+if [ -z "$DPP_BATCH_ID" ]; then
+  ok "DPP_BATCH_ID not set — skipping GET /dpp/:batchId check"
+else
+  DPP_RESP=$(curl -sf --max-time 10 "$API_URL/dpp/$DPP_BATCH_ID" 2>&1) && \
+    ok "GET /dpp/$DPP_BATCH_ID returned data" || \
+    fail "GET /dpp/$DPP_BATCH_ID failed"
+fi
 
 # ── 3. Marketplace API endpoint ───────────────────────────────────────────────
 
 echo ""
 echo "── 3. Marketplace endpoint"
-MP_RESP=$(curl -sf --max-time 10 "$API_URL/marketplace" 2>&1) && \
-  ok "GET /marketplace returned data" || \
-  fail "GET /marketplace failed"
+MP_RESP=$(curl -sf --max-time 10 "$API_URL/marketplace/listings" 2>&1) && \
+  ok "GET /marketplace/listings returned data" || \
+  fail "GET /marketplace/listings failed"
 
 # ── 4. VeChainThor node reachability ──────────────────────────────────────────
 
