@@ -110,6 +110,7 @@ jobs:
         env:
           DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
           VECHAIN_TESTNET_RPC_URL: ${{ vars.VECHAIN_TESTNET_RPC_URL || 'https://testnet.vechain.org' }}
+          HARDHAT_IGNITION_CONFIRM_DEPLOYMENT: "false"
 
       - name: Deploy Marketplace contract
         id: deploy-marketplace
@@ -145,6 +146,7 @@ jobs:
         env:
           DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
           VECHAIN_TESTNET_RPC_URL: ${{ vars.VECHAIN_TESTNET_RPC_URL || 'https://testnet.vechain.org' }}
+          HARDHAT_IGNITION_CONFIRM_DEPLOYMENT: "false"
 
       - name: Upload deployment artifacts
         if: always()
