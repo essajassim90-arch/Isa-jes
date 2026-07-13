@@ -48,11 +48,12 @@ jobs:
           const trimmedKey = rawKey?.trim() ?? ''
           const hasPrefix = trimmedKey.startsWith('0x')
           const keyBody = hasPrefix ? trimmedKey.slice(2) : trimmedKey
+          const normalizedLength = trimmedKey === '' ? 0 : keyBody.length + 2
           const formatValid = /^[0-9a-fA-F]{64}$/.test(keyBody)
 
           console.log(`DEPLOYER_PRIVATE_KEY present: ${rawKey !== undefined && trimmedKey !== '' ? 'yes' : 'no'}`)
           console.log(`DEPLOYER_PRIVATE_KEY has 0x prefix: ${hasPrefix ? 'yes' : 'no'}`)
-          console.log(`DEPLOYER_PRIVATE_KEY normalized length: ${formatValid ? 66 : 0}`)
+          console.log(`DEPLOYER_PRIVATE_KEY normalized length: ${normalizedLength}`)
           console.log(`DEPLOYER_PRIVATE_KEY hex format valid: ${formatValid ? 'yes' : 'no'}`)
 
           if (!formatValid) {
