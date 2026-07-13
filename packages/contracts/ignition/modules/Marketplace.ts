@@ -13,7 +13,7 @@ import { buildModule } from '@nomicfoundation/hardhat-ignition/modules'
  *   DEPLOYER_PRIVATE_KEY   — deployer account private key (preferred)
  *   VECHAIN_TESTNET_RPC_URL — optional, defaults to https://testnet.vechain.org
  */
-const MarketplaceModule = buildModule('Marketplace', (m) => {
+const MarketplaceModule = buildModule('MarketplaceModule', (m) => {
   const marketplace = m.contract('Marketplace')
 
   return { marketplace }
