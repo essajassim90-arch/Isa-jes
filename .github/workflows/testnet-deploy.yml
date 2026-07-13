@@ -36,28 +36,96 @@ jobs:
       - name: Validate Ignition modules
         run: npm run ignition:validate --workspace=@nama/contracts
 
-      - name: Validate deployer private key
+      - name: Validate deployer key format and derived address
         run: |
           set -euo pipefail
-          KEY="${DEPLOYER_PRIVATE_KEY:-}"
-          if [ -z "$KEY" ]; then
-            echo "ERROR: DEPLOYER_PRIVATE_KEY secret is not set."
-            echo "Set a 64-character hex private key (with or without 0x prefix) in repository secrets."
-            exit 1
+
+          node <<'NODE'
+          const fs = require('node:fs')
+          const { Wallet, getAddress } = require('ethers')
+
+          const rawKey = process.env.DEPLOYER_PRIVATE_KEY ?? ''
+          const trimmedKey = rawKey.trim()
+          const secretPresent = trimmedKey.length > 0
+          const hasPrefix = trimmedKey.startsWith('0x')
+          const keyBody = hasPrefix ? trimmedKey.slice(2) : trimmedKey
+          const normalizedKey = `0x${keyBody}`
+          const validLength = keyBody.length === 64
+          const validHex = /^[0-9a-fA-F]{64}$/.test(keyBody)
+
+          console.log(`secret present: ${secretPresent ? 'yes' : 'no'}`)
+          console.log(`has 0x prefix: ${hasPrefix ? 'yes' : 'no'}`)
+          console.log(`normalized length: ${normalizedKey.length}`)
+          console.log(`hex format valid: ${validHex ? 'yes' : 'no'}`)
+
+          if (!secretPresent || !validLength || !validHex) {
+            console.error(
+              'DEPLOYER_PRIVATE_KEY is not a valid private key. Do not use wallet address, QR receive address, password, or seed phrase.',
+            )
+            process.exit(1)
+          }
+
+          let deployerAddress
+          try {
+            deployerAddress = new Wallet(normalizedKey).address
+          } catch {
+            console.error(
+              'DEPLOYER_PRIVATE_KEY is not a valid private key. Do not use wallet address, QR receive address, password, or seed phrase.',
+            )
+            process.exit(1)
+          }
+
+          console.log(`derived deployer address: ${deployerAddress}`)
+          fs.writeFileSync(
+            `${process.env.RUNNER_TEMP}/derived-deployer-address`,
+            deployerAddress,
+            { mode: 0o600 },
+          )
+
+          const expectedAddress = (process.env.EXPECTED_DEPLOYER_ADDRESS ?? '').trim()
+          if (expectedAddress) {
+            let normalizedExpectedAddress
+            try {
+              normalizedExpectedAddress = getAddress(expectedAddress)
+            } catch {
+              console.error('EXPECTED_DEPLOYER_ADDRESS is not a valid address.')
+              process.exit(1)
+            }
+            if (normalizedExpectedAddress !== deployerAddress) {
+              console.error(
+                'Derived deployer address does not match EXPECTED_DEPLOYER_ADDRESS.',
+              )
+              process.exit(1)
+            }
+          }
+          NODE
+
+          DERIVED_DEPLOYER_ADDRESS="$(cat "$RUNNER_TEMP/derived-deployer-address")"
+          ACCOUNT_URL="${VECHAIN_TESTNET_RPC_URL%/}/accounts/$DERIVED_DEPLOYER_ADDRESS"
+          if ACCOUNT_RESPONSE="$(curl --fail --silent --show-error --max-time 15 "$ACCOUNT_URL")"; then
+            if ! ACCOUNT_RESPONSE="$ACCOUNT_RESPONSE" node <<'NODE'
+          const account = JSON.parse(process.env.ACCOUNT_RESPONSE)
+          if (
+            typeof account.balance !== 'string' ||
+            typeof account.energy !== 'string' ||
+            typeof account.hasCode !== 'boolean'
+          ) {
+            throw new Error('unexpected account response')
+          }
+          console.log(`balance: ${account.balance}`)
+          console.log(`energy: ${account.energy}`)
+          console.log(`hasCode: ${account.hasCode}`)
+          NODE
+            then
+              echo "::warning::VeChainThor testnet account response was unavailable or invalid."
+            fi
+          else
+            echo "::warning::VeChainThor testnet account query was unavailable."
           fi
-          # Strip optional 0x prefix then check for exactly 64 hex characters (32 bytes).
-          STRIPPED="${KEY#0x}"
-          if ! echo "$STRIPPED" | grep -qE '^[0-9a-fA-F]{64}$'; then
-            BYTE_LEN=$(( ${#STRIPPED} / 2 ))
-            echo "ERROR: DEPLOYER_PRIVATE_KEY is not a valid 32-byte hex private key."
-            echo "  Expected: 64 hex characters (32 bytes), with or without 0x prefix."
-            echo "  Got     : ~${BYTE_LEN} bytes (${#STRIPPED} hex chars after stripping 0x)."
-            echo "Update the DEPLOYER_PRIVATE_KEY secret with a full 64-character hex key."
-            exit 1
-          fi
-          echo "DEPLOYER_PRIVATE_KEY is a valid 32-byte hex key."
         env:
           DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+          EXPECTED_DEPLOYER_ADDRESS: ${{ vars.EXPECTED_DEPLOYER_ADDRESS }}
+          VECHAIN_TESTNET_RPC_URL: ${{ vars.VECHAIN_TESTNET_RPC_URL || 'https://testnet.vechain.org' }}
 
       - name: Deploy DPP contract
         id: deploy-dpp
