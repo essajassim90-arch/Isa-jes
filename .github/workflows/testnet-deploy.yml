@@ -84,7 +84,7 @@ jobs:
 
           echo "PWD: $(pwd)"
           echo "Deploying DPP module..."
-          npx hardhat ignition deploy ignition/modules/DPP.ts --network vechain_testnet --deployment-id nama-testnet --yes 2>&1 | tee /tmp/dpp-deploy.log
+          npx hardhat ignition deploy ignition/modules/DPP.ts --network vechain_testnet --deployment-id nama-testnet 2>&1 | tee /tmp/dpp-deploy.log
 
           echo "Listing ignition/deployments folders:"
           find ignition/deployments -maxdepth 3 -type d | sort || true
@@ -110,6 +110,7 @@ jobs:
         env:
           DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
           VECHAIN_TESTNET_RPC_URL: ${{ vars.VECHAIN_TESTNET_RPC_URL || 'https://testnet.vechain.org' }}
+          HARDHAT_IGNITION_CONFIRM_DEPLOYMENT: "false"
 
       - name: Deploy Marketplace contract
         id: deploy-marketplace
@@ -119,7 +120,7 @@ jobs:
 
           echo "PWD: $(pwd)"
           echo "Deploying Marketplace module..."
-          npx hardhat ignition deploy ignition/modules/Marketplace.ts --network vechain_testnet --deployment-id nama-testnet --yes 2>&1 | tee /tmp/marketplace-deploy.log
+          npx hardhat ignition deploy ignition/modules/Marketplace.ts --network vechain_testnet --deployment-id nama-testnet 2>&1 | tee /tmp/marketplace-deploy.log
 
           echo "Listing ignition/deployments folders:"
           find ignition/deployments -maxdepth 3 -type d | sort || true
@@ -145,6 +146,7 @@ jobs:
         env:
           DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
           VECHAIN_TESTNET_RPC_URL: ${{ vars.VECHAIN_TESTNET_RPC_URL || 'https://testnet.vechain.org' }}
+          HARDHAT_IGNITION_CONFIRM_DEPLOYMENT: "false"
 
       - name: Upload deployment artifacts
         if: always()
