@@ -36,6 +36,29 @@ jobs:
       - name: Validate Ignition modules
         run: npm run ignition:validate --workspace=@nama/contracts
 
+      - name: Validate deployer private key
+        run: |
+          set -euo pipefail
+          KEY="${DEPLOYER_PRIVATE_KEY:-}"
+          if [ -z "$KEY" ]; then
+            echo "ERROR: DEPLOYER_PRIVATE_KEY secret is not set."
+            echo "Set a 64-character hex private key (with or without 0x prefix) in repository secrets."
+            exit 1
+          fi
+          # Strip optional 0x prefix then check for exactly 64 hex characters (32 bytes).
+          STRIPPED="${KEY#0x}"
+          if ! echo "$STRIPPED" | grep -qE '^[0-9a-fA-F]{64}$'; then
+            BYTE_LEN=$(( ${#STRIPPED} / 2 ))
+            echo "ERROR: DEPLOYER_PRIVATE_KEY is not a valid 32-byte hex private key."
+            echo "  Expected: 64 hex characters (32 bytes), with or without 0x prefix."
+            echo "  Got     : ~${BYTE_LEN} bytes (${#STRIPPED} hex chars after stripping 0x)."
+            echo "Update the DEPLOYER_PRIVATE_KEY secret with a full 64-character hex key."
+            exit 1
+          fi
+          echo "DEPLOYER_PRIVATE_KEY is a valid 32-byte hex key."
+        env:
+          DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+
       - name: Deploy DPP contract
         id: deploy-dpp
         run: |
