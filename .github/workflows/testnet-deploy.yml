@@ -36,6 +36,46 @@ jobs:
       - name: Validate Ignition modules
         run: npm run ignition:validate --workspace=@nama/contracts
 
+      - name: Preflight deployer account
+        env:
+          DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+          VECHAIN_TESTNET_RPC_URL: ${{ vars.VECHAIN_TESTNET_RPC_URL || 'https://testnet.vechain.org' }}
+        run: |
+          node --input-type=module <<'EOF'
+          import { Wallet } from 'ethers'
+
+          const rawKey = process.env.DEPLOYER_PRIVATE_KEY
+          const trimmedKey = rawKey?.trim() ?? ''
+          const hasPrefix = trimmedKey.startsWith('0x')
+          const keyBody = hasPrefix ? trimmedKey.slice(2) : trimmedKey
+          const normalizedLength = trimmedKey === '' ? 0 : keyBody.length + 2
+          const formatValid = /^[0-9a-fA-F]{64}$/.test(keyBody)
+
+          console.log(`DEPLOYER_PRIVATE_KEY present: ${rawKey !== undefined && trimmedKey !== '' ? 'yes' : 'no'}`)
+          console.log(`DEPLOYER_PRIVATE_KEY has 0x prefix: ${hasPrefix ? 'yes' : 'no'}`)
+          console.log(`DEPLOYER_PRIVATE_KEY normalized length: ${normalizedLength}`)
+          console.log(`DEPLOYER_PRIVATE_KEY hex format valid: ${formatValid ? 'yes' : 'no'}`)
+
+          if (!formatValid) {
+            throw new Error('DEPLOYER_PRIVATE_KEY must be exactly 64 hexadecimal characters, optionally prefixed with 0x.')
+          }
+
+          const wallet = new Wallet(`0x${keyBody}`)
+          const networkUrl = new URL(process.env.VECHAIN_TESTNET_RPC_URL ?? 'https://testnet.vechain.org')
+          console.log(`Derived deployer address: ${wallet.address}`)
+          console.log(`Selected network URL host: ${networkUrl.host}`)
+
+          const response = await fetch(new URL(`/accounts/${wallet.address}`, networkUrl))
+          if (!response.ok) {
+            throw new Error(`Unable to query deployer account state (HTTP ${response.status}).`)
+          }
+
+          const account = await response.json()
+          console.log(`Balance: ${account.balance}`)
+          console.log(`Energy: ${account.energy}`)
+          console.log(`Has code: ${account.hasCode ? 'yes' : 'no'}`)
+          EOF
+
       - name: Deploy DPP contract
         id: deploy-dpp
         run: |

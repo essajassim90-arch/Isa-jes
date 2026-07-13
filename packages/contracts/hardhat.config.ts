@@ -1,12 +1,32 @@
-import { config as dotenvConfig } from 'dotenv'
 import '@nomicfoundation/hardhat-toolbox'
+import '@vechain/sdk-hardhat-plugin'
+import { config as dotenvConfig } from 'dotenv'
 import type { HardhatUserConfig } from 'hardhat/config'
 
 dotenvConfig()
 
 const vechainTestnetRpcUrl = process.env.VECHAIN_TESTNET_RPC_URL ?? 'https://testnet.vechain.org'
-const deployerPrivateKey =
+const rawDeployerPrivateKey =
   process.env.DEPLOYER_PRIVATE_KEY ?? process.env.VECHAIN_TESTNET_PRIVATE_KEY
+
+function normalizePrivateKey(value: string | undefined): string | undefined {
+  if (value === undefined) {
+    return undefined
+  }
+
+  const trimmedValue = value.trim()
+  const privateKey = trimmedValue.startsWith('0x') ? trimmedValue.slice(2) : trimmedValue
+
+  if (!/^[0-9a-fA-F]{64}$/.test(privateKey)) {
+    throw new Error(
+      'DEPLOYER_PRIVATE_KEY must be exactly 64 hexadecimal characters, optionally prefixed with 0x.',
+    )
+  }
+
+  return `0x${privateKey}`
+}
+
+const deployerPrivateKey = normalizePrivateKey(rawDeployerPrivateKey)
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -22,12 +42,11 @@ const config: HardhatUserConfig = {
     vechain_testnet: {
       url: vechainTestnetRpcUrl,
       accounts: deployerPrivateKey ? [deployerPrivateKey] : [],
-      // VeChainThor Testnet chain ID (0x27 = 39).
-      // Required so Hardhat does not auto-detect via eth_chainId on startup.
-      chainId: 39,
-      // VeChainThor does not support EIP-1559 (no eth_feeHistory / maxFeePerGas).
-      // Setting gasPrice forces Hardhat Ignition to send legacy (type-0) transactions.
-      gasPrice: 1_000_000_000,
+      gas: 'auto',
+      gasPrice: 'auto',
+      gasMultiplier: 1,
+      timeout: 20000,
+      httpHeaders: {},
     },
   },
 }
