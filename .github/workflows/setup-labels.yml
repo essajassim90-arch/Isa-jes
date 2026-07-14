@@ -1,0 +1,47 @@
+name: Setup Labels
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/labeler.yml'
+
+jobs:
+  create-labels:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+
+    steps:
+      - name: Create repository labels
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          script: |
+            const labels = [
+              { name: 'web',       color: '0075ca', description: 'Changes to the web application' },
+              { name: 'api',       color: 'e4e669', description: 'Changes to the API' },
+              { name: 'indexer',   color: 'a2eeef', description: 'Changes to the indexer' },
+              { name: 'contracts', color: 'd876e3', description: 'Changes to smart contracts' },
+              { name: 'iot',       color: 'f9d0c4', description: 'Changes to IoT simulation' },
+              { name: 'shared',    color: 'bfd4f2', description: 'Changes to shared packages' },
+              { name: 'ci',        color: 'fef2c0', description: 'Changes to CI/CD configuration' },
+            ];
+
+            for (const label of labels) {
+              try {
+                await github.rest.issues.createLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  ...label,
+                });
+                console.log(`Created label: ${label.name}`);
+              } catch (err) {
+                if (err.status === 422) {
+                  console.log(`Label already exists: ${label.name}`);
+                } else {
+                  throw err;
+                }
+              }
+            }
