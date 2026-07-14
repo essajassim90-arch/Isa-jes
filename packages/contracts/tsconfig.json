@@ -9,5 +9,5 @@
     "skipLibCheck": true,
     "types": ["node", "mocha", "chai"]
   },
-  "include": ["./hardhat.config.ts", "./test/**/*.ts", "./ignition/**/*.ts"]
+  "include": ["./hardhat.config.ts", "./test/**/*.ts", "./ignition/**/*.ts", "./typechain-types/**/*.ts"]
 }

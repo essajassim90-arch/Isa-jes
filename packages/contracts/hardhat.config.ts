@@ -47,6 +47,10 @@ const config: HardhatUserConfig = {
       gasMultiplier: 1,
       timeout: 20000,
       httpHeaders: {},
+      // @ts-ignore: the VeChain plugin extends the config but not the UserConfig type correctly
+      rpcConfiguration: {
+        ethGetTransactionCountMustReturn0: true,
+      },
     },
   },
 }
