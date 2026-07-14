@@ -1,0 +1,37 @@
+# Labeler configuration
+# Automatically apply labels to pull requests based on the files changed.
+# See: https://github.com/actions/labeler
+
+web:
+  - changed-files:
+    - any-glob-to-any-file: 'apps/web/**'
+
+api:
+  - changed-files:
+    - any-glob-to-any-file: 'apps/api/**'
+
+indexer:
+  - changed-files:
+    - any-glob-to-any-file: 'apps/indexer/**'
+
+contracts:
+  - changed-files:
+    - any-glob-to-any-file: 'packages/contracts/**'
+
+iot:
+  - changed-files:
+    - any-glob-to-any-file: 'packages/iot-simulation/**'
+
+shared:
+  - changed-files:
+    - any-glob-to-any-file: 'packages/shared/**'
+
+ci:
+  - changed-files:
+    - any-glob-to-any-file: '.github/**'
+
+documentation:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '*.md'
+      - 'docs/**'
