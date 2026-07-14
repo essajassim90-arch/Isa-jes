@@ -25,7 +25,7 @@
     "@typechain/hardhat": "^9.0.0",
     "@types/chai": "^4.2.0",
     "@types/mocha": ">=9.1.0",
-    "@types/node": "^20.0.0",
+    "@types/node": "^26.1.1",
     "@vechain/sdk-hardhat-plugin": "2.0.7",
     "chai": "^6.2.2",
     "dotenv": "^16.6.1",
