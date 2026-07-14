@@ -1,0 +1,127 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: Lint · Type-check · Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Lint
+        run: npm run lint --workspace=@nama/web
+
+      - name: Type-check
+        run: tsc -p apps/web/tsconfig.app.json --noEmit
+
+      - name: Build (apps/web)
+        run: npm run build --workspace=@nama/web
+        env:
+          VITE_WC_PROJECT_ID: ${{ secrets.VITE_WC_PROJECT_ID || 'ci-placeholder' }}
+          VITE_PRIVY_APP_ID: ${{ secrets.VITE_PRIVY_APP_ID || 'ci-placeholder' }}
+          VITE_PRIVY_CLIENT_ID: ${{ secrets.VITE_PRIVY_CLIENT_ID || 'ci-placeholder' }}
+
+  contracts:
+    name: Contracts · Compile · Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Compile contracts
+        run: npm run compile --workspace=@nama/contracts
+
+      - name: Test contracts
+        run: npm run test --workspace=@nama/contracts
+
+  api:
+    name: API · Lint · Type-check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Lint API
+        run: npm run lint --workspace=@nama/api
+
+      - name: Type-check API
+        run: npx tsc --project apps/api/tsconfig.json
+
+  indexer:
+    name: Indexer · Lint · Type-check · Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Lint indexer
+        run: npm run lint --workspace=@nama/indexer
+
+      - name: Type-check indexer
+        run: npm run type-check --workspace=@nama/indexer
+
+      - name: Build indexer
+        run: npm run build --workspace=@nama/indexer
+
+  iot-simulation:
+    name: IoT Simulation · Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Build IoT simulation
+        run: npm run build --workspace=@nama/iot-simulation

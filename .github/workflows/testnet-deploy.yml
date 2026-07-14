@@ -1,0 +1,237 @@
+name: Deploy Contracts to VeChainThor Testnet
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type "deploy" to confirm testnet deployment'
+        required: true
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  deploy-contracts:
+    name: Deploy DPP + Marketplace to VeChainThor Testnet
+    runs-on: ubuntu-latest
+    if: github.event.inputs.confirm == 'deploy'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Compile contracts
+        run: npm run compile --workspace=@nama/contracts
+
+      - name: Validate Ignition modules
+        run: npm run ignition:validate --workspace=@nama/contracts
+
+      - name: Preflight deployer account
+        env:
+          DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+          VECHAIN_TESTNET_RPC_URL: ${{ vars.VECHAIN_TESTNET_RPC_URL || 'https://testnet.vechain.org' }}
+        run: |
+          node --input-type=module <<'EOF'
+          import { Wallet } from 'ethers'
+
+          const rawKey = process.env.DEPLOYER_PRIVATE_KEY
+          const trimmedKey = rawKey?.trim() ?? ''
+          const hasPrefix = trimmedKey.startsWith('0x')
+          const keyBody = hasPrefix ? trimmedKey.slice(2) : trimmedKey
+          const normalizedLength = trimmedKey === '' ? 0 : keyBody.length + 2
+          const formatValid = /^[0-9a-fA-F]{64}$/.test(keyBody)
+
+          console.log(`DEPLOYER_PRIVATE_KEY present: ${rawKey !== undefined && trimmedKey !== '' ? 'yes' : 'no'}`)
+          console.log(`DEPLOYER_PRIVATE_KEY has 0x prefix: ${hasPrefix ? 'yes' : 'no'}`)
+          console.log(`DEPLOYER_PRIVATE_KEY normalized length: ${normalizedLength}`)
+          console.log(`DEPLOYER_PRIVATE_KEY hex format valid: ${formatValid ? 'yes' : 'no'}`)
+
+          if (!formatValid) {
+            throw new Error('DEPLOYER_PRIVATE_KEY must be exactly 64 hexadecimal characters, optionally prefixed with 0x.')
+          }
+
+          const wallet = new Wallet(`0x${keyBody}`)
+          const networkUrl = new URL(process.env.VECHAIN_TESTNET_RPC_URL ?? 'https://testnet.vechain.org')
+          console.log(`Derived deployer address: ${wallet.address}`)
+          console.log(`Selected network URL host: ${networkUrl.host}`)
+
+          const response = await fetch(new URL(`/accounts/${wallet.address}`, networkUrl))
+          if (!response.ok) {
+            throw new Error(`Unable to query deployer account state (HTTP ${response.status}).`)
+          }
+
+          const account = await response.json()
+          console.log(`Balance: ${account.balance}`)
+          console.log(`Energy: ${account.energy}`)
+          console.log(`Has code: ${account.hasCode ? 'yes' : 'no'}`)
+          EOF
+
+      - name: Deploy DPP contract
+        id: deploy-dpp
+        run: |
+          set +e
+          set -uo pipefail
+          cd packages/contracts
+
+          echo "PWD: $(pwd)"
+          echo "Deploying DPP module..."
+          DEPLOY_LOG="/tmp/dpp-deploy.log"
+          DEPLOY_EXIT=1
+
+          for ATTEMPT in 1 2 3; do
+            : > "$DEPLOY_LOG"
+            npx hardhat ignition deploy ignition/modules/DPP.ts --network vechain_testnet --deployment-id nama-testnet 2>&1 | tee "$DEPLOY_LOG"
+            DEPLOY_EXIT=${PIPESTATUS[0]}
+
+            if [ "$DEPLOY_EXIT" -eq 0 ]; then
+              break
+            fi
+
+            if grep -q 'IGN403:' "$DEPLOY_LOG" && [ "$ATTEMPT" -lt 3 ]; then
+              echo "Ignition found a recent deployer transaction. Waiting 60 seconds for confirmations before retrying."
+              sleep 60
+              continue
+            fi
+
+            break
+          done
+
+          if [ "$DEPLOY_EXIT" -ne 0 ]; then
+            echo "ERROR: DPP deployment failed with exit code $DEPLOY_EXIT."
+            echo "Last 100 lines of the DPP deploy log:"
+            tail -n 100 "$DEPLOY_LOG" || true
+            echo "Ignition deployment files:"
+            if [ -d ignition/deployments ]; then
+              find ignition/deployments -maxdepth 4 -type f -print | sort
+            else
+              echo "No ignition deployment directory was created; Hardhat failed before artifact creation."
+            fi
+            exit "$DEPLOY_EXIT"
+          fi
+
+          echo "Listing ignition/deployments folders:"
+          find ignition/deployments -maxdepth 3 -type d | sort || true
+
+          DEPLOYED_ADDRESSES_FILE="ignition/deployments/nama-testnet/deployed_addresses.json"
+
+          if [ ! -f "$DEPLOYED_ADDRESSES_FILE" ]; then
+            echo "ERROR: deployed_addresses.json not found at expected path: $DEPLOYED_ADDRESSES_FILE"
+            exit 1
+          fi
+
+          echo "Contents of $DEPLOYED_ADDRESSES_FILE:"
+          cat "$DEPLOYED_ADDRESSES_FILE"
+
+          DPP_ADDR=$(jq -r '."DPPModule#DPP" // empty' "$DEPLOYED_ADDRESSES_FILE")
+          if [ -z "$DPP_ADDR" ]; then
+            echo "ERROR: could not find DPPModule#DPP in $DEPLOYED_ADDRESSES_FILE"
+            exit 1
+          fi
+
+          echo "Parsed DPP address: $DPP_ADDR"
+          echo "dpp_address=$DPP_ADDR" >> "$GITHUB_OUTPUT"
+        env:
+          DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+          VECHAIN_TESTNET_RPC_URL: ${{ vars.VECHAIN_TESTNET_RPC_URL || 'https://testnet.vechain.org' }}
+          HARDHAT_IGNITION_CONFIRM_DEPLOYMENT: "false"
+
+      - name: Deploy Marketplace contract
+        id: deploy-marketplace
+        run: |
+          set +e
+          set -uo pipefail
+          cd packages/contracts
+
+          echo "PWD: $(pwd)"
+          echo "Deploying Marketplace module..."
+          DEPLOY_LOG="/tmp/marketplace-deploy.log"
+          DEPLOY_EXIT=1
+
+          for ATTEMPT in 1 2 3; do
+            : > "$DEPLOY_LOG"
+            npx hardhat ignition deploy ignition/modules/Marketplace.ts --network vechain_testnet --deployment-id nama-testnet 2>&1 | tee "$DEPLOY_LOG"
+            DEPLOY_EXIT=${PIPESTATUS[0]}
+
+            if [ "$DEPLOY_EXIT" -eq 0 ]; then
+              break
+            fi
+
+            if grep -q 'IGN403:' "$DEPLOY_LOG" && [ "$ATTEMPT" -lt 3 ]; then
+              echo "Ignition found a recent deployer transaction. Waiting 60 seconds for confirmations before retrying."
+              sleep 60
+              continue
+            fi
+
+            break
+          done
+
+          if [ "$DEPLOY_EXIT" -ne 0 ]; then
+            echo "ERROR: Marketplace deployment failed with exit code $DEPLOY_EXIT."
+            echo "Last 100 lines of the Marketplace deploy log:"
+            tail -n 100 "$DEPLOY_LOG" || true
+            echo "Ignition deployment files:"
+            if [ -d ignition/deployments ]; then
+              find ignition/deployments -maxdepth 4 -type f -print | sort
+            else
+              echo "No ignition deployment directory was created; Hardhat failed before artifact creation."
+            fi
+            exit "$DEPLOY_EXIT"
+          fi
+
+          echo "Listing ignition/deployments folders:"
+          find ignition/deployments -maxdepth 3 -type d | sort || true
+
+          DEPLOYED_ADDRESSES_FILE="ignition/deployments/nama-testnet/deployed_addresses.json"
+
+          if [ ! -f "$DEPLOYED_ADDRESSES_FILE" ]; then
+            echo "ERROR: deployed_addresses.json not found at expected path: $DEPLOYED_ADDRESSES_FILE"
+            exit 1
+          fi
+
+          echo "Contents of $DEPLOYED_ADDRESSES_FILE:"
+          cat "$DEPLOYED_ADDRESSES_FILE"
+
+          MARKETPLACE_ADDR=$(jq -r '."MarketplaceModule#Marketplace" // empty' "$DEPLOYED_ADDRESSES_FILE")
+          if [ -z "$MARKETPLACE_ADDR" ]; then
+            echo "ERROR: could not find MarketplaceModule#Marketplace in $DEPLOYED_ADDRESSES_FILE"
+            exit 1
+          fi
+
+          echo "Parsed Marketplace address: $MARKETPLACE_ADDR"
+          echo "marketplace_address=$MARKETPLACE_ADDR" >> "$GITHUB_OUTPUT"
+        env:
+          DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+          VECHAIN_TESTNET_RPC_URL: ${{ vars.VECHAIN_TESTNET_RPC_URL || 'https://testnet.vechain.org' }}
+          HARDHAT_IGNITION_CONFIRM_DEPLOYMENT: "false"
+
+      - name: Upload deployment artifacts
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ignition-deployments
+          path: packages/contracts/ignition/deployments
+          if-no-files-found: warn
+
+      - name: Print deployed addresses
+        run: |
+          echo "════════════════════════════════════════════"
+          echo "NAMA contracts deployed to VeChainThor Testnet"
+          echo "════════════════════════════════════════════"
+          echo "DPP:         ${{ steps.deploy-dpp.outputs.dpp_address }}"
+          echo "Marketplace: ${{ steps.deploy-marketplace.outputs.marketplace_address }}"
+          echo ""
+          echo "Next steps:"
+          echo "  1. Update packages/shared/src/constants/vechain.ts with these addresses"
+          echo "  2. Set VITE_CONTRACT_DPP and VITE_CONTRACT_MARKETPLACE in GitHub Secrets"
+          echo "  3. Set DPP_CONTRACT_ADDRESS and MARKETPLACE_CONTRACT_ADDRESS on your indexer host"
+          echo "════════════════════════════════════════════"
