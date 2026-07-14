@@ -1,6 +1,6 @@
 import { createAppKit } from '@reown/appkit/react'
-import { mainnet, arbitrum, polygon } from '@reown/appkit/networks'
 import type { AppKitNetwork } from '@reown/appkit/networks'
+import { mainnet, arbitrum, polygon } from 'viem/chains'
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
 import { QueryClient } from '@tanstack/react-query'
 
