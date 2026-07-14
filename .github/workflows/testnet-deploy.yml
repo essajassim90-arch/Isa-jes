@@ -88,6 +88,12 @@ jobs:
           DEPLOY_LOG="/tmp/dpp-deploy.log"
           DEPLOY_EXIT=1
 
+          if [ -d ignition/deployments ]; then
+            find ignition/deployments -maxdepth 4 -type f -print | sort > /tmp/dpp-before-deploy.txt
+          else
+            touch /tmp/dpp-before-deploy.txt
+          fi
+
           for ATTEMPT in 1 2 3; do
             : > "$DEPLOY_LOG"
             npx hardhat ignition deploy ignition/modules/DPP.ts --network vechain_testnet --deployment-id nama-testnet 2>&1 | tee "$DEPLOY_LOG"
@@ -112,7 +118,15 @@ jobs:
             tail -n 100 "$DEPLOY_LOG" || true
             echo "Ignition deployment files:"
             if [ -d ignition/deployments ]; then
-              find ignition/deployments -maxdepth 4 -type f -print | sort
+              find ignition/deployments -maxdepth 4 -type f -print | sort > /tmp/dpp-after-deploy.txt
+              if cmp -s /tmp/dpp-before-deploy.txt /tmp/dpp-after-deploy.txt; then
+                echo "No new ignition deployment files were created; Hardhat failed before artifact creation."
+              else
+                echo "New or modified ignition files:"
+                comm -13 /tmp/dpp-before-deploy.txt /tmp/dpp-after-deploy.txt || true
+                echo "All ignition files:"
+                cat /tmp/dpp-after-deploy.txt
+              fi
             else
               echo "No ignition deployment directory was created; Hardhat failed before artifact creation."
             fi
@@ -157,6 +171,12 @@ jobs:
           DEPLOY_LOG="/tmp/marketplace-deploy.log"
           DEPLOY_EXIT=1
 
+          if [ -d ignition/deployments ]; then
+            find ignition/deployments -maxdepth 4 -type f -print | sort > /tmp/marketplace-before-deploy.txt
+          else
+            touch /tmp/marketplace-before-deploy.txt
+          fi
+
           for ATTEMPT in 1 2 3; do
             : > "$DEPLOY_LOG"
             npx hardhat ignition deploy ignition/modules/Marketplace.ts --network vechain_testnet --deployment-id nama-testnet 2>&1 | tee "$DEPLOY_LOG"
@@ -181,7 +201,15 @@ jobs:
             tail -n 100 "$DEPLOY_LOG" || true
             echo "Ignition deployment files:"
             if [ -d ignition/deployments ]; then
-              find ignition/deployments -maxdepth 4 -type f -print | sort
+              find ignition/deployments -maxdepth 4 -type f -print | sort > /tmp/marketplace-after-deploy.txt
+              if cmp -s /tmp/marketplace-before-deploy.txt /tmp/marketplace-after-deploy.txt; then
+                echo "No new ignition deployment files were created; Hardhat failed before artifact creation."
+              else
+                echo "New or modified ignition files:"
+                comm -13 /tmp/marketplace-before-deploy.txt /tmp/marketplace-after-deploy.txt || true
+                echo "All ignition files:"
+                cat /tmp/marketplace-after-deploy.txt
+              fi
             else
               echo "No ignition deployment directory was created; Hardhat failed before artifact creation."
             fi
