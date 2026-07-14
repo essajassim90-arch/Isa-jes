@@ -79,12 +79,45 @@ jobs:
       - name: Deploy DPP contract
         id: deploy-dpp
         run: |
-          set -euo pipefail
+          set +e
+          set -uo pipefail
           cd packages/contracts
 
           echo "PWD: $(pwd)"
           echo "Deploying DPP module..."
-          npx hardhat ignition deploy ignition/modules/DPP.ts --network vechain_testnet --deployment-id nama-testnet 2>&1 | tee /tmp/dpp-deploy.log
+          DEPLOY_LOG="/tmp/dpp-deploy.log"
+          DEPLOY_EXIT=1
+
+          for ATTEMPT in 1 2 3; do
+            : > "$DEPLOY_LOG"
+            npx hardhat ignition deploy ignition/modules/DPP.ts --network vechain_testnet --deployment-id nama-testnet 2>&1 | tee "$DEPLOY_LOG"
+            DEPLOY_EXIT=${PIPESTATUS[0]}
+
+            if [ "$DEPLOY_EXIT" -eq 0 ]; then
+              break
+            fi
+
+            if grep -q 'IGN403:' "$DEPLOY_LOG" && [ "$ATTEMPT" -lt 3 ]; then
+              echo "Ignition found a recent deployer transaction. Waiting 60 seconds for confirmations before retrying."
+              sleep 60
+              continue
+            fi
+
+            break
+          done
+
+          if [ "$DEPLOY_EXIT" -ne 0 ]; then
+            echo "ERROR: DPP deployment failed with exit code $DEPLOY_EXIT."
+            echo "Last 100 lines of the DPP deploy log:"
+            tail -n 100 "$DEPLOY_LOG" || true
+            echo "Ignition deployment files:"
+            if [ -d ignition/deployments ]; then
+              find ignition/deployments -maxdepth 4 -type f -print | sort
+            else
+              echo "No ignition deployment directory was created; Hardhat failed before artifact creation."
+            fi
+            exit "$DEPLOY_EXIT"
+          fi
 
           echo "Listing ignition/deployments folders:"
           find ignition/deployments -maxdepth 3 -type d | sort || true
@@ -115,12 +148,45 @@ jobs:
       - name: Deploy Marketplace contract
         id: deploy-marketplace
         run: |
-          set -euo pipefail
+          set +e
+          set -uo pipefail
           cd packages/contracts
 
           echo "PWD: $(pwd)"
           echo "Deploying Marketplace module..."
-          npx hardhat ignition deploy ignition/modules/Marketplace.ts --network vechain_testnet --deployment-id nama-testnet 2>&1 | tee /tmp/marketplace-deploy.log
+          DEPLOY_LOG="/tmp/marketplace-deploy.log"
+          DEPLOY_EXIT=1
+
+          for ATTEMPT in 1 2 3; do
+            : > "$DEPLOY_LOG"
+            npx hardhat ignition deploy ignition/modules/Marketplace.ts --network vechain_testnet --deployment-id nama-testnet 2>&1 | tee "$DEPLOY_LOG"
+            DEPLOY_EXIT=${PIPESTATUS[0]}
+
+            if [ "$DEPLOY_EXIT" -eq 0 ]; then
+              break
+            fi
+
+            if grep -q 'IGN403:' "$DEPLOY_LOG" && [ "$ATTEMPT" -lt 3 ]; then
+              echo "Ignition found a recent deployer transaction. Waiting 60 seconds for confirmations before retrying."
+              sleep 60
+              continue
+            fi
+
+            break
+          done
+
+          if [ "$DEPLOY_EXIT" -ne 0 ]; then
+            echo "ERROR: Marketplace deployment failed with exit code $DEPLOY_EXIT."
+            echo "Last 100 lines of the Marketplace deploy log:"
+            tail -n 100 "$DEPLOY_LOG" || true
+            echo "Ignition deployment files:"
+            if [ -d ignition/deployments ]; then
+              find ignition/deployments -maxdepth 4 -type f -print | sort
+            else
+              echo "No ignition deployment directory was created; Hardhat failed before artifact creation."
+            fi
+            exit "$DEPLOY_EXIT"
+          fi
 
           echo "Listing ignition/deployments folders:"
           find ignition/deployments -maxdepth 3 -type d | sort || true
