@@ -6,7 +6,7 @@ import { QueryClient } from '@tanstack/react-query'
 
 export const queryClient = new QueryClient()
 
-const projectId = import.meta.env.VITE_WC_PROJECT_ID
+const projectId = import.meta.env.VITE_WC_PROJECT_ID?.trim() || undefined
 
 const metadata = {
   name: 'NAMA Protocol',
@@ -18,17 +18,23 @@ const metadata = {
 
 export const networks: [AppKitNetwork, ...AppKitNetwork[]] = [mainnet, arbitrum, polygon]
 
-export const wagmiAdapter = new WagmiAdapter({
-  networks,
-  projectId,
-})
+// WalletConnect / AppKit is only initialized when a project ID is available.
+// In CI and demo builds without VITE_WC_PROJECT_ID the EVM wallet integration
+// is skipped and wagmiAdapter is null.
+export const walletConnectAvailable = Boolean(projectId)
 
-createAppKit({
-  adapters: [wagmiAdapter],
-  networks,
-  projectId,
-  metadata,
-  features: {
-    analytics: true,
-  },
-})
+export const wagmiAdapter = walletConnectAvailable
+  ? new WagmiAdapter({ networks, projectId: projectId! })
+  : null
+
+if (walletConnectAvailable && wagmiAdapter) {
+  createAppKit({
+    adapters: [wagmiAdapter],
+    networks,
+    projectId: projectId!,
+    metadata,
+    features: {
+      analytics: true,
+    },
+  })
+}
