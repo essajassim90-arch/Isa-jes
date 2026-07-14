@@ -39,10 +39,11 @@ jobs:
       - name: Preflight deployer account
         env:
           DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+          EXPECTED_DEPLOYER_ADDRESS: ${{ vars.EXPECTED_DEPLOYER_ADDRESS }}
           VECHAIN_TESTNET_RPC_URL: ${{ vars.VECHAIN_TESTNET_RPC_URL || 'https://testnet.vechain.org' }}
         run: |
           node --input-type=module <<'EOF'
-          import { Wallet } from 'ethers'
+          import { Wallet, getAddress } from 'ethers'
 
           const rawKey = process.env.DEPLOYER_PRIVATE_KEY
           const trimmedKey = rawKey?.trim() ?? ''
@@ -64,6 +65,11 @@ jobs:
           const networkUrl = new URL(process.env.VECHAIN_TESTNET_RPC_URL ?? 'https://testnet.vechain.org')
           console.log(`Derived deployer address: ${wallet.address}`)
           console.log(`Selected network URL host: ${networkUrl.host}`)
+
+          const expectedAddress = (process.env.EXPECTED_DEPLOYER_ADDRESS ?? '').trim()
+          if (expectedAddress !== '' && getAddress(expectedAddress) !== wallet.address) {
+            throw new Error('Derived deployer address does not match EXPECTED_DEPLOYER_ADDRESS.')
+          }
 
           const response = await fetch(new URL(`/accounts/${wallet.address}`, networkUrl))
           if (!response.ok) {

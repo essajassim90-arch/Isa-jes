@@ -8,25 +8,47 @@ dotenvConfig()
 const vechainTestnetRpcUrl = process.env.VECHAIN_TESTNET_RPC_URL ?? 'https://testnet.vechain.org'
 const rawDeployerPrivateKey =
   process.env.DEPLOYER_PRIVATE_KEY ?? process.env.VECHAIN_TESTNET_PRIVATE_KEY
+const deployerPrivateKeySource =
+  process.env.DEPLOYER_PRIVATE_KEY !== undefined
+    ? 'DEPLOYER_PRIVATE_KEY'
+    : process.env.VECHAIN_TESTNET_PRIVATE_KEY !== undefined
+      ? 'VECHAIN_TESTNET_PRIVATE_KEY'
+      : undefined
 
-function normalizePrivateKey(value: string | undefined): string | undefined {
+function normalizePrivateKey(
+  value: string | undefined,
+  sourceName: string | undefined,
+): string | undefined {
   if (value === undefined) {
     return undefined
   }
 
   const trimmedValue = value.trim()
+  if (trimmedValue === '') {
+    return undefined
+  }
+
   const privateKey = trimmedValue.startsWith('0x') ? trimmedValue.slice(2) : trimmedValue
 
   if (!/^[0-9a-fA-F]{64}$/.test(privateKey)) {
-    throw new Error(
-      'DEPLOYER_PRIVATE_KEY must be exactly 64 hexadecimal characters, optionally prefixed with 0x.',
+    const configuredSource = sourceName ?? 'Configured deployer private key'
+    const byteLen = Math.floor(privateKey.length / 2)
+
+    console.error(
+      `[hardhat.config] ${configuredSource} is not a valid 32-byte hex private key ` +
+        `(decoded to ~${byteLen} bytes). Proceeding with no deployer account – ` +
+        `set a 64-character hex key (with or without 0x prefix) to enable deployment.`,
     )
+    return undefined
   }
 
   return `0x${privateKey}`
 }
 
-const deployerPrivateKey = normalizePrivateKey(rawDeployerPrivateKey)
+const deployerPrivateKey = normalizePrivateKey(
+  rawDeployerPrivateKey,
+  deployerPrivateKeySource,
+)
 
 const config: HardhatUserConfig = {
   solidity: {
