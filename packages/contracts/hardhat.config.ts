@@ -29,6 +29,11 @@ function normalizePrivateKey(value: string | undefined): string | undefined {
 const deployerPrivateKey = normalizePrivateKey(rawDeployerPrivateKey)
 
 const config: HardhatUserConfig = {
+  ignition: {
+    rpcConfiguration: {
+      ethGetTransactionCountMustReturn0: true,
+    },
+  },
   solidity: {
     version: '0.8.26',
     settings: {
