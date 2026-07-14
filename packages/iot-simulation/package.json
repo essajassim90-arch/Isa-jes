@@ -14,7 +14,7 @@
     "@nama/shared": "*"
   },
   "devDependencies": {
-    "@types/node": "^24.13.2",
+    "@types/node": "^26.1.1",
     "oxlint": "^1.71.0",
     "tsx": "^4.20.3",
     "typescript": "~6.0.2"
