@@ -255,6 +255,7 @@ For the full technical and commercial deep-dive, read the [NAMA Whitepaper](WHIT
 | [ARCHITECTURE.md](ARCHITECTURE.md) | System architecture and module breakdown |
 | [ROADMAP.md](ROADMAP.md) | Phased development roadmap |
 | [docs/COMMERCIAL_MODEL.md](docs/COMMERCIAL_MODEL.md) | Commercial operating model — shared savings, circular revenue share, supplier participation tiers |
+| [docs/PILOT_AND_PARTNERSHIP_STRATEGY.md](docs/PILOT_AND_PARTNERSHIP_STRATEGY.md) | Pilot strategy, partner selection, KPI framework, safeguards, and go-to-market discipline |
 | [docs/BRAND_SYSTEM.md](docs/BRAND_SYSTEM.md) | Visual identity — Leaf-N mark, colour palette, Arabic tagline, badge system, usage rules |
 | [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) | Brand system, design tokens, CSS variables, component specs |
 | [docs/UI_ARCHITECTURE.md](docs/UI_ARCHITECTURE.md) | UI/UX architecture, page structure, user journeys |
@@ -300,4 +301,3 @@ Description:  NAMA is a global trust infrastructure for sustainable food systems
 GitHub:       https://github.com/essajassim90-arch
 VeWorld:      [TO BE PROVIDED LATER]
 ```
-
