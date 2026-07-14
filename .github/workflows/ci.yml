@@ -34,9 +34,9 @@ jobs:
       - name: Build (apps/web)
         run: npm run build --workspace=@nama/web
         env:
-          VITE_WC_PROJECT_ID: ${{ secrets.VITE_WC_PROJECT_ID }}
-          VITE_PRIVY_APP_ID: ${{ secrets.VITE_PRIVY_APP_ID }}
-          VITE_PRIVY_CLIENT_ID: ${{ secrets.VITE_PRIVY_CLIENT_ID }}
+          VITE_WC_PROJECT_ID: ${{ secrets.VITE_WC_PROJECT_ID || 'ci-placeholder' }}
+          VITE_PRIVY_APP_ID: ${{ secrets.VITE_PRIVY_APP_ID || 'ci-placeholder' }}
+          VITE_PRIVY_CLIENT_ID: ${{ secrets.VITE_PRIVY_CLIENT_ID || 'ci-placeholder' }}
 
   contracts:
     name: Contracts · Compile · Test

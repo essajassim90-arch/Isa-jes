@@ -36,106 +36,94 @@ jobs:
       - name: Validate Ignition modules
         run: npm run ignition:validate --workspace=@nama/contracts
 
-      - name: Validate deployer key format and derived address
-        run: |
-          set -euo pipefail
-
-          node <<'NODE'
-          const fs = require('node:fs')
-          const { Wallet, getAddress } = require('ethers')
-
-          const rawKey = process.env.DEPLOYER_PRIVATE_KEY ?? ''
-          const trimmedKey = rawKey.trim()
-          const secretPresent = trimmedKey.length > 0
-          const hasPrefix = trimmedKey.startsWith('0x')
-          const keyBody = hasPrefix ? trimmedKey.slice(2) : trimmedKey
-          const normalizedKey = `0x${keyBody}`
-          const validLength = keyBody.length === 64
-          const validHex = /^[0-9a-fA-F]{64}$/.test(keyBody)
-
-          console.log(`secret present: ${secretPresent ? 'yes' : 'no'}`)
-          console.log(`has 0x prefix: ${hasPrefix ? 'yes' : 'no'}`)
-          console.log(`normalized length: ${normalizedKey.length}`)
-          console.log(`hex format valid: ${validHex ? 'yes' : 'no'}`)
-
-          if (!secretPresent || !validLength || !validHex) {
-            console.error(
-              'DEPLOYER_PRIVATE_KEY is not a valid private key. Do not use wallet address, QR receive address, password, or seed phrase.',
-            )
-            process.exit(1)
-          }
-
-          let deployerAddress
-          try {
-            deployerAddress = new Wallet(normalizedKey).address
-          } catch {
-            console.error(
-              'DEPLOYER_PRIVATE_KEY is not a valid private key. Do not use wallet address, QR receive address, password, or seed phrase.',
-            )
-            process.exit(1)
-          }
-
-          console.log(`derived deployer address: ${deployerAddress}`)
-          fs.writeFileSync(
-            `${process.env.RUNNER_TEMP}/derived-deployer-address`,
-            deployerAddress,
-            { mode: 0o600 },
-          )
-
-          const expectedAddress = (process.env.EXPECTED_DEPLOYER_ADDRESS ?? '').trim()
-          if (expectedAddress) {
-            let normalizedExpectedAddress
-            try {
-              normalizedExpectedAddress = getAddress(expectedAddress)
-            } catch {
-              console.error('EXPECTED_DEPLOYER_ADDRESS is not a valid address.')
-              process.exit(1)
-            }
-            if (normalizedExpectedAddress !== deployerAddress) {
-              console.error(
-                'Derived deployer address does not match EXPECTED_DEPLOYER_ADDRESS.',
-              )
-              process.exit(1)
-            }
-          }
-          NODE
-
-          DERIVED_DEPLOYER_ADDRESS="$(cat "$RUNNER_TEMP/derived-deployer-address")"
-          ACCOUNT_URL="${VECHAIN_TESTNET_RPC_URL%/}/accounts/$DERIVED_DEPLOYER_ADDRESS"
-          if ACCOUNT_RESPONSE="$(curl --fail --silent --show-error --max-time 15 "$ACCOUNT_URL")"; then
-            if ! ACCOUNT_RESPONSE="$ACCOUNT_RESPONSE" node <<'NODE'
-          const account = JSON.parse(process.env.ACCOUNT_RESPONSE)
-          if (
-            typeof account.balance !== 'string' ||
-            typeof account.energy !== 'string' ||
-            typeof account.hasCode !== 'boolean'
-          ) {
-            throw new Error('unexpected account response')
-          }
-          console.log(`balance: ${account.balance}`)
-          console.log(`energy: ${account.energy}`)
-          console.log(`hasCode: ${account.hasCode}`)
-          NODE
-            then
-              echo "::warning::VeChainThor testnet account response was unavailable or invalid."
-            fi
-          else
-            echo "::warning::VeChainThor testnet account query was unavailable."
-          fi
+      - name: Preflight deployer account
         env:
           DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
           EXPECTED_DEPLOYER_ADDRESS: ${{ vars.EXPECTED_DEPLOYER_ADDRESS }}
           VECHAIN_TESTNET_RPC_URL: ${{ vars.VECHAIN_TESTNET_RPC_URL || 'https://testnet.vechain.org' }}
+        run: |
+          node --input-type=module <<'EOF'
+          import { Wallet, getAddress } from 'ethers'
+
+          const rawKey = process.env.DEPLOYER_PRIVATE_KEY
+          const trimmedKey = rawKey?.trim() ?? ''
+          const hasPrefix = trimmedKey.startsWith('0x')
+          const keyBody = hasPrefix ? trimmedKey.slice(2) : trimmedKey
+          const normalizedLength = trimmedKey === '' ? 0 : keyBody.length + 2
+          const formatValid = /^[0-9a-fA-F]{64}$/.test(keyBody)
+
+          console.log(`DEPLOYER_PRIVATE_KEY present: ${rawKey !== undefined && trimmedKey !== '' ? 'yes' : 'no'}`)
+          console.log(`DEPLOYER_PRIVATE_KEY has 0x prefix: ${hasPrefix ? 'yes' : 'no'}`)
+          console.log(`DEPLOYER_PRIVATE_KEY normalized length: ${normalizedLength}`)
+          console.log(`DEPLOYER_PRIVATE_KEY hex format valid: ${formatValid ? 'yes' : 'no'}`)
+
+          if (!formatValid) {
+            throw new Error('DEPLOYER_PRIVATE_KEY must be exactly 64 hexadecimal characters, optionally prefixed with 0x.')
+          }
+
+          const wallet = new Wallet(`0x${keyBody}`)
+          const networkUrl = new URL(process.env.VECHAIN_TESTNET_RPC_URL ?? 'https://testnet.vechain.org')
+          console.log(`Derived deployer address: ${wallet.address}`)
+          console.log(`Selected network URL host: ${networkUrl.host}`)
+
+          const expectedAddress = (process.env.EXPECTED_DEPLOYER_ADDRESS ?? '').trim()
+          if (expectedAddress !== '' && getAddress(expectedAddress) !== wallet.address) {
+            throw new Error('Derived deployer address does not match EXPECTED_DEPLOYER_ADDRESS.')
+          }
+
+          const response = await fetch(new URL(`/accounts/${wallet.address}`, networkUrl))
+          if (!response.ok) {
+            throw new Error(`Unable to query deployer account state (HTTP ${response.status}).`)
+          }
+
+          const account = await response.json()
+          console.log(`Balance: ${account.balance}`)
+          console.log(`Energy: ${account.energy}`)
+          console.log(`Has code: ${account.hasCode ? 'yes' : 'no'}`)
+          EOF
 
       - name: Deploy DPP contract
         id: deploy-dpp
         run: |
-          set -euo pipefail
+          set +e
+          set -uo pipefail
           cd packages/contracts
 
           echo "PWD: $(pwd)"
           echo "Deploying DPP module..."
-          npx hardhat ignition deploy ignition/modules/DPP.ts --network vechain_testnet --deployment-id nama-testnet 2>&1 | tee /tmp/dpp-deploy.log
+          DEPLOY_LOG="/tmp/dpp-deploy.log"
+          DEPLOY_EXIT=1
+
+          for ATTEMPT in 1 2 3; do
+            : > "$DEPLOY_LOG"
+            npx hardhat ignition deploy ignition/modules/DPP.ts --network vechain_testnet --deployment-id nama-testnet 2>&1 | tee "$DEPLOY_LOG"
+            DEPLOY_EXIT=${PIPESTATUS[0]}
+
+            if [ "$DEPLOY_EXIT" -eq 0 ]; then
+              break
+            fi
+
+            if grep -q 'IGN403:' "$DEPLOY_LOG" && [ "$ATTEMPT" -lt 3 ]; then
+              echo "Ignition found a recent deployer transaction. Waiting 60 seconds for confirmations before retrying."
+              sleep 60
+              continue
+            fi
+
+            break
+          done
+
+          if [ "$DEPLOY_EXIT" -ne 0 ]; then
+            echo "ERROR: DPP deployment failed with exit code $DEPLOY_EXIT."
+            echo "Last 100 lines of the DPP deploy log:"
+            tail -n 100 "$DEPLOY_LOG" || true
+            echo "Ignition deployment files:"
+            if [ -d ignition/deployments ]; then
+              find ignition/deployments -maxdepth 4 -type f -print | sort
+            else
+              echo "No ignition deployment directory was created; Hardhat failed before artifact creation."
+            fi
+            exit "$DEPLOY_EXIT"
+          fi
 
           echo "Listing ignition/deployments folders:"
           find ignition/deployments -maxdepth 3 -type d | sort || true
@@ -161,16 +149,50 @@ jobs:
         env:
           DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
           VECHAIN_TESTNET_RPC_URL: ${{ vars.VECHAIN_TESTNET_RPC_URL || 'https://testnet.vechain.org' }}
+          HARDHAT_IGNITION_CONFIRM_DEPLOYMENT: "false"
 
       - name: Deploy Marketplace contract
         id: deploy-marketplace
         run: |
-          set -euo pipefail
+          set +e
+          set -uo pipefail
           cd packages/contracts
 
           echo "PWD: $(pwd)"
           echo "Deploying Marketplace module..."
-          npx hardhat ignition deploy ignition/modules/Marketplace.ts --network vechain_testnet --deployment-id nama-testnet 2>&1 | tee /tmp/marketplace-deploy.log
+          DEPLOY_LOG="/tmp/marketplace-deploy.log"
+          DEPLOY_EXIT=1
+
+          for ATTEMPT in 1 2 3; do
+            : > "$DEPLOY_LOG"
+            npx hardhat ignition deploy ignition/modules/Marketplace.ts --network vechain_testnet --deployment-id nama-testnet 2>&1 | tee "$DEPLOY_LOG"
+            DEPLOY_EXIT=${PIPESTATUS[0]}
+
+            if [ "$DEPLOY_EXIT" -eq 0 ]; then
+              break
+            fi
+
+            if grep -q 'IGN403:' "$DEPLOY_LOG" && [ "$ATTEMPT" -lt 3 ]; then
+              echo "Ignition found a recent deployer transaction. Waiting 60 seconds for confirmations before retrying."
+              sleep 60
+              continue
+            fi
+
+            break
+          done
+
+          if [ "$DEPLOY_EXIT" -ne 0 ]; then
+            echo "ERROR: Marketplace deployment failed with exit code $DEPLOY_EXIT."
+            echo "Last 100 lines of the Marketplace deploy log:"
+            tail -n 100 "$DEPLOY_LOG" || true
+            echo "Ignition deployment files:"
+            if [ -d ignition/deployments ]; then
+              find ignition/deployments -maxdepth 4 -type f -print | sort
+            else
+              echo "No ignition deployment directory was created; Hardhat failed before artifact creation."
+            fi
+            exit "$DEPLOY_EXIT"
+          fi
 
           echo "Listing ignition/deployments folders:"
           find ignition/deployments -maxdepth 3 -type d | sort || true
@@ -196,6 +218,7 @@ jobs:
         env:
           DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
           VECHAIN_TESTNET_RPC_URL: ${{ vars.VECHAIN_TESTNET_RPC_URL || 'https://testnet.vechain.org' }}
+          HARDHAT_IGNITION_CONFIRM_DEPLOYMENT: "false"
 
       - name: Upload deployment artifacts
         if: always()
