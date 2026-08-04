@@ -1,10 +1,13 @@
 import './App.css'
 import { RoleBasedDashboard } from './pages/RoleBasedDashboard.tsx'
+import CheckPage from './pages/CheckPage.tsx'
 
 function App() {
+  const isCheckPage = window.location.hash === '#/check'
+
   return (
     <div className="app">
-      <RoleBasedDashboard />
+      {isCheckPage ? <CheckPage /> : <RoleBasedDashboard />}
 
       <footer className="footer">
         <span>NAMA Protocol — </span>

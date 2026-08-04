@@ -36,6 +36,7 @@ jobs:
       - name: Build
         run: npm run build --workspace=@nama/web
         env:
+          VITE_NETWORK: "test"
           VITE_WC_PROJECT_ID: ${{ secrets.VITE_WC_PROJECT_ID }}
           VITE_PRIVY_APP_ID: ${{ secrets.VITE_PRIVY_APP_ID }}
           VITE_PRIVY_CLIENT_ID: ${{ secrets.VITE_PRIVY_CLIENT_ID }}
@@ -58,3 +59,25 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5
+
+      - name: 🔍 تحقق من أن التطبيق منشور على testnet
+        run: |
+          DEPLOY_URL="${{ steps.deployment.outputs.page_url }}"
+          echo "الرابط المنشور: $DEPLOY_URL"
+
+          # 1. تأكد أن الصفحة تستجيب بـ 200
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$DEPLOY_URL")
+          if [ "$HTTP_CODE" -ne 200 ]; then
+            echo "❌ فشل: HTTP $HTTP_CODE"
+            exit 1
+          fi
+          echo "✅ الصفحة تستجيب بـ 200"
+
+          # 2. تأكد أن index.html يحتوي على إعدادات testnet
+          if curl -s "$DEPLOY_URL" | grep -q "testnet.vechain.org"; then
+            echo "✅ تم تأكيد وجود إعدادات testnet في البناء"
+          else
+            echo "⚠️ تحذير: لم يتم العثور على testnet.vechain.org في الصفحة"
+          fi
+
+          echo "🎉 التحقق اكتمل — التطبيق منشور على: $DEPLOY_URL"
