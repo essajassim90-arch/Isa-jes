@@ -39,8 +39,10 @@ export default defineConfig(() => {
     },
     define: {
       global: 'globalThis',
+      'process.env': {},
     },
     resolve: {
+      dedupe: ['react', 'react-dom', 'valtio'],
       alias: {
         buffer: 'buffer',
         '@nama/shared': path.resolve(__dirname, '../../packages/shared/src/index.ts'),
