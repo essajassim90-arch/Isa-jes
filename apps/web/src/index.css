@@ -1,3 +1,131 @@
+/* =================================================================
+   NAMA Design System — CSS Custom Properties (v1.0)
+   Source of truth: docs/DESIGN_SYSTEM.md
+   ================================================================= */
+
+:root {
+  /* ─── Typography ─── */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-arabic: 'IBM Plex Arabic', 'Noto Sans Arabic', 'Geeza Pro', 'Arial', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  --text-xs:   0.75rem;
+  --text-sm:   0.875rem;
+  --text-base: 1rem;
+  --text-lg:   1.125rem;
+  --text-xl:   1.25rem;
+  --text-2xl:  1.5rem;
+  --text-3xl:  1.875rem;
+  --text-4xl:  2.25rem;
+  --text-5xl:  3rem;
+
+  --font-normal:    400;
+  --font-medium:    500;
+  --font-semibold:  600;
+  --font-bold:      700;
+  --font-extrabold: 800;
+
+  /* ─── Brand Greens ─── */
+  --color-green-950: #052E16;
+  --color-green-900: #14532D;
+  --color-green-700: #15803D;
+  --color-green-600: #16A34A;
+  --color-green-500: #22C55E;
+  --color-green-400: #4ADE80;
+  --color-green-200: #BBF7D0;
+  --color-green-100: #DCFCE7;
+  --color-green-50:  #F0FDF4;
+
+  /* ─── Navy & Neutrals ─── */
+  --color-navy-950: #0A0F1E;
+  --color-navy-900: #0F172A;
+  --color-navy-800: #1E293B;
+  --color-navy-700: #334155;
+  --color-gray-600: #475569;
+  --color-gray-500: #64748B;
+  --color-gray-400: #94A3B8;
+  --color-gray-300: #CBD5E1;
+  --color-gray-200: #E2E8F0;
+  --color-gray-100: #F1F5F9;
+  --color-gray-50:  #F8FAFC;
+  --color-white:    #FFFFFF;
+
+  /* ─── VeChain Purple — blockchain verification only ─── */
+  --color-vechain-700: #5B21B6;
+  --color-vechain-600: #7C3AED;
+  --color-vechain-500: #8B5CF6;
+  --color-vechain-400: #A78BFA;
+  --color-vechain-200: #DDD6FE;
+  --color-vechain-100: #EDE9FE;
+  --color-vechain-50:  #F5F3FF;
+
+  /* ─── Semantic state ─── */
+  --color-success:       #16A34A;
+  --color-success-light: #DCFCE7;
+  --color-warning:       #D97706;
+  --color-warning-light: #FEF3C7;
+  --color-error:         #DC2626;
+  --color-error-light:   #FEE2E2;
+  --color-info:          #0284C7;
+  --color-info-light:    #E0F2FE;
+
+  /* ─── Semantic design tokens ─── */
+  --color-bg-primary:   var(--color-gray-50);
+  --color-bg-surface:   var(--color-white);
+  --color-bg-subtle:    var(--color-gray-100);
+  --color-text-primary: var(--color-navy-950);
+  --color-text-secondary: var(--color-navy-700);
+  --color-text-tertiary:  var(--color-gray-600);
+  --color-text-brand:   var(--color-green-700);
+  --color-text-chain:   var(--color-vechain-600);
+  --color-border-default: var(--color-gray-200);
+  --color-border-focus: var(--color-green-600);
+  --color-interactive-primary:       var(--color-green-600);
+  --color-interactive-primary-hover: var(--color-green-700);
+
+  /* ─── Shadows ─── */
+  --shadow-xs: 0 1px 2px 0 rgba(0,0,0,0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0,0,0,0.1), 0 1px 2px -1px rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+  --shadow-chain: 0 0 0 2px var(--color-vechain-200);
+
+  /* ─── Border radius ─── */
+  --radius-sm:   0.25rem;
+  --radius-md:   0.5rem;
+  --radius-lg:   0.75rem;
+  --radius-xl:   1rem;
+  --radius-2xl:  1.5rem;
+  --radius-full: 9999px;
+
+  /* ─── Layout ─── */
+  --topbar-height:     64px;
+  --content-max-width: 1200px;
+  --sidebar-width:     240px;
+
+  /* ─── Transitions ─── */
+  --transition-fast:   all 100ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ─── Focus ring ─── */
+  --focus-ring: 0 0 0 3px rgba(22, 163, 74, 0.4);
+  --focus-ring-chain: 0 0 0 3px rgba(124, 58, 237, 0.35);
+
+  /* ─── Legacy aliases (used by existing App.css classes) ─── */
+  --accent:      #15803d;
+  --accent-hover:#14532d;
+  --bg:          #0a0f1e;
+  --bg-card:     #0f172a;
+  --bg-card2:    #1e293b;
+  --border:      rgba(255,255,255,0.08);
+  --text:        #f8fafc;
+  --text-muted:  #94a3b8;
+  --green:       #16a34a;
+  --red:         #dc2626;
+  --font:        var(--font-sans);
+  --radius:      12px;
+}
+
 #root {
   display: contents;
 }

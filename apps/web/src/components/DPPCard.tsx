@@ -46,93 +46,104 @@ export function DPPCard({ dpp }: DPPCardProps) {
   const qualityIndicator = certificationCount >= 2 ? 'premium' : certificationCount === 1 ? 'qualified' : 'watchlist'
 
   return (
-    <div className="sa-card" style={{ maxWidth: '100%', width: '100%' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
+    <div className={`dpp-card${isVerified ? ' dpp-card-verified' : ''}`} style={{ width: '100%' }}>
+      {/* Header row */}
+      <div className="dpp-card-header">
         <div>
-          <div className="sa-network">DPP</div>
-          <div style={{ fontSize: '1.1rem', fontWeight: 700, margin: '4px 0' }}>
+          <div className="dpp-card-label">Digital Product Passport</div>
+          <div className="dpp-card-product">
             {dpp.productName ?? dpp.product}
           </div>
         </div>
-        <div className={`sa-status ${dpp.status === 'active' ? 'deployed' : 'pending'}`} style={{ textTransform: 'capitalize' }}>
-          {dpp.status}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '6px' }}>
+          <div className={`sa-status ${dpp.status === 'active' ? 'deployed' : 'pending'}`} style={{ textTransform: 'capitalize', fontSize: '0.78rem' }}>
+            {dpp.status}
+          </div>
+          {isVerified ? (
+            <div className="chain-badge dark" title={`VeChainThor Testnet · tx ${dpp.txHash}`}>
+              🔗 On-Chain Verified
+            </div>
+          ) : (
+            <div className="chain-badge dark" style={{ opacity: 0.6 }}>
+              ⏳ Testnet-ready
+            </div>
+          )}
         </div>
       </div>
 
-      <div className="wallet-info" style={{ marginBottom: '16px' }}>
-        <div className="wallet-row">
-          <span className="wallet-label">Batch ID</span>
-          <span className="sa-address">{dpp.batchId}</span>
-        </div>
-        <div className="wallet-row">
-          <span className="wallet-label">Origin</span>
-          <span>{dpp.originCountry ? `${dpp.origin}, ${dpp.originCountry}` : dpp.origin}</span>
-        </div>
-        {(dpp.profile || dpp.workflowId) && (
+      <div style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        {/* Core fields */}
+        <div className="wallet-info" style={{ margin: 0 }}>
           <div className="wallet-row">
-            <span className="wallet-label">Workflow</span>
-            <span style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-              {dpp.profile && <span className="badge-roadmap">{dpp.profile}</span>}
-              {dpp.workflowId && <span className="badge-roadmap">{dpp.workflowId}</span>}
-            </span>
+            <span className="wallet-label">Batch ID</span>
+            <span className="sa-address">{dpp.batchId}</span>
           </div>
-        )}
-        {dpp.certifications.length > 0 && (
           <div className="wallet-row">
-            <span className="wallet-label">Certifications</span>
-            <span style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-              {dpp.certifications.map((c) => (
-                <span key={c.name} className="badge-roadmap">{c.name}</span>
+            <span className="wallet-label">Origin</span>
+            <span>{dpp.originCountry ? `${dpp.origin}, ${dpp.originCountry}` : dpp.origin}</span>
+          </div>
+          {(dpp.profile || dpp.workflowId) && (
+            <div className="wallet-row">
+              <span className="wallet-label">Workflow</span>
+              <span style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+                {dpp.profile && <span className="badge-roadmap">{dpp.profile}</span>}
+                {dpp.workflowId && <span className="badge-roadmap">{dpp.workflowId}</span>}
+              </span>
+            </div>
+          )}
+          {dpp.certifications.length > 0 && (
+            <div className="wallet-row">
+              <span className="wallet-label">Certifications</span>
+              <span style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                {dpp.certifications.map((c) => (
+                  <span key={c.name} className="badge-roadmap">{c.name}</span>
+                ))}
+              </span>
+            </div>
+          )}
+          <div className="wallet-row">
+            <span className="wallet-label">AII badge</span>
+            <span className="badge-roadmap">{certificationCount > 0 ? `${certificationCount} verified` : 'Pending'}</span>
+          </div>
+          <div className="wallet-row">
+            <span className="wallet-label">Procurement signal</span>
+            <span className="badge-roadmap">{procurementSignal}</span>
+          </div>
+          <div className="wallet-row">
+            <span className="wallet-label">Marketplace quality</span>
+            <span className="badge-roadmap">{qualityIndicator}</span>
+          </div>
+        </div>
+
+        {/* Metadata section */}
+        {metadataEntries.length > 0 && (
+          <div>
+            <div style={{ fontWeight: 600, fontSize: '0.88rem', marginBottom: '8px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              Metadata capture
+            </div>
+            <div style={{ display: 'grid', gap: '8px' }}>
+              {metadataEntries.map(([key, value]) => (
+                <div key={key} className="data-chip">
+                  <span className="data-chip-label">{key}</span>
+                  <span className="data-chip-value">{String(value)}</span>
+                </div>
               ))}
-            </span>
+            </div>
           </div>
         )}
-        <div className="wallet-row">
-          <span className="wallet-label">AII badge</span>
-          <span className="badge-roadmap">{certificationCount > 0 ? `${certificationCount} verified` : 'Pending'}</span>
-        </div>
-        <div className="wallet-row">
-          <span className="wallet-label">Procurement signal</span>
-          <span className="badge-roadmap">{procurementSignal}</span>
-        </div>
-        <div className="wallet-row">
-          <span className="wallet-label">Marketplace quality</span>
-          <span className="badge-roadmap">{qualityIndicator}</span>
-        </div>
-        <div className="wallet-row">
-          <span className="wallet-label">On-Chain</span>
-          <span className={`sa-status ${isVerified ? 'deployed' : 'pending'}`} style={{ fontSize: '0.8rem' }}>
-            {isVerified ? `✅ ${dpp.txHash!.slice(0, 10)}…` : '⏳ Testnet-ready'}
-          </span>
-        </div>
-      </div>
 
-      {metadataEntries.length > 0 && (
-        <div style={{ marginBottom: '16px' }}>
-          <div style={{ fontWeight: 600, fontSize: '0.9rem', marginBottom: '8px', color: 'var(--text-muted)' }}>
-            Metadata-driven capture
-          </div>
-          <div style={{ display: 'grid', gap: '8px' }}>
-            {metadataEntries.map(([key, value]) => (
-              <div key={key} className="data-chip">
-                <span className="data-chip-label">{key}</span>
-                <span className="data-chip-value">{String(value)}</span>
-              </div>
+        {/* Lifecycle events */}
+        {dpp.events.length > 0 && (
+          <div>
+            <div style={{ fontWeight: 600, fontSize: '0.88rem', marginBottom: '8px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              Lifecycle Events
+            </div>
+            {dpp.events.map((e, i) => (
+              <EventRow key={i} event={e} />
             ))}
           </div>
-        </div>
-      )}
-
-      {dpp.events.length > 0 && (
-        <div>
-          <div style={{ fontWeight: 600, fontSize: '0.9rem', marginBottom: '8px', color: 'var(--text-muted)' }}>
-            Lifecycle Events
-          </div>
-          {dpp.events.map((e, i) => (
-            <EventRow key={i} event={e} />
-          ))}
-        </div>
-      )}
+        )}
+      </div>
     </div>
   )
 }

@@ -1,30 +1,31 @@
 /* ─── Reset & base ─────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-:root {
-  --accent: #15803d;
-  --accent-hover: #14532d;
-  --bg: #0a0f1e;
-  --bg-card: #0f172a;
-  --bg-card2: #1e293b;
-  --border: rgba(255,255,255,0.08);
-  --text: #f8fafc;
-  --text-muted: #94a3b8;
-  --green: #16a34a;
-  --red: #dc2626;
-  --font: 'Inter', system-ui, -apple-system, sans-serif;
-  --radius: 12px;
-}
+/* Design tokens are defined in index.css */
 
 body {
-  font-family: var(--font);
+  font-family: var(--font-sans, 'Inter', system-ui, -apple-system, sans-serif);
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
+
+/* Focus ring for accessibility */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* Arabic text rendering */
+[lang="ar"], .arabic-text {
+  font-family: var(--font-arabic, 'IBM Plex Arabic', 'Geeza Pro', Arial, sans-serif);
+  direction: rtl;
+}
 
 /* ─── Layout ───────────────────────────────────────────────────── */
 .app {
@@ -38,31 +39,56 @@ a:hover { text-decoration: underline; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 32px;
+  padding: 0 32px;
+  height: var(--topbar-height, 64px);
   border-bottom: 1px solid var(--border);
-  background: rgba(15,17,23,0.8);
-  backdrop-filter: blur(12px);
+  background: rgba(15, 17, 23, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: var(--z-sticky, 200);
+  gap: 16px;
+}
+
+/* Left brand cluster */
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-shrink: 0;
+}
+
+/* Brand border accent — Deep Green left stripe */
+.header-brand::before {
+  content: '';
+  display: block;
+  width: 3px;
+  height: 32px;
+  background: linear-gradient(180deg, #16A34A 0%, #14532D 100%);
+  border-radius: 2px;
+  margin-right: 14px;
+  flex-shrink: 0;
 }
 
 .header-left {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 10px;
 }
 
 .header-controls {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .logo {
   font-size: 1.3rem;
   font-weight: 700;
   letter-spacing: -0.5px;
+  color: #FFFFFF;
 }
 
 .tagline {
@@ -252,19 +278,6 @@ a:hover { text-decoration: underline; }
   font-size: 0.95rem;
 }
 
-/* ─── Footer ───────────────────────────────────────────────────── */
-.footer {
-  text-align: center;
-  padding: 24px;
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  border-top: 1px solid var(--border);
-  display: flex;
-  gap: 6px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
 /* ─── EVM Section (Reown AppKit) ───────────────────────────────── */
 .evm-section {
   display: flex;
@@ -330,24 +343,6 @@ a:hover { text-decoration: underline; }
 .evm-btn-outline:hover {
   background: var(--accent);
   color: #fff;
-}
-
-/* ─── Responsive ───────────────────────────────────────────────── */
-@media (max-width: 600px) {
-  .header { padding: 14px 16px; }
-  .main   { padding: 32px 16px; }
-  .hero h1 { font-size: 2rem; }
-  .hero-cards { flex-direction: column; align-items: center; }
-  .header-controls {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .wallet-row,
-  .list-row,
-  .key-value {
-    flex-direction: column;
-    align-items: flex-start;
-  }
 }
 
 /* ─── Nav ──────────────────────────────────────────────────────── */
@@ -609,4 +604,178 @@ a:hover { text-decoration: underline; }
 
 .page-error {
   color: var(--red);
+}
+
+/* ─── DPP Card brand treatment ─────────────────────────────────── */
+.dpp-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+/* Green left-border accent on DPP cards */
+.dpp-card-verified {
+  border-left: 3px solid var(--color-green-600, #16A34A);
+}
+
+.dpp-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: linear-gradient(90deg, rgba(20, 83, 45, 0.3) 0%, rgba(15, 23, 42, 0) 100%);
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+}
+
+.dpp-card-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-green-400, #4ADE80);
+}
+
+.dpp-card-product {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-top: 2px;
+}
+
+/* VeChain verification badge — VeChain purple per DESIGN_SYSTEM.md */
+.chain-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: var(--color-vechain-100, #EDE9FE);
+  color: var(--color-vechain-700, #5B21B6);
+  border: 1px solid var(--color-vechain-200, #DDD6FE);
+  white-space: nowrap;
+}
+
+.chain-badge.dark {
+  background: rgba(124, 58, 237, 0.12);
+  color: var(--color-vechain-400, #A78BFA);
+  border-color: rgba(124, 58, 237, 0.25);
+}
+
+/* Hero section — enterprise landing */
+.hero-brand-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 48px 24px;
+  gap: 20px;
+}
+
+.hero-brand-headline {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+.hero-brand-headline .accent-green {
+  background: linear-gradient(135deg, #4ADE80 0%, #16A34A 60%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-brand-tagline {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  max-width: 520px;
+  line-height: 1.65;
+}
+
+.hero-arabic-tagline {
+  font-size: 1.1rem;
+  font-family: var(--font-arabic, 'IBM Plex Arabic', 'Geeza Pro', Arial, sans-serif);
+  direction: rtl;
+  color: var(--color-green-400, #4ADE80);
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+/* Mode toggle — brand-colored active state */
+.mode-toggle.active-enterprise {
+  background: rgba(20, 83, 45, 0.25);
+  border-color: rgba(22, 163, 74, 0.5);
+  color: var(--color-green-400, #4ADE80);
+}
+
+.mode-toggle.active-producer {
+  background: rgba(22, 163, 74, 0.15);
+  border-color: var(--color-green-600, #16A34A);
+  color: var(--color-green-400, #4ADE80);
+}
+
+/* Footer brand bar */
+.footer {
+  text-align: center;
+  padding: 20px 24px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.footer-brand-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-green-600, #16A34A);
+  vertical-align: middle;
+  margin: 0 4px;
+}
+
+/* ─── Responsive ───────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .header {
+    padding: 0 16px;
+    height: auto;
+    min-height: var(--topbar-height, 64px);
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+  .header-brand::before { display: none; }
+  .header-controls { gap: 8px; }
+  .hero-brand-headline { font-size: 1.8rem; }
+  .dpp-card-header { padding: 12px 16px; }
+  .main { padding: 32px 16px; }
+  .hero h1 { font-size: 2rem; }
+  .hero-cards { flex-direction: column; align-items: center; }
+}
+
+@media (max-width: 480px) {
+  .header-nav { gap: 4px; }
+  .nav-btn { padding: 6px 10px; font-size: 0.78rem; }
+  .mode-toggle { padding: 7px 10px; font-size: 0.78rem; }
+  .header-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .wallet-row,
+  .list-row,
+  .key-value {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

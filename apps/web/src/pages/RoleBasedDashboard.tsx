@@ -63,10 +63,10 @@ export function RoleBasedDashboard() {
 
   return (
     <>
-      <header className="header" style={{ background: mode === 'enterprise' ? '#0F172A' : 'rgba(15,17,23,0.8)' }}>
-        <div className="header-left" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '4px' }}>
+      <header className="header" style={{ background: mode === 'enterprise' ? '#0F172A' : 'rgba(15,17,23,0.92)' }}>
+        <div className="header-brand">
           <LeafNLogo
-            variant={mode === 'enterprise' ? 'enterprise' : 'primary'}
+            variant={mode === 'enterprise' ? 'enterprise' : 'reversed'}
             showTagline={true}
             language={mode === 'producer' ? 'ar' : 'bilingual'}
             size={32}
@@ -75,24 +75,28 @@ export function RoleBasedDashboard() {
         <div className="header-controls">
           <div className="mode-switcher">
             <button
-              className={`mode-toggle ${mode === 'enterprise' ? 'active' : ''}`}
+              className={`mode-toggle ${mode === 'enterprise' ? 'active active-enterprise' : ''}`}
               onClick={() => switchMode('enterprise')}
+              aria-pressed={mode === 'enterprise'}
             >
               Enterprise
             </button>
             <button
-              className={`mode-toggle ${mode === 'producer' ? 'active' : ''}`}
+              className={`mode-toggle ${mode === 'producer' ? 'active active-producer' : ''}`}
               onClick={() => switchMode('producer')}
+              aria-pressed={mode === 'producer'}
             >
-              Producer
+              <span lang="ar" aria-hidden="true" style={{ fontFamily: 'var(--font-arabic, sans-serif)' }}>منتج</span>
+              {' '}Producer
             </button>
           </div>
-          <nav className="header-nav">
+          <nav className="header-nav" aria-label="Page navigation">
             {navItems.map((n) => (
             <button
               key={n.id}
               className={`nav-btn ${page === n.id ? 'active' : ''}`}
               onClick={() => setPage(n.id)}
+              aria-current={page === n.id ? 'page' : undefined}
             >
               {n.label}
             </button>
@@ -102,7 +106,7 @@ export function RoleBasedDashboard() {
         </div>
       </header>
 
-      <main className="main">{renderPage()}</main>
+      <main className="main" id="main-content">{renderPage()}</main>
     </>
   )
 }
