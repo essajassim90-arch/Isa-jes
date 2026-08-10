@@ -6,7 +6,7 @@ import path from 'path'
 export default defineConfig(() => {
   return {
     plugins: [react()],
-    base: '/Isa-jes/',
+    base: '/nama-protocol/',
     server: {
       proxy: {
         '/api': {

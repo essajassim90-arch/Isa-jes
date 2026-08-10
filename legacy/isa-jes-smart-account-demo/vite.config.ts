@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/Isa-jes/',
+  base: '/nama-protocol/',
   define: {
     global: 'globalThis',
   },

@@ -68,7 +68,7 @@ Real-time carbon footprint tracking, predictive risk analytics, and audit-ready 
 ## Repository Structure
 
 ```
-Isa-jes/
+nama-protocol/
 ├── apps/
 │   ├── web/                  ← React + Vite frontend (main demo dashboard)
 │   ├── api/                  ← Node.js + TypeScript REST API gateway
@@ -112,8 +112,8 @@ Isa-jes/
 
 ```bash
 # Clone the repository
-git clone https://github.com/essajassim90-arch/Isa-jes.git
-cd Isa-jes
+git clone https://github.com/essajassim90-arch/nama-protocol.git
+cd nama-protocol
 
 # Install all workspace dependencies
 npm ci
@@ -146,7 +146,7 @@ npm run build --workspace=@nama/iot-simulation   # Build IoT simulator
 
 ## Staging Demo (GitHub Pages)
 
-The live GitHub Pages demo at `https://essajassim90-arch.github.io/Isa-jes/` runs entirely in the browser with **no backend**. When no `VITE_API_URL` environment variable is set in a production build, the app automatically enters **demo mode**:
+The live GitHub Pages demo at `https://essajassim90-arch.github.io/nama-protocol/` runs entirely in the browser with **no backend**. When no `VITE_API_URL` environment variable is set in a production build, the app automatically enters **demo mode**:
 
 - All API hooks return local seeded data for batch `demo-batch-001`.
 - No network requests are made to any backend.

@@ -5,6 +5,7 @@ import {
   useUpgradeSmartAccount,
   useAccountBalance,
 } from '@vechain/vechain-kit'
+import { LeafNLogo } from '../components/LeafNLogo.tsx'
 
 // Phase 1 MVP Demo: Testnet only.
 // Mainnet address retained here for future phases but is NOT shown in the demo UI.
@@ -118,16 +119,22 @@ export function Home() {
       <ConnectedDashboard />
     </>
   ) : (
-    <div className="hero">
-      <h1>NAMA Protocol</h1>
-      <p>
-        Decentralized ecosystem for global food security &amp; sustainable supply chains —
-        powered by VeChainThor blockchain, IoT simulation, and Digital Product Passports.
+    <div className="hero" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px' }}>
+      <div style={{ transform: 'scale(1.5)', margin: '24px 0' }}>
+        <LeafNLogo size={48} variant="primary" showText={true} showTagline={true} language="bilingual" />
+      </div>
+      <h1 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--accent)', margin: 0 }}>NAMA Protocol</h1>
+      <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--text)', margin: '0 0 12px 0', fontFamily: 'sans-serif' }}>
+        نما — ثقة غذائية مستدامة / Sustainable Food Trust
+      </h2>
+      <p style={{ maxWidth: '600px', margin: '0 auto', color: 'var(--text-muted)', lineHeight: 1.6, fontSize: '1.05rem' }}>
+        Global Trust Infrastructure for Sustainable Food Systems. Powered by VeChainThor blockchain,
+        IoT simulation, and Digital Product Passports.
       </p>
-      <div className="hero-cards">
+      <div className="hero-cards" style={{ marginTop: '24px' }}>
         <SmartAccountCard address={TESTNET_SMART_ACCOUNT} />
       </div>
-      <div className="connect-cta">
+      <div className="connect-cta" style={{ marginTop: '16px' }}>
         <WalletButton />
       </div>
     </div>
