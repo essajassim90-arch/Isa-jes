@@ -149,7 +149,7 @@ DEPLOYER_PRIVATE_KEY=<testnet-only-private-key>
 After deployment, propagate the resulting addresses to all consumers:
 
 1. **Shared constants**
-   - Update `/home/runner/work/Isa-jes/Isa-jes/packages/shared/src/constants/vechain.ts`
+   - Update `/home/runner/work/nama-protocol/nama-protocol/packages/shared/src/constants/vechain.ts`
    - Set:
      - `TESTNET_CONTRACT_ADDRESSES.DPP`
      - `TESTNET_CONTRACT_ADDRESSES.Marketplace`
@@ -172,7 +172,7 @@ The frontend and API consume shared constants, while the indexer uses runtime en
 
 ### 1. Validate the repository
 
-Run from `/home/runner/work/Isa-jes/Isa-jes`:
+Run from `/home/runner/work/nama-protocol/nama-protocol`:
 
 ```bash
 VITE_WC_PROJECT_ID=dummy VITE_PRIVY_APP_ID=dummy VITE_PRIVY_CLIENT_ID=dummy npm run lint --workspace=@nama/web
@@ -202,7 +202,7 @@ sudo chown -R "$USER":"$USER" /var/lib/nama/projections
 
 ### 3. Deploy contracts
 
-Run from `/home/runner/work/Isa-jes/Isa-jes/packages/contracts`:
+Run from `/home/runner/work/nama-protocol/nama-protocol/packages/contracts`:
 
 ```bash
 npm run ignition:validate
@@ -224,7 +224,7 @@ ignition/deployments/<deployment-id>/deployed_addresses.json
 
 ### 5. Start the indexer
 
-From `/home/runner/work/Isa-jes/Isa-jes`:
+From `/home/runner/work/nama-protocol/nama-protocol`:
 
 ```bash
 THOR_URL=https://testnet.vechain.org \
@@ -238,7 +238,7 @@ npm run start --workspace=@nama/indexer
 
 ### 6. Start the API
 
-From `/home/runner/work/Isa-jes/Isa-jes`:
+From `/home/runner/work/nama-protocol/nama-protocol`:
 
 ```bash
 JWT_SECRET=replace-with-strong-random-value \

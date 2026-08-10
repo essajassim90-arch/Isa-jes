@@ -1,0 +1,37 @@
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "docs/**"
+          - "*.md"
+
+smart-contracts:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "packages/contracts/**"
+
+frontend:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "apps/web/**"
+
+api:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "apps/api/**"
+
+indexer:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "apps/indexer/**"
+
+shared:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "packages/shared/**"
+
+devops:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/**"
+          - "docker-compose.yml"
+          - "scripts/**"

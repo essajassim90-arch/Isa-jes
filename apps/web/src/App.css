@@ -2,16 +2,16 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --accent: #3b82f6;
-  --accent-hover: #2563eb;
-  --bg: #0f1117;
-  --bg-card: #1a1d27;
-  --bg-card2: #22263a;
+  --accent: #15803d;
+  --accent-hover: #14532d;
+  --bg: #0a0f1e;
+  --bg-card: #0f172a;
+  --bg-card2: #1e293b;
   --border: rgba(255,255,255,0.08);
-  --text: #f0f0f0;
-  --text-muted: #8a8fa8;
-  --green: #22c55e;
-  --red: #ef4444;
+  --text: #f8fafc;
+  --text-muted: #94a3b8;
+  --green: #16a34a;
+  --red: #dc2626;
   --font: 'Inter', system-ui, -apple-system, sans-serif;
   --radius: 12px;
 }
@@ -88,7 +88,7 @@ a:hover { text-decoration: underline; }
 .hero h1 {
   font-size: 2.8rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #60a5fa, #a78bfa);
+  background: linear-gradient(135deg, #4ade80, #16a34a);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

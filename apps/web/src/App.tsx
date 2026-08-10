@@ -1,10 +1,16 @@
 import './App.css'
 import { RoleBasedDashboard } from './pages/RoleBasedDashboard.tsx'
+import CheckPage from './pages/CheckPage.tsx'
+import { BrandingStatus } from './components/BrandingStatus.tsx'
 
 function App() {
+  const isCheckPage = window.location.hash === '#/check'
+
   return (
     <div className="app">
-      <RoleBasedDashboard />
+      {isCheckPage ? <CheckPage /> : <RoleBasedDashboard />}
+
+      <BrandingStatus />
 
       <footer className="footer">
         <span>NAMA Protocol — </span>
@@ -16,7 +22,7 @@ function App() {
           Testnet Explorer
         </a>
         <span> · </span>
-        <a href="https://github.com/essajassim90-arch/Isa-jes" target="_blank" rel="noopener noreferrer">
+        <a href="https://github.com/essajassim90-arch/nama-protocol" target="_blank" rel="noopener noreferrer">
           GitHub
         </a>
       </footer>

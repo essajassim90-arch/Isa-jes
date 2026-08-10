@@ -218,7 +218,7 @@ export function EnterpriseDashboard() {
         <div className="panel-note" style={{ marginBottom: '16px' }}>
           Illustrative commercial model — demo values only. No real revenue, no payment contracts,
           no financial settlement. See{' '}
-          <a href="https://github.com/essajassim90-arch/Isa-jes/blob/main/docs/COMMERCIAL_MODEL.md" className="link-muted" target="_blank" rel="noopener noreferrer">
+          <a href="https://github.com/essajassim90-arch/nama-protocol/blob/main/docs/COMMERCIAL_MODEL.md" className="link-muted" target="_blank" rel="noopener noreferrer">
             docs/COMMERCIAL_MODEL.md
           </a>{' '}
           for full context.

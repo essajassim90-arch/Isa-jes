@@ -49,6 +49,20 @@ const config: HardhatUserConfig = {
       httpHeaders: {},
     },
   },
+  ignition: {
+    requiredConfirmations: 1,
+    blockPollingInterval: 1_000,
+    timeBeforeBumpingFees: 3 * 60 * 1_000,
+    maxFeeBumps: 4,
+    strategyConfig: {
+      create2: {
+        salt: '',
+      },
+    },
+    rpcConfiguration: {
+      ethGetTransactionCountMustReturn0: true,
+    },
+  },
 }
 
 export default config
