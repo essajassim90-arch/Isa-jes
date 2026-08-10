@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="NAMA Protocol — Sustainable Food Trust">
+  <!-- Background: Dark Navy -->
+  <rect width="1200" height="630" fill="#0F172A"/>
+
+  <!-- Left green accent bar -->
+  <rect x="0" y="0" width="8" height="630" fill="#16A34A"/>
+
+  <!-- Logo mark: Deep Green circle -->
+  <circle cx="120" cy="315" r="72" fill="#14532D"/>
+  <!-- N letterform in white -->
+  <path d="M92 355V275h16.8L148 325V275H164V355h-16.8L108 305V355H92Z" fill="#FFFFFF"/>
+  <!-- Leaf accent -->
+  <path d="M148 296C148 278 160 268 176 266C176 280 166 292 148 296Z" fill="#4ADE80"/>
+
+  <!-- NAMA wordmark -->
+  <text x="216" y="300" font-family="'Inter', -apple-system, sans-serif" font-size="72" font-weight="800" fill="#FFFFFF" letter-spacing="-2">NAMA</text>
+  <!-- Arabic identity -->
+  <text x="216" y="368" font-family="'IBM Plex Arabic', 'Geeza Pro', Arial, sans-serif" font-size="52" font-weight="700" fill="#4ADE80" direction="rtl">نما</text>
+
+  <!-- English tagline -->
+  <text x="120" y="452" font-family="'Inter', -apple-system, sans-serif" font-size="28" font-weight="500" fill="#94A3B8">Sustainable Food Trust</text>
+  <!-- Arabic tagline -->
+  <text x="1080" y="452" font-family="'IBM Plex Arabic', 'Geeza Pro', Arial, sans-serif" font-size="26" font-weight="400" fill="#64748B" text-anchor="end" direction="rtl">ثقة غذائية مستدامة</text>
+
+  <!-- VeChainThor badge -->
+  <rect x="120" y="490" width="220" height="40" rx="20" fill="#1E293B" stroke="#334155" stroke-width="1"/>
+  <text x="230" y="515" font-family="'Inter', -apple-system, sans-serif" font-size="16" font-weight="600" fill="#94A3B8" text-anchor="middle">Powered by VeChainThor</text>
+
+  <!-- Decorative grid pattern (subtle) -->
+  <line x1="900" y1="0" x2="900" y2="630" stroke="#1E293B" stroke-width="1"/>
+  <line x1="1050" y1="0" x2="1050" y2="630" stroke="#1E293B" stroke-width="1"/>
+  <line x1="0" y1="420" x2="1200" y2="420" stroke="#1E293B" stroke-width="1"/>
+</svg>

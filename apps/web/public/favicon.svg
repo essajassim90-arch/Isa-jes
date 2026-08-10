@@ -1,6 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
-  <!-- Geometric N in Deep Green -->
-  <path d="M6 26V6H11L21 20V6H26V26H21L11 12V26H6Z" fill="#14532D" />
-  <!-- Integrated Leaf Motif emerging from the upper-right diagonal/intersection -->
-  <path d="M21 11.5C21 7 24 4.5 28 4C28 8 25.5 11 21 11.5Z" fill="#16A34A" />
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none" role="img" aria-label="NAMA Protocol logo">
+  <!-- Background circle -->
+  <circle cx="16" cy="16" r="16" fill="#14532D"/>
+  <!-- Letter N in white, strokes thickened for clarity at small sizes -->
+  <path d="M8 24V8h4.2L20 18.5V8H24V24h-4.2L12 13.5V24H8Z" fill="#FFFFFF"/>
+  <!-- Leaf motif: organic drop-shape emerging from upper-right serif of N -->
+  <path d="M20 12.5C20 8.5 23 6.5 27 6C27 9.5 24.5 12 20 12.5Z" fill="#4ADE80"/>
 </svg>

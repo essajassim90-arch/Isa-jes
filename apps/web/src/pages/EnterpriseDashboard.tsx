@@ -32,11 +32,29 @@ export function EnterpriseDashboard() {
     <div className="stack-lg">
       <section className="panel hero-panel">
         <div>
-          <div className="badge-roadmap">Pre-Testnet scope · 2K + 2L</div>
-          <h1 className="page-title">Enterprise interface</h1>
+          <div className="badge-roadmap" style={{ marginBottom: '8px' }}>Pre-Testnet · Phase 1 MVP</div>
+          <h1 className="page-title" style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', letterSpacing: '-0.02em' }}>
+            <span className="accent-green" style={{ background: 'linear-gradient(135deg, #4ADE80 0%, #16A34A 60%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+              NAMA
+            </span>
+            {' '}Enterprise Dashboard
+          </h1>
           <p className="page-subtitle">
             Projection-backed ESG intelligence, procurement visibility, verified SDG telemetry,
             audit snapshots, ERP exports, and AII score visibility.
+          </p>
+          <p
+            className="page-subtitle"
+            lang="ar"
+            style={{
+              fontFamily: 'var(--font-arabic, "IBM Plex Arabic", "Geeza Pro", Arial, sans-serif)',
+              direction: 'rtl',
+              color: 'rgba(74, 222, 128, 0.7)',
+              fontSize: '0.9rem',
+              marginTop: '4px',
+            }}
+          >
+            ثقة غذائية مستدامة
           </p>
         </div>
         <div className="metric-grid">

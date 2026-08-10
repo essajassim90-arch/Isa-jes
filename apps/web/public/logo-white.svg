@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="44" viewBox="0 0 160 44" fill="none" role="img" aria-label="NAMA Protocol">
+  <!-- Leaf-N mark: white circle outline variant -->
+  <circle cx="22" cy="22" r="22" fill="rgba(255,255,255,0.12)"/>
+  <circle cx="22" cy="22" r="21" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+  <!-- Letter N in white -->
+  <path d="M11 33V11h5.8L28 26V11h5.5V33h-5.8L17 18V33H11Z" fill="#FFFFFF"/>
+  <!-- Leaf motif -->
+  <path d="M28 17.5C28 11.5 32 9 38 8.5C38 13 35 17 28 17.5Z" fill="#4ADE80"/>
+
+  <!-- NAMA wordmark in white -->
+  <text x="52" y="19" font-family="'Inter', -apple-system, BlinkMacSystemFont, sans-serif" font-size="18" font-weight="800" fill="#FFFFFF" letter-spacing="-0.5">NAMA</text>
+  <!-- Arabic name in white -->
+  <text x="152" y="19" font-family="'IBM Plex Arabic', 'Geeza Pro', Arial, sans-serif" font-size="15" font-weight="700" fill="#FFFFFF" text-anchor="end">نما</text>
+  <!-- English tagline in muted white -->
+  <text x="52" y="34" font-family="'Inter', -apple-system, BlinkMacSystemFont, sans-serif" font-size="9.5" font-weight="500" fill="rgba(255,255,255,0.6)" letter-spacing="0.02em">Sustainable Food Trust</text>
+</svg>
