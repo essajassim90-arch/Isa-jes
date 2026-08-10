@@ -6,6 +6,7 @@ import { ESG } from './ESG.tsx'
 import { EnterpriseDashboard } from './EnterpriseDashboard.tsx'
 import { ProducerMobileUI } from './ProducerMobileUI.tsx'
 import { Circular } from './Circular.tsx'
+import { LeafNLogo } from '../components/LeafNLogo.tsx'
 
 type InterfaceMode = 'enterprise' | 'producer'
 type EnterprisePage = 'dashboard' | 'passport' | 'marketplace' | 'esg' | 'circular'
@@ -62,10 +63,14 @@ export function RoleBasedDashboard() {
 
   return (
     <>
-      <header className="header">
-        <div className="header-left">
-          <span className="logo">⚡ NAMA Protocol</span>
-          <span className="tagline">Role-aware enterprise + producer pre-Testnet shell</span>
+      <header className="header" style={{ background: mode === 'enterprise' ? '#0F172A' : 'rgba(15,17,23,0.8)' }}>
+        <div className="header-left" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '4px' }}>
+          <LeafNLogo
+            variant={mode === 'enterprise' ? 'enterprise' : 'primary'}
+            showTagline={true}
+            language={mode === 'producer' ? 'ar' : 'bilingual'}
+            size={32}
+          />
         </div>
         <div className="header-controls">
           <div className="mode-switcher">
