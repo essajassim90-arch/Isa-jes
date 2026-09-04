@@ -1,0 +1,23 @@
+---
+name: "PR: feature/stakeholder-demo — CI and demo preview"
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  create_comment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add PR comment
+        uses: marocchino/sticky-pull-request-comment@v0.7.0
+        with:
+          message: |
+            Automated CI run for feature/stakeholder-demo started.
+            This PR runs lint, type-check, build, contracts, api, indexer and IoT simulation jobs on Node 20.
+
