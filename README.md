@@ -3,18 +3,18 @@
 ## Decentralized Ecosystem for Global Food Security & Sustainable Supply Chains
 
 [![VeChainThor](https://img.shields.io/badge/Blockchain-VeChainThor-blue)](https://vechain.org)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)](https://www.typescriptlang.org)
 [![React](https://img.shields.io/badge/React-18-61DAFB)](https://react.dev)
 [![Status: Phase 1 MVP Demo](https://img.shields.io/badge/Status-Phase%201%20MVP%20Demo-orange)](#)
 
-NAMA is an open-source, blockchain-powered ecosystem that transforms global food supply chains through transparency, sustainability, and automation. Built on the **VeChainThor blockchain**, NAMA implements a decentralized digital product passport (DPP), AI-driven waste triage, smart procurement marketplace, and enterprise ESG intelligence to solve global food waste, supply chain opacity, and sustainability reporting challenges.
+NAMA is a proprietary, source-available, blockchain-powered ecosystem that transforms global food supply chains through transparency, sustainability, and automation. Built on the **VeChainThor blockchain**, NAMA i[...]
 
 ---
 
 ## Vision
 
-To establish a transparent, sustainable, and decentralized infrastructure for food production, procurement, logistics, and waste management — accessible to every stakeholder worldwide, from small-holder farmers to multinational retailers, through tokenised incentives and circular revenue models.
+To establish a transparent, sustainable, and decentralized infrastructure for food production, procurement, logistics, and waste management — accessible to every stakeholder worldwide, from smal[...]
 
 ---
 
@@ -112,8 +112,8 @@ nama-protocol/
 
 ```bash
 # Clone the repository
-git clone https://github.com/essajassim90-arch/nama-protocol.git
-cd nama-protocol
+git clone https://github.com/essajassim90-arch/Isa-jes.git
+cd Isa-jes
 
 # Install all workspace dependencies
 npm ci
@@ -146,7 +146,7 @@ npm run build --workspace=@nama/iot-simulation   # Build IoT simulator
 
 ## Staging Demo (GitHub Pages)
 
-The live GitHub Pages demo at `https://essajassim90-arch.github.io/nama-protocol/` runs entirely in the browser with **no backend**. When no `VITE_API_URL` environment variable is set in a production build, the frontend automatically enters demo mode:
+The live GitHub Pages demo at `https://essajassim90-arch.github.io/Isa-jes/` runs entirely in the browser with **no backend**. When no `VITE_API_URL` environment variable is set in a produc[...]
 
 - All API hooks return local seeded data for batch `demo-batch-001`.
 - No network requests are made to any backend.
@@ -183,7 +183,7 @@ cp .env.example .env.local
 
 ## Testnet deployment runbook
 
-For the deployment architecture, co-location strategy, hosting recommendations, secret handling, and contract address propagation flow, see [`docs/TESTNET_DEPLOYMENT_RUNBOOK.md`](docs/TESTNET_DEPLOYMENT_RUNBOOK.md).
+For the deployment architecture, co-location strategy, hosting recommendations, secret handling, and contract address propagation flow, see [`docs/TESTNET_DEPLOYMENT_RUNBOOK.md`](docs/TESTNET_DEP[...]
 
 ---
 
@@ -221,14 +221,6 @@ Full roadmap: [ROADMAP.md](ROADMAP.md)
 
 ---
 
-## Contributing
-
-We welcome contributions from developers, researchers, sustainability professionals, and supply chain experts worldwide.
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
----
-
 ## Security
 
 For responsible disclosure of vulnerabilities, see [SECURITY.md](SECURITY.md).
@@ -237,17 +229,21 @@ For responsible disclosure of vulnerabilities, see [SECURITY.md](SECURITY.md).
 
 ## Author and Ownership
 
-This project was conceived, designed, and developed by **Isa Ali**.
+This project was conceived, designed, and developed by **Isa Jassim Ali**.
 
 ---
 
 ## Copyright and Intellectual Property
 
-The original source code, documentation, project design, and all original project materials are the intellectual property of **Isa Ali**.
+The original source code, documentation, project design, and all original project materials are the intellectual property of **Isa Jassim Ali**.
 
-### Permissions and Restrictions
+### Licensing
 
-**No open-source license is currently granted. All rights are reserved.**
+Proprietary
+
+All Rights Reserved
+
+Source Available for Evaluation Only
 
 Viewing this public repository does not grant permission to:
 - Copy, reproduce, or modify the project or any substantial part thereof
@@ -257,18 +253,18 @@ Viewing this public repository does not grant permission to:
 
 ### Permission Requirements
 
-Anyone interested in using, adapting, collaborating on, or licensing this project must first contact the author and receive **explicit written permission** from Isa Ali.
+Anyone interested in using, adapting, collaborating on, or licensing this project must first contact the author and receive **explicit written permission** from Isa Jassim Ali.
 
-**A request for permission does not constitute approval.** Permission is valid only after written acceptance from Isa Ali.
+**A request for permission does not constitute approval.** Permission is valid only after written acceptance from Isa Jassim Ali.
 
 ---
 
 ## Permissions and Collaboration
 
-This project is not open source. Before copying, modifying, distributing, commercially using, sublicensing, or incorporating substantial parts of this project into another project, you must:
+This project is proprietary and source-available for evaluation only. Before copying, modifying, distributing, commercially using, sublicensing, or incorporating substantial parts of this project into another project, you must:
 
 1. Contact the author at **Info@evenchi.com**
-2. Receive explicit written permission from Isa Ali
+2. Receive explicit written permission from Isa Jassim Ali
 3. Obtain written acceptance confirming permission
 
 A request for permission does not constitute approval. **All rights remain with the author until explicit written permission is granted.**
@@ -281,7 +277,7 @@ For permission requests, collaboration inquiries, licensing discussions, or othe
 
 | Contact Method | Details |
 |---|---|
-| **Author** | Isa Ali |
+| **Author** | Isa Jassim Ali |
 | **Email** | Info@evenchi.com |
 | **GitHub** | [essajassim90-arch](https://github.com/essajassim90-arch) — Open an [Issue](../../issues) or start a [Discussion](../../discussions) |
 | **Phone** | May be requested through email or GitHub communication |
@@ -290,17 +286,17 @@ For permission requests, collaboration inquiries, licensing discussions, or othe
 
 ## Credits
 
-**Original Creator, Author, and Developer:** Isa Ali
+**Original Creator, Author, and Developer:** Isa Jassim Ali
 
-Isa Ali conceived and architected the NAMA Protocol vision for global trust infrastructure for sustainable food systems.
+Isa Jassim Ali conceived and architected the NAMA Protocol vision for global trust infrastructure for sustainable food systems.
 
 ---
 
 ## Copyright Notice
 
-**Copyright © 2026 Isa Ali. All rights reserved.**
+**Copyright © 2026 Isa Jassim Ali. All rights reserved.**
 
-This project is **not open source**. See [NOTICE.md](NOTICE.md) for the complete copyright and permissions notice.
+This project is proprietary and source-available for evaluation only. See [NOTICE.md](NOTICE.md) for the complete copyright and permissions notice.
 
 ---
 
@@ -324,7 +320,6 @@ For the full technical and commercial deep-dive, read the [NAMA Whitepaper](WHIT
 | [docs/COMPONENT_ARCHITECTURE.md](docs/COMPONENT_ARCHITECTURE.md) | React component hierarchy and TypeScript models |
 | [docs/IMPLEMENTATION_GUIDE.md](docs/IMPLEMENTATION_GUIDE.md) | Frontend, API, and smart contract implementation guide |
 | [docs/ECOSYSTEM_ASSESSMENT.md](docs/ECOSYSTEM_ASSESSMENT.md) | VeChain alignment, grant readiness, MVP strategy |
-| [CONTRIBUTING.md](CONTRIBUTING.md) | Contribution guidelines |
 | [SECURITY.md](SECURITY.md) | Security policy and responsible disclosure |
 
 ---
@@ -333,7 +328,7 @@ For the full technical and commercial deep-dive, read the [NAMA Whitepaper](WHIT
 
 NAMA was conceived and architected by **Isa Jassim Ali**, Founder & Lead Architect of the NAMA Protocol.
 
-Isa Jassim Ali is the creator of NAMA's vision for global trust infrastructure for sustainable food systems — bringing together digital product passports, IoT traceability, ESG intelligence, circular economy tracking, and enterprise supply-chain transparency. The ecosystem design reflects deep expertise in blockchain systems, supply chain architecture, sustainability standards, and decentralized market design.
+Isa Jassim Ali is the creator of NAMA's vision for global trust infrastructure for sustainable food systems — bringing together digital product passports, IoT traceability, ESG intelligence, ci[...]
 
 | | |
 |---|---|
@@ -342,12 +337,6 @@ Isa Jassim Ali is the creator of NAMA's vision for global trust infrastructure f
 | **Project** | NAMA |
 | **GitHub** | [essajassim90-arch](https://github.com/essajassim90-arch) |
 | **VeWorld Wallet** | [TO BE PROVIDED LATER] |
-
----
-
-## Contact
-
-NAMA is an open-source VeChain ecosystem project. Open an [Issue](../../issues) or start a [Discussion](../../discussions) to connect with the team.
 
 ---
 
