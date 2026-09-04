@@ -8,13 +8,13 @@
 [![React](https://img.shields.io/badge/React-18-61DAFB)](https://react.dev)
 [![Status: Phase 1 MVP Demo](https://img.shields.io/badge/Status-Phase%201%20MVP%20Demo-orange)](#)
 
-NAMA is an open-source, blockchain-powered ecosystem that transforms global food supply chains through transparency, sustainability, and automation. Built on the **VeChainThor blockchain**, NAMA integrates Artificial Intelligence (AI), Internet of Things (IoT), and Digital Product Passports (DPP) to create a verifiable, traceable, and circular food economy.
+NAMA is an open-source, blockchain-powered ecosystem that transforms global food supply chains through transparency, sustainability, and automation. Built on the **VeChainThor blockchain**, NAMA implements a decentralized digital product passport (DPP), AI-driven waste triage, smart procurement marketplace, and enterprise ESG intelligence to solve global food waste, supply chain opacity, and sustainability reporting challenges.
 
 ---
 
 ## Vision
 
-To establish a transparent, sustainable, and decentralized infrastructure for food production, procurement, logistics, and waste management — accessible to every stakeholder worldwide, from smallholder farmers to multinational enterprises.
+To establish a transparent, sustainable, and decentralized infrastructure for food production, procurement, logistics, and waste management — accessible to every stakeholder worldwide, from small-holder farmers to multinational retailers, through tokenised incentives and circular revenue models.
 
 ---
 
@@ -146,7 +146,7 @@ npm run build --workspace=@nama/iot-simulation   # Build IoT simulator
 
 ## Staging Demo (GitHub Pages)
 
-The live GitHub Pages demo at `https://essajassim90-arch.github.io/nama-protocol/` runs entirely in the browser with **no backend**. When no `VITE_API_URL` environment variable is set in a production build, the app automatically enters **demo mode**:
+The live GitHub Pages demo at `https://essajassim90-arch.github.io/nama-protocol/` runs entirely in the browser with **no backend**. When no `VITE_API_URL` environment variable is set in a production build, the frontend automatically enters demo mode:
 
 - All API hooks return local seeded data for batch `demo-batch-001`.
 - No network requests are made to any backend.
@@ -235,9 +235,72 @@ For responsible disclosure of vulnerabilities, see [SECURITY.md](SECURITY.md).
 
 ---
 
-## License
+## Author and Ownership
 
-This project is licensed under the [MIT License](LICENSE).
+This project was conceived, designed, and developed by **Isa Ali**.
+
+---
+
+## Copyright and Intellectual Property
+
+The original source code, documentation, project design, and all original project materials are the intellectual property of **Isa Ali**.
+
+### Permissions and Restrictions
+
+**No open-source license is currently granted. All rights are reserved.**
+
+Viewing this public repository does not grant permission to:
+- Copy, reproduce, or modify the project or any substantial part thereof
+- Distribute, publish, or sublicense the project
+- Commercially use or incorporate the project into another project
+- Create derivative works based on the project
+
+### Permission Requirements
+
+Anyone interested in using, adapting, collaborating on, or licensing this project must first contact the author and receive **explicit written permission** from Isa Ali.
+
+**A request for permission does not constitute approval.** Permission is valid only after written acceptance from Isa Ali.
+
+---
+
+## Permissions and Collaboration
+
+This project is not open source. Before copying, modifying, distributing, commercially using, sublicensing, or incorporating substantial parts of this project into another project, you must:
+
+1. Contact the author at **Info@evenchi.com**
+2. Receive explicit written permission from Isa Ali
+3. Obtain written acceptance confirming permission
+
+A request for permission does not constitute approval. **All rights remain with the author until explicit written permission is granted.**
+
+---
+
+## Contact
+
+For permission requests, collaboration inquiries, licensing discussions, or other matters:
+
+| Contact Method | Details |
+|---|---|
+| **Author** | Isa Ali |
+| **Email** | Info@evenchi.com |
+| **GitHub** | [essajassim90-arch](https://github.com/essajassim90-arch) — Open an [Issue](../../issues) or start a [Discussion](../../discussions) |
+| **Phone** | May be requested through email or GitHub communication |
+
+---
+
+## Credits
+
+**Original Creator, Author, and Developer:** Isa Ali
+
+Isa Ali conceived and architected the NAMA Protocol vision for global trust infrastructure for sustainable food systems.
+
+---
+
+## Copyright Notice
+
+**Copyright © 2026 Isa Ali. All rights reserved.**
+
+This project is **not open source**. See [NOTICE.md](NOTICE.md) for the complete copyright and permissions notice.
 
 ---
 
@@ -270,7 +333,7 @@ For the full technical and commercial deep-dive, read the [NAMA Whitepaper](WHIT
 
 NAMA was conceived and architected by **Isa Jassim Ali**, Founder & Lead Architect of the NAMA Protocol.
 
-Isa Jassim Ali is the creator of NAMA's vision for global trust infrastructure for sustainable food systems — bringing together digital product passports, IoT traceability, ESG intelligence, circular economy tracking, and enterprise supply-chain transparency on VeChainThor.
+Isa Jassim Ali is the creator of NAMA's vision for global trust infrastructure for sustainable food systems — bringing together digital product passports, IoT traceability, ESG intelligence, circular economy tracking, and enterprise supply-chain transparency. The ecosystem design reflects deep expertise in blockchain systems, supply chain architecture, sustainability standards, and decentralized market design.
 
 | | |
 |---|---|
@@ -300,4 +363,3 @@ Description:  NAMA is a global trust infrastructure for sustainable food systems
 GitHub:       https://github.com/essajassim90-arch
 VeWorld:      [TO BE PROVIDED LATER]
 ```
-
