@@ -3,12 +3,12 @@
 ## Decentralized Ecosystem for Global Food Security & Sustainable Supply Chains
 
 [![VeChainThor](https://img.shields.io/badge/Blockchain-VeChainThor-blue)](https://vechain.org)
-[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)](https://www.typescriptlang.org)
 [![React](https://img.shields.io/badge/React-18-61DAFB)](https://react.dev)
 [![Status: Phase 1 MVP Demo](https://img.shields.io/badge/Status-Phase%201%20MVP%20Demo-orange)](#)
 
-NAMA is a proprietary, source-available, blockchain-powered ecosystem that transforms global food supply chains through transparency, sustainability, and automation. Built on the **VeChainThor blockchain**, NAMA i[...]
+NAMA is an open-source, blockchain-powered ecosystem that transforms global food supply chains through transparency, sustainability, and automation. Built on the **VeChainThor blockchain**, NAMA i[...]
 
 ---
 
@@ -112,8 +112,8 @@ nama-protocol/
 
 ```bash
 # Clone the repository
-git clone https://github.com/essajassim90-arch/Isa-jes.git
-cd Isa-jes
+git clone https://github.com/essajassim90-arch/nama-protocol.git
+cd nama-protocol
 
 # Install all workspace dependencies
 npm ci
@@ -146,7 +146,7 @@ npm run build --workspace=@nama/iot-simulation   # Build IoT simulator
 
 ## Staging Demo (GitHub Pages)
 
-The live GitHub Pages demo at `https://essajassim90-arch.github.io/Isa-jes/` runs entirely in the browser with **no backend**. When no `VITE_API_URL` environment variable is set in a produc[...]
+The live GitHub Pages demo at `https://essajassim90-arch.github.io/nama-protocol/` runs entirely in the browser with **no backend**. When no `VITE_API_URL` environment variable is set in a produc[...]
 
 - All API hooks return local seeded data for batch `demo-batch-001`.
 - No network requests are made to any backend.
@@ -221,6 +221,14 @@ Full roadmap: [ROADMAP.md](ROADMAP.md)
 
 ---
 
+## Contributing
+
+We welcome contributions from developers, researchers, sustainability professionals, and supply chain experts worldwide.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+---
+
 ## Security
 
 For responsible disclosure of vulnerabilities, see [SECURITY.md](SECURITY.md).
@@ -229,21 +237,17 @@ For responsible disclosure of vulnerabilities, see [SECURITY.md](SECURITY.md).
 
 ## Author and Ownership
 
-This project was conceived, designed, and developed by **Isa Jassim Ali**.
+This project was conceived, designed, and developed by **Isa Ali**.
 
 ---
 
 ## Copyright and Intellectual Property
 
-The original source code, documentation, project design, and all original project materials are the intellectual property of **Isa Jassim Ali**.
+The original source code, documentation, project design, and all original project materials are the intellectual property of **Isa Ali**.
 
-### Licensing
+### Permissions and Restrictions
 
-Proprietary
-
-All Rights Reserved
-
-Source Available for Evaluation Only
+**No open-source license is currently granted. All rights are reserved.**
 
 Viewing this public repository does not grant permission to:
 - Copy, reproduce, or modify the project or any substantial part thereof
@@ -253,18 +257,18 @@ Viewing this public repository does not grant permission to:
 
 ### Permission Requirements
 
-Anyone interested in using, adapting, collaborating on, or licensing this project must first contact the author and receive **explicit written permission** from Isa Jassim Ali.
+Anyone interested in using, adapting, collaborating on, or licensing this project must first contact the author and receive **explicit written permission** from Isa Ali.
 
-**A request for permission does not constitute approval.** Permission is valid only after written acceptance from Isa Jassim Ali.
+**A request for permission does not constitute approval.** Permission is valid only after written acceptance from Isa Ali.
 
 ---
 
 ## Permissions and Collaboration
 
-This project is proprietary and source-available for evaluation only. Before copying, modifying, distributing, commercially using, sublicensing, or incorporating substantial parts of this project into another project, you must:
+This project is not open source. Before copying, modifying, distributing, commercially using, sublicensing, or incorporating substantial parts of this project into another project, you must:
 
 1. Contact the author at **Info@evenchi.com**
-2. Receive explicit written permission from Isa Jassim Ali
+2. Receive explicit written permission from Isa Ali
 3. Obtain written acceptance confirming permission
 
 A request for permission does not constitute approval. **All rights remain with the author until explicit written permission is granted.**
@@ -277,7 +281,7 @@ For permission requests, collaboration inquiries, licensing discussions, or othe
 
 | Contact Method | Details |
 |---|---|
-| **Author** | Isa Jassim Ali |
+| **Author** | Isa Ali |
 | **Email** | Info@evenchi.com |
 | **GitHub** | [essajassim90-arch](https://github.com/essajassim90-arch) — Open an [Issue](../../issues) or start a [Discussion](../../discussions) |
 | **Phone** | May be requested through email or GitHub communication |
@@ -286,17 +290,17 @@ For permission requests, collaboration inquiries, licensing discussions, or othe
 
 ## Credits
 
-**Original Creator, Author, and Developer:** Isa Jassim Ali
+**Original Creator, Author, and Developer:** Isa Ali
 
-Isa Jassim Ali conceived and architected the NAMA Protocol vision for global trust infrastructure for sustainable food systems.
+Isa Ali conceived and architected the NAMA Protocol vision for global trust infrastructure for sustainable food systems.
 
 ---
 
 ## Copyright Notice
 
-**Copyright © 2026 Isa Jassim Ali. All rights reserved.**
+**Copyright © 2026 Isa Ali. All rights reserved.**
 
-This project is proprietary and source-available for evaluation only. See [NOTICE.md](NOTICE.md) for the complete copyright and permissions notice.
+This project is **not open source**. See [NOTICE.md](NOTICE.md) for the complete copyright and permissions notice.
 
 ---
 
