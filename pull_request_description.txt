@@ -1,0 +1,10 @@
+Title: feature(stakeholder-demo): enable stakeholder demo CI & preview
+
+This PR is opened by the automation to run CI for the stakeholder demo feature.
+
+Goals:
+- Run lint, type-check, build for apps/web using Node 20 and npm.
+- Run contracts compilation and tests, API type-check, indexer build, and IoT simulation build (CI jobs).
+- Use demo data in apps/web/src/lib/demoData.ts and fallback VITE_WC_PROJECT_ID=dummy for CI builds.
+
+Do not merge automatically. Requesting review from @essajassim90-arch only.
