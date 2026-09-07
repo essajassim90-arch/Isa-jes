@@ -25,14 +25,14 @@
     "@vechain/vechain-contract-types": "1.7.0",
     "@vechain/sdk-core": "^2.0.7",
     "@vechain/vechain-kit": "^2.12.0",
-    "react": "19.2.7",
+    "react": "19.2.8",
     "react-dom": "19.2.7",
     "viem": "^2.55.0",
     "wagmi": "^2.19.5"
   },
   "devDependencies": {
     "@types/node": "^24.13.2",
-    "@types/react": "^19.2.17",
+    "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "5.1.1",
     "buffer": "^6.0.3",
